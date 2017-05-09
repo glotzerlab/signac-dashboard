@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Statepoint {{ spid }}</title>
+</head>
+<body>
+	<h1>{{ spid }}</h1>
+	<ul>
+	{% for key in sp %}
+		<li><strong>{{ key }}:</strong> {{ sp[key] }}</li>
+	{% endfor %}
+	</ul>
+</body>
+</html>
+
