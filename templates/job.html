@@ -14,7 +14,7 @@
         <h2>Files</h2>
         <ul>
             {% for file in files %}
-            <li><a href="file/{{ file }}">{{ file }}</a></li>
+            <li><a href="{{ file.url }}">{{ file.name }}</a></li>
             {% endfor %}
         </ul>
         <h2>Job Document</h2>
