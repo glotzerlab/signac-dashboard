@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Statepoint {{ jobid }}</title>
+    </head>
+    <body>
+        <h1>{{ jobid }}</h1>
+        <h2>Statepoint</h2>
+        <ul>
+            {% for key in sp %}
+            <li><strong>{{ key }}:</strong> {{ sp[key] }}</li>
+            {% endfor %}
+        </ul>
+        <h2>Files</h2>
+        <ul>
+            {% for file in files %}
+            <li><a href="file/{{ file }}">{{ file }}</a></li>
+            {% endfor %}
+        </ul>
+        <h2>Job Document</h2>
+        <ul>
+            {% for key in doc %}
+            <li><strong>{{ key }}:</strong> {{ doc[key] }}</li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>
+
