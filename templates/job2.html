@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
+{% set active_page = "jobs" %}
+
 {% block title %}{{ jobtitle }}{% endblock %}
 {% block subtitle %}{{ jobsubtitle }}{% endblock %}
+
 {% block panels %}
 {% for fig in figs %}
 <div class="column is-one-third-desktop is-full-mobile">

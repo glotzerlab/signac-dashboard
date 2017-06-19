@@ -1,3 +1,8 @@
+{% set menu = [
+    ('/dashboard', 'dashboard', 'Dashboard', 'fa-home'),
+    ('/jobs', 'jobs', 'Jobs', 'fa-th-list')
+] -%}
+{% set active_page = active_page|default('dashboard') -%}
 <!doctype html>
 <html lang="en">
 	<head>
@@ -7,28 +12,31 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/app.css') }}" />
         <title>
-            {% block title %}Page Title{% endblock %}{% if self.subtitle() %} - {% block subtitle %}{% endblock %}{% else %} - signac-viewer{% endif %}
+            {% block title %}Page Title{% endblock %}{% if self.subtitle() %} - {% block subtitle %}{% endblock %}{% else %} - {{ APP_NAME }}{% endif %}
         </title>
 		{% endblock %}
 	</head>
 	<body>
 		<div class="columns">
-            {% if self.sidebar() %}
             <aside class="column is-2 aside hero is-fullheight is-hidden-mobile">
 				<div>
 					<div class="main">
-						{% block sidebar %}
 						<div class="title">{{ self.title() }}</div>
-						{% endblock %}
+                        {% for href, id, name, icon in menu %}
+                        <a href="{{ href|e }}" class="item{% if id == active_page %} active{% endif %}">
+                            <span class="icon"><i class="fa {{ icon }}"></i></span>
+                            <span class="name">{{ name }}</span>
+                        </a>
+                        {% endfor %}
+                        {% if self.sidebar() %}{% block sidebar %}{% endblock %}{% endif %}
 					</div>
 				</div>
 			</aside>
-            {% endif %}
 			<div class="column is-10">
 				<nav class="nav has-shadow" id="top">
 					<div class="container">
 						<div class="nav-left">
-							<a class="nav-item" href="/">signac-viewer</a>
+                            <a class="nav-item" href="/">{{ APP_NAME }}</a>
                             <p class="control has-addons searchbox">
 								<input class="input" type="text" placeholder="Search statepoints">
 								<a class="button is-dark">
@@ -42,7 +50,9 @@
 							<span></span>
 						</span>
 						<div class="nav-right nav-menu is-hidden-tablet">
-							<a href="/" class="nav-item is-active">Home</a>
+                            {% for href, id, name, icon in menu %}
+                            <a href="{{ href|e }}" class="nav-item{% if id == active_page %} is-active{% endif %}">{{ name }}</a>
+                            {% endfor %}
 						</div>
 					</div>
 				</nav>
@@ -321,17 +331,12 @@
             {% block footer %}
 			<div class="container">
 				<div class="has-text-centered">
-					<p>
-					    <strong>signac-viewer</strong> by Bradley Dice
-					</p>
+					<p><strong>{{ APP_NAME }}</strong> by Bradley Dice</p>
 				</div>
 			</div>
             {% endblock %}
 		</footer>
-		<script async type="text/javascript" src="../js/bulma.js"></script>
-		<script type="text/javascript" src="../demo/jquery.js"></script>
-		<script type="text/javascript" src="../demo/raphael.min.js"></script>
-		<script type="text/javascript" src="../demo/morris.js"></script>
-		<script type="text/javascript" src="../demo/admin.js"></script>
+        <script async type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
+		<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 	</body>
 </html>

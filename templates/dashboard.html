@@ -1,2 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Dashboard{% endblock %}
+{% set active_page = "dashboard" %}
+
+{% block title %}{{ PROJECT_NAME }}: Dashboard{% endblock %}
+{% block subtitle %}{{ PROJECT_DIR_SHORT }}{% endblock %}

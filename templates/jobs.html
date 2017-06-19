@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
+{% set active_page = "jobs" %}
 
-{% block title %}{{ project_name }}: Jobs{% endblock %}
-{% block subtitle %}{{ project_dir }}{% endblock %}
+{% block title %}{{ PROJECT_NAME }}: Jobs{% endblock %}
+{% block subtitle %}{{ PROJECT_DIR_SHORT }}{% endblock %}
 {% import "stats.html" as stats %}
 {% block stats %}
 {{ stats.stat('Statepoints', num_statepoints) }}
@@ -12,7 +13,7 @@
         <div class="panel-block">
             <ul>
             {% for job in jobs %}
-                <li><a href="{{ job.url }}">{{ job.title }}- {{ job.id }}</a></li>
+                <li><a href="{{ job.url }}">{{ job.title }} &mdash; {{ job.id }}</a></li>
             {% endfor %}
             </ul>
         </div>
