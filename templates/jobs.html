@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ project_name }}: Jobs{% endblock %}
+{% block subtitle %}{{ project_dir }}{% endblock %}
+{% import "stats.html" as stats %}
+{% block stats %}
+{{ stats.stat('Statepoints', num_statepoints) }}
+{% endblock %}
+{% block panels %}
+<div class="column">
+    <section class="panel">
+        <div class="panel-block">
+            <ul>
+            {% for job in jobs %}
+                <li><a href="{{ job.url }}">{{ job.title }}- {{ job.id }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+    </section>
+</div>
+{% endblock %}
