@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block title %}{{ jobtitle }}{% endblock %}
+{% block subtitle %}{{ jobsubtitle }}{% endblock %}
+{% block panels %}
+{% for fig in figs %}
+<div class="column is-one-third-desktop is-full-mobile">
+    <section class="panel">
+        <p class="panel-heading">{{ fig.name }}</p>
+        <p class="panel-block">
+            <img src="{{ fig.url }}" alt="{{ fig.name }}" />
+        </p>
+    </section>
+</div>
+{% endfor %}
+<div class="column is-one-third-desktop is-full-mobile">
+    <section class="panel">
+        <p class="panel-heading">Statepoint</p>
+        <div class="panel-block">
+            <ul>
+            {% for key in sp %}
+                <li><strong>{{ key }}:</strong> {{ sp[key] }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </section>
+</div>
+<div class="column is-one-third-desktop is-full-mobile">
+    <section class="panel">
+        <p class="panel-heading">Files</p>
+        <div class="panel-block">
+            <ul>
+            {% for file in files %}
+                <li><a href="{{ file.url }}">{{ file.name }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+    </section>
+</div>
+<div class="column is-one-third-desktop is-full-mobile">
+    <section class="panel">
+        <p class="panel-heading">Job Document</p>
+        <div class="panel-block">
+            <ul>
+            {% for key in doc %}
+                <li><strong>{{ key }}:</strong> {{ doc[key] }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+<!--        <h1>{{ jobid }}</h1>
+        <h2>Statepoint</h2>
+        <ul>
+            {% for key in sp %}
+            <li><strong>{{ key }}:</strong> {{ sp[key] }}</li>
+            {% endfor %}
+        </ul>
+        <h2>Files</h2>
+        <ul>
+            {% for file in files %}
+            <li><a href="{{ file.url }}">{{ file.name }}</a></li>
+            {% endfor %}
+        </ul>
+        <h2>Job Document</h2>
+        <ul>
+            {% for key in doc %}
+            <li><strong>{{ key }}:</strong> {{ doc[key] }}</li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>
+-->

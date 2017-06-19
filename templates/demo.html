@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}Statepoint {{ jobid }}{% endblock%}
+{% block panels %}
+{% for fig in figs %}
+<div class="column is-one-third-desktop is-full-mobile">
+    <section class="panel">
+        <p class="panel-heading">{{ fig.name }}</p>
+        <p class="panel-block">
+            <img src="{{ fig.url }}" alt="{{ fig.name }}" />
+        </p>
+    </section>
+</div>
+{% endfor %}
+
+<body>
+        <div style="float:right">
+            {% for fig in figs %}
+            <div style="padding:1em; border:1px solid #666">
+                <img src="{{ fig.url }}" alt="{{ fig.name }}" />
+                <strong>{{ fig.name }}</strong>
+            </div>
+            {% endfor %}
+        </div>
+        <h1>{{ jobtitle }}</h1>
+        <h1>{{ jobid }}</h1>
+        <h2>Statepoint</h2>
+        <ul>
+            {% for key in sp %}
+            <li><strong>{{ key }}:</strong> {{ sp[key] }}</li>
+            {% endfor %}
+        </ul>
+        <h2>Files</h2>
+        <ul>
+            {% for file in files %}
+            <li><a href="{{ file.url }}">{{ file.name }}</a></li>
+            {% endfor %}
+        </ul>
+        <h2>Job Document</h2>
+        <ul>
+            {% for key in doc %}
+            <li><strong>{{ key }}:</strong> {{ doc[key] }}</li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>
+
