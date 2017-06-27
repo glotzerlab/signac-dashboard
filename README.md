@@ -25,6 +25,7 @@ Required software for building (may change):
 
 Build process:
 
+  * Run `yarn` to download and install all dependencies into `node_modules`
   * Run `gulp` and it will compile/combine and copy all CSS/SCSS files, JavaScript files, and image assets to the `static` folder.
 
 ### Running
