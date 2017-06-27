@@ -18,15 +18,15 @@ The software is currently in "alpha."
 This software is currently standalone, but may someday be an installable package similar to signac-flow, where users' code includes a class that inherits from the base class implemented in this repository.
 
 Required software for building (may change):
-* NodeJS
-* [yarn package manager](https://yarnpkg.com/en/).
+  * NodeJS
+  * [yarn package manager](https://yarnpkg.com/en/).
 
 Build process:
-* Run `gulp` and it will compile/combine and copy all CSS/SCSS files, JavaScript files, and image assets to the `static` folder.
+  * Run `gulp` and it will compile/combine and copy all CSS/SCSS files, JavaScript files, and image assets to the `static` folder.
 
 Required Python packages for running the server (may change):
-* flask
-* signac
+  * flask
+  * signac
 
 Run process:
 * Run `./webserver.py` and it will launch a server listening on local port 8888.
