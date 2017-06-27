@@ -1,0 +1,5 @@
+project_dir
+.DS_Store
+*.pyc
+*.swp
+node_modules
