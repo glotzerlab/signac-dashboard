@@ -1,0 +1,2 @@
+graft signac_dashboard/templates
+graft signac_dashboard/static
