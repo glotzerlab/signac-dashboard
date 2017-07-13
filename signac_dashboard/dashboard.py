@@ -17,6 +17,7 @@ class Dashboard():
         self.app = self.create_app(config)
 
         if self.app.config['PROJECT_DIR'] is not None:
+            self.app.config['PROJECT_DIR'] = os.path.realpath(self.app.config['PROJECT_DIR'])
             self.project = get_project(self.app.config['PROJECT_DIR'])
         else:
             self.project = get_project()

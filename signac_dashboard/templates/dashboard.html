@@ -3,3 +3,178 @@
 
 {% block title %}{{ PROJECT_NAME }}: Dashboard{% endblock %}
 {% block subtitle %}{{ PROJECT_DIR_SHORT }}{% endblock %}
+
+{% block panels %}
+<div class="column is-one-third-desktop is-full-mobile">
+	<section class="panel">
+		<p class="panel-heading">
+		Total Jobs
+		</p>
+		<p class="panel-tabs">
+		<a class="is-active" href="#">All Time</a>
+		<a href="#">Past week</a>
+		<a href="#">Past month</a>
+		<a href="#">Past quarter</a>
+		<a href="#">Past Year</a>
+		</p>
+		<div class="panel-block">
+			<div id="chart1" style="height: 250px;"></div>
+		</div>
+		<div class="panel-block">
+			<button class="button is-default is-outlined is-fullwidth">
+				View Data
+			</button>
+		</div>
+	</section>
+</div>
+<div class="column is-one-third-desktop is-full-mobile">
+	<section class="panel">
+		<p class="panel-heading">
+		Queue
+		</p>
+		<div class="panel-block">
+			<div id="chart2" style="height: 280px;"></div>
+		</div>
+		<div class="panel-block">
+			<button class="button is-default is-outlined is-fullwidth">
+				View Data
+			</button>
+		</div>
+	</section>
+</div>
+<div class="column is-one-third-desktop is-full-mobile">
+	<section class="panel">
+		<p class="panel-heading">
+		Jobs/Day
+		</p>
+		<div class="panel-block">
+			<div id="chart3" style="height: 280px;"></div>
+		</div>
+		<div class="panel-block">
+			<button class="button is-default is-outlined is-fullwidth">
+				View Data
+			</button>
+		</div>
+	</section>
+</div>
+<div class="column is-half-desktop is-full-mobile">
+	<section class="panel">
+		<p class="panel-heading">
+		Notifications
+		</p>
+		<div class="panel-block">
+			<div class="notification is-warning">
+				<button class="delete" onclick="((this).parentNode.remove())"></button>
+				<strong>NFS is at 90% disk capacity.</strong>
+				<br>
+				<small>1h ago | via: system</small>
+			</div>
+			<div class="notification">
+				<button class="delete" onclick="((this).parentNode.remove())"></button>
+				<strong>Cron job successfully completed.</strong>
+				<br>
+				<small>2h ago | via: system</small>
+			</div>
+			<div class="notification">
+				<button class="delete" onclick="((this).parentNode.remove())"></button>
+				<strong>Completed automated backup.</strong>
+				<br>
+				<small>1d ago | via: system</small>
+			</div>
+			<div class="notification">
+				<button class="delete" onclick="((this).parentNode.remove())"></button>
+				<strong>Security scan complete. 0 exceptions found.</strong>
+				<br>
+				<small>1d ago | via: system</small>
+			</div>
+		</div>
+	</section>
+</div>
+<div class="column is-half-desktop is-full-mobile">
+	<section class="panel">
+		<p class="panel-heading">
+		Signac-Flow progress
+		</p>
+		<div class="panel-block">
+			<div id="chart5" style="height: 280px;"></div>
+		</div>
+	</section>
+</div>
+<div class="column is-half-desktop is-full-mobile">
+	<section class="panel">
+		<p class="panel-heading">
+		Tabular Data
+		</p>
+		<div class="panel-block">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Instrument</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Misty Abbott</td>
+						<td>Bass Guitar</td>
+						<td class="is-icon">
+							<a href="#">
+								<i class="fa fa-twitter"></i>
+							</a>
+						</td>
+						<td class="is-icon">
+							<a href="#">
+								<i class="fa fa-instagram"></i>
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td>John Smith</td>
+						<td>Rhythm Guitar</td>
+						<td class="is-icon">
+							<a href="#">
+								<i class="fa fa-twitter"></i>
+							</a>
+						</td>
+						<td class="is-icon">
+							<a href="#">
+								<i class="fa fa-instagram"></i>
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td>Robert Mikels</td>
+						<td>Lead Guitar</td>
+						<td class="is-icon">
+							<a href="#">
+								<i class="fa fa-twitter"></i>
+							</a>
+						</td>
+						<td class="is-icon">
+							<a href="#">
+								<i class="fa fa-instagram"></i>
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td>Karyn Holmberg</td>
+						<td>Drums</td>
+						<td class="is-icon">
+							<a href="#">
+								<i class="fa fa-twitter"></i>
+							</a>
+						</td>
+						<td class="is-icon">
+							<a href="#">
+								<i class="fa fa-instagram"></i>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</section>
+</div>
+{% endblock %}

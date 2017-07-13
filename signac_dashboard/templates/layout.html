@@ -17,6 +17,7 @@
             {% block title %}Page Title{% endblock %}{% if self.subtitle() %} - {% block subtitle %}{% endblock %}{% else %} - {{ APP_NAME }}{% endif %}
         </title>
         {% endblock %}
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     </head>
     <body>
         <div class="columns">
@@ -99,9 +100,10 @@
             </div>
             {% endblock %}
         </footer>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
         {% assets "js_all" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}
-        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     </body>
 </html>
