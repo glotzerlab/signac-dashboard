@@ -162,10 +162,10 @@ class Dashboard():
             job = self.project.open_job(id=jobid)
             if(job.isfile(filename)):
                 # Return job-compress.o827643 and similar files as plain text
-                print(filename)
-                if(re.match('job-.*\.[oe][0-9]*',filename) is not None):
-                    return send_file(job.fn(filename), mimetype='text/plain')
-                else:
-                    return send_file(job.fn(filename))
+                textfile_regexes = ['job-.*\.[oe][0-9]*', '.*\.log', '.*\.dat']
+                for regex in textfile_regexes:
+                    if(re.match('job-.*\.[oe][0-9]*',filename) is not None):
+                        return send_file(job.fn(filename), mimetype='text/plain')
+                return send_file(job.fn(filename))
             else:
                 return 'File not found.', 404
