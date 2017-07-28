@@ -116,9 +116,9 @@ class Dashboard():
         def jobs_list():
             jobs = sorted(self.project.find_jobs(), key=lambda job: self.job_sorter(job))
             jobs_detailed = [{
-                'id': str(j),
-                'title': self.job_title(j),
-                'url': url_for('show_job', jobid=str(job))} for j in jobs]
+                'title': self.job_title(job),
+                'subtitle': self.job_subtitle(job),
+                'url': url_for('show_job', jobid=str(job))} for job in jobs]
             return render_template('jobs.html', jobs=jobs_detailed)
 
         @self.app.route('/jobs/<jobid>')
