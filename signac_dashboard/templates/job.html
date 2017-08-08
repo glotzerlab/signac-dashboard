@@ -5,6 +5,7 @@
 {% block subtitle %}{{ jobsubtitle }}{% endblock %}
 
 {% block panels %}
+{% if modules %}
 {% for module in modules %}
 {% if module.context == 'JobContext' %}
 {% for panel in module.get_panels(job) %}
@@ -19,6 +20,7 @@
 {% endfor %}
 {% endif %}
 {% endfor %}
+{% endif %}
 {% endblock %}
 
 <!--        <h1>{{ jobid }}</h1>
