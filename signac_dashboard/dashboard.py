@@ -1,6 +1,7 @@
 from flask import Flask, redirect, url_for, render_template, send_file
 import jinja2
 from flask_assets import Environment, Bundle
+from flask_turbolinks import turbolinks
 
 import os
 import re
@@ -47,6 +48,8 @@ class Dashboard():
             app.jinja_loader
         ])
         app.jinja_loader = template_loader
+
+        turbolinks(app)
 
         return app
 
