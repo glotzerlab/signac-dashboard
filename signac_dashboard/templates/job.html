@@ -10,12 +10,14 @@
 {% if module.context == 'JobContext' %}
 {% for panel in module.get_panels(job) %}
 <div class="column is-one-third-desktop is-full-mobile">
-    <section class="panel">
-        <div class="panel-heading">{{ panel.name }}</div>
-        <div class="panel-block">
+    <div class="card">
+        <div class="card-header">
+            <p class="card-header-title">{{ panel.name }}</p>
+        </div>
+        <div class="card-content">
             {{ panel.content | safe }}
         </div>
-    </section>
+    </div>
 </div>
 {% endfor %}
 {% endif %}
