@@ -118,6 +118,7 @@ class Dashboard():
             jobs_detailed = [{
                 'title': self.job_title(job),
                 'subtitle': self.job_subtitle(job),
+                'labels': job.document['stages'] if 'stages' in job.document else [],
                 'url': url_for('show_job', jobid=str(job))} for job in jobs]
             return render_template('jobs.html', jobs=jobs_detailed)
 
