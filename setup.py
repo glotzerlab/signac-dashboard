@@ -7,7 +7,8 @@ setup(
     include_package_data=True,
     install_requires=[
         'flask',
-        'Flask-Assets'
+        'Flask-Assets',
+        'Flask-Turbolinks'
     ],
 
     author='Bradley Dice',
