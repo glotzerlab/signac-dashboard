@@ -14,7 +14,7 @@ class ImageViewer(Module):
 
     def get_panels(self, job):
         def make_panel(filename):
-            return {'name': self.name,
+            return {'name': self.name + ': ' + filename,
                     'content': render_template(self.template,
                                                imgsrc = url_for('get_file', jobid=str(job), filename=filename),
                                                filename=filename)}
