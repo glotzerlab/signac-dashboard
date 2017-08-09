@@ -1,6 +1,6 @@
 <ul>
   {% for key in document %}
-  <li><strong>{{ key }}:</strong> {{ document[key] }}</li>
+  <li><strong>{{ key }}:</strong> {{ document[key]|safe }}</li>
   {% endfor %}
 </ul>
 
