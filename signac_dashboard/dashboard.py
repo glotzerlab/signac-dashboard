@@ -8,6 +8,8 @@ import re
 import signac
 from collections import OrderedDict
 
+from .util import *
+
 class Dashboard():
 
     def __init__(self, config=None, project=None, modules=None):
@@ -20,7 +22,6 @@ class Dashboard():
 
         self.modules = modules
 
-        self.simplified_keys = self._simplified_keys()
         self.assets = self.create_assets()
         self.register_routes()
 
@@ -62,20 +63,6 @@ class Dashboard():
     def run(self, *args, **kwargs):
         self.app.run(*args, **kwargs)
 
-    def _simplified_keys(self):
-        sps = list(self.project.find_statepoints())
-        varied_keys = list()
-        for key in sps[0]:
-            same_for_all = True # This key has the same value for all statepoints
-            for sp in sps:
-                if sps[0][key] != sp[key]:
-                    same_for_all = False
-                    break
-            if not same_for_all:
-                varied_keys.append(key)
-        return varied_keys
-
-
     def job_title(self, job):
         return str(job)
 
@@ -85,11 +72,6 @@ class Dashboard():
     def job_sorter(self, job):
         return self.job_title(job)
 
-    def ellipsis_string(self, string, length=60):
-        string = str(string)
-        half = int(length/2)
-        return string if len(string) < length else string[:half]+"..."+string[-half:]
-
     def register_routes(self):
         @self.app.context_processor
         def injections():
@@ -98,7 +80,7 @@ class Dashboard():
                 'APP_NAME': 'signac-dashboard',
                 'PROJECT_NAME': self.project.config['project'],
                 'PROJECT_DIR': self.project.config['project_dir'],
-                'PROJECT_DIR_SHORT': self.ellipsis_string(self.project.config['project_dir']),
+                'PROJECT_DIR_SHORT': ellipsis_string(self.project.config['project_dir'], length=60),
                 'statepoints': sps,
                 'num_statepoints': len(sps),
             }
