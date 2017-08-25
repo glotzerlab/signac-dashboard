@@ -8,7 +8,10 @@ setup(
     install_requires=[
         'flask',
         'Flask-Assets',
-        'Flask-Turbolinks'
+        'Flask-Turbolinks',
+        'libsass',
+        'cssmin',
+        'jsmin'
     ],
 
     author='Bradley Dice',
