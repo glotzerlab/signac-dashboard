@@ -2,14 +2,14 @@ from flask import Flask, redirect, url_for, render_template, send_file
 import jinja2
 from flask_assets import Environment, Bundle
 from flask_turbolinks import turbolinks
-
 import os
 import re
-
+import logging
 import signac
 from collections import OrderedDict
-
 from .util import *
+
+logger = logging.getLogger(__name__)
 
 class Dashboard():
 
@@ -32,6 +32,11 @@ class Dashboard():
             SECRET_KEY=b'NlHFEbC89JkfGLC3Lpk8'
         ))
         app.config.update(config or {})
+
+        if app.config.get('PROFILE'):
+            logger.warning("Application profiling is enabled.")
+            from werkzeug.contrib.profiler import ProfilerMiddleware
+            app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[10])
 
         dashboard_path = os.path.dirname(__file__)
         app.static_folder = dashboard_path + '/static'
