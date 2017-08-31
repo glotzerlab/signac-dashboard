@@ -31,25 +31,29 @@ class Dashboard():
         app.config.update(dict(
             SECRET_KEY=b'NlHFEbC89JkfGLC3Lpk8'
         ))
+
+        # Load the provided config
         app.config.update(config or {})
 
+        # Enable profiling
         if app.config.get('PROFILE'):
             logger.warning("Application profiling is enabled.")
             from werkzeug.contrib.profiler import ProfilerMiddleware
             app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[10])
 
+        # Set up signac-dashboard static and template paths
         dashboard_path = os.path.dirname(__file__)
         app.static_folder = dashboard_path + '/static'
         app.template_folder = dashboard_path + '/templates'
 
+        # Set up custom template paths
         dashboard_paths = [dashboard_path]
-        if 'DASHBOARD_DIR' in app.config:
-            dashboard_paths.append(app.config.DASHBOARD_DIR)
-
+        for custom_path in list(app.config.get('DASHBOARD_DIRS', [])):
+            dashboard_paths.append(custom_path)
         template_loader = jinja2.ChoiceLoader([
-            jinja2.FileSystemLoader((
-                dashpath + '/templates' for dashpath in dashboard_paths
-            )),
+            jinja2.FileSystemLoader(
+                (dashpath + '/templates' for dashpath in dashboard_paths)
+            ),
             app.jinja_loader
         ])
         app.jinja_loader = template_loader
@@ -72,12 +76,18 @@ class Dashboard():
         self.app.run(*args, **kwargs)
 
     def job_title(self, job):
+        # Overload this method with a function that returns
+        # a human-readable form of the job title.
         return str(job)
 
     def job_subtitle(self, job):
+        # Overload this method with a function that returns
+        # a human-readable form of the job subtitle.
         return str(job)
 
     def job_sorter(self, job):
+        # Overload this method to return a value that
+        # can be used as a sorting index.
         return self.job_title(job)
 
     def register_routes(self):
