@@ -93,14 +93,11 @@ class Dashboard():
     def register_routes(self):
         @self.app.context_processor
         def injections():
-            sps = list(self.project.find_statepoints())
             injections = {
                 'APP_NAME': 'signac-dashboard',
                 'PROJECT_NAME': self.project.config['project'],
                 'PROJECT_DIR': self.project.config['project_dir'],
-                'PROJECT_DIR_SHORT': ellipsis_string(self.project.config['project_dir'], length=60),
-                'statepoints': sps,
-                'num_statepoints': len(sps),
+                'PROJECT_DIR_SHORT': ellipsis_string(self.project.config['project_dir'], length=60)
             }
             return injections
 
