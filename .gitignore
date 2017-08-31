@@ -2,3 +2,4 @@
 .DS_Store
 *.pyc
 *.swp
+signac_dashboard.egg-info/
