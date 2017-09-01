@@ -4,4 +4,4 @@ config = {
     'PROJECT_DIR': '/path/to/signac/directory'
 }
 dashboard = Dashboard(config)
-dashboard.run(host='0.0.0.0', port=8888, debug=True)
+dashboard.run(host='localhost', port=8888, debug=True)
