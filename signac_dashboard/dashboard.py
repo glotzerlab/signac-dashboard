@@ -73,8 +73,18 @@ class Dashboard():
         assets.register('scss_all', scss_all)
         return assets
 
-    def run(self, *args, **kwargs):
-        self.app.run(*args, **kwargs)
+    def run(self, host='localhost', port=8888, *args, **kwargs):
+        max_retries = 5
+        for _ in range(max_retries):
+            try:
+                self.app.run(host, port, *args, **kwargs)
+                break
+            except OSError as e:
+                logger.warning(e)
+                if port:
+                    port += 1
+                pass
+
 
     def job_title(self, job):
         # Overload this method with a function that returns
