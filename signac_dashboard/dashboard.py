@@ -1,10 +1,11 @@
-from flask import Flask, redirect, url_for, render_template, send_file
+from flask import Flask, redirect, request, url_for, render_template, send_file
 import jinja2
 from flask_assets import Environment, Bundle
 from flask_turbolinks import turbolinks
 
 import os
 import re
+import json
 
 import signac
 from collections import OrderedDict
@@ -75,6 +76,11 @@ class Dashboard():
     def job_sorter(self, job):
         return self.job_title(job)
 
+    def job_search(self, query):
+        f = signac.contrib.filterparse._parse_json(query)
+        print('Filter: {}'.format(f))
+        return self.project.find_job_ids(filter=f)
+
     def register_routes(self):
         @self.app.context_processor
         def injections():
@@ -96,6 +102,20 @@ class Dashboard():
         @self.app.route('/dashboard')
         def dashboard():
             return render_template('dashboard.html')
+
+        @self.app.route('/search')
+        def search():
+            json_query = request.args.get('q', None)
+            try:
+                if request.method != 'GET':
+                    raise NotImplementedError('Unsupported search method.')
+                if json_query is None:
+                    raise ValueError('No search query provided.')
+                query = json.loads(json_query)
+                jobs = self.job_search(query)
+                return str(jobs)
+            except Exception as e:
+                return 'Invalid search: {}'.format(e)
 
         @self.app.route('/jobs/')
         def jobs_list():

@@ -40,12 +40,18 @@
                     <div class="container">
                         <div class="nav-left">
                             <a class="nav-item" href="/">{{ APP_NAME }}</a>
-                            <p class="control has-addons searchbox">
-                            <input class="input" type="text" placeholder="Search statepoints">
-                            <a class="button is-dark">
-                                &nbsp; <i class="fa fa-search"></i> &nbsp;
-                            </a>
-                            </p>
+                            <form action="{{ url_for('search') }}" method="GET" id="searchform">
+                                <div class="field has-addons searchbox">
+                                    <p class="control">
+                                        <input name="q" class="input" type="text" placeholder="Search jobs">
+                                    </p>
+                                    <p class="control">
+                                        <a class="button is-dark" onclick="document.getElementById('searchform').submit()">
+                                            &nbsp; <i class="fa fa-search"></i> &nbsp;
+                                        </a>
+                                    </p>
+                                </div>
+                            </form>
                         </div>
                         <span class="nav-toggle">
                             <span></span>
