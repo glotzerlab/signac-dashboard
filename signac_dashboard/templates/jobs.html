@@ -5,7 +5,7 @@
 {% block subtitle %}{{ PROJECT_DIR_SHORT }}{% endblock %}
 {% import "stats.html" as stats %}
 {% block stats %}
-{{ stats.stat('Statepoints', num_statepoints) }}
+{{ stats.stat('Statepoints', jobs|length) }}
 {% endblock %}
 {% block panels %}
 <div class="column">

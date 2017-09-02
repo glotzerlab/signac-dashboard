@@ -8,6 +8,7 @@ setup(
     install_requires=[
         'flask',
         'Flask-Assets',
+        'Flask-Cache',
         'Flask-Turbolinks',
         'libsass',
         'cssmin',

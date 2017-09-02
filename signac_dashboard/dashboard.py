@@ -1,6 +1,7 @@
 from flask import Flask, redirect, request, url_for, render_template, send_file
 import jinja2
 from flask_assets import Environment, Bundle
+from flask_cache import Cache
 from flask_turbolinks import turbolinks
 import os
 import re
@@ -11,16 +12,18 @@ from collections import OrderedDict
 from .util import *
 
 logger = logging.getLogger(__name__)
+cache = Cache(config={'CACHE_TYPE': 'simple'})
 
 class Dashboard():
 
     def __init__(self, config=None, project=None, modules=None):
         self.app = self.create_app(config)
+        cache.init_app(self.app)
 
-        if project is None:
-            self.project = signac.get_project()
-        else:
+        if project:
             self.project = project
+        else:
+            self.project = signac.get_project()
 
         self.modules = modules
 
@@ -101,6 +104,12 @@ class Dashboard():
         # can be used as a sorting index.
         return self.job_title(job)
 
+    @cache.cached(timeout=60*5, key_prefix='all_jobs')
+    def get_all_jobs(self):
+        all_jobs = sorted(self.project.find_jobs(), key=lambda job: self.job_sorter(job))
+        print(all_jobs)
+        return all_jobs
+
     def job_search(self, query):
         f = signac.contrib.filterparse._parse_json(query)
         print('Filter: {}'.format(f))
@@ -141,7 +150,7 @@ class Dashboard():
 
         @self.app.route('/jobs/')
         def jobs_list():
-            jobs = sorted(self.project.find_jobs(), key=lambda job: self.job_sorter(job))
+            jobs = self.get_all_jobs()
             jobs_detailed = [{
                 'title': self.job_title(job),
                 'subtitle': self.job_subtitle(job),
