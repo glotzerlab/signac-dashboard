@@ -110,11 +110,12 @@ class Dashboard():
         all_jobs = sorted(self.project.find_jobs(), key=lambda job: self.job_sorter(job))
         return all_jobs
 
-    #@cache.memoize(timeout=60*5)
+    @cache.memoize(timeout=60*5)
     def job_search(self, query):
         try:
             f = signac.contrib.filterparse._parse_json(query)
-            return self.project.find_jobs(filter=f)
+            return sorted(self.project.find_jobs(filter=f),
+                          key=lambda job: self.job_sorter(job))
         except Exception as e:
             flash('An error occurred while parsing your query.', 'danger')
             return []
