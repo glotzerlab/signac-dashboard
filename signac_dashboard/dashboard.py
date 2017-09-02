@@ -1,4 +1,5 @@
-from flask import Flask, redirect, request, url_for, render_template, send_file
+from flask import Flask, redirect, request, url_for, render_template, \
+     send_file, flash
 import jinja2
 from flask_assets import Environment, Bundle
 from flask_cache import Cache
@@ -107,13 +108,24 @@ class Dashboard():
     @cache.cached(timeout=60*5, key_prefix='all_jobs')
     def get_all_jobs(self):
         all_jobs = sorted(self.project.find_jobs(), key=lambda job: self.job_sorter(job))
-        print(all_jobs)
         return all_jobs
 
+    #@cache.memoize(timeout=60*5)
     def job_search(self, query):
-        f = signac.contrib.filterparse._parse_json(query)
-        print('Filter: {}'.format(f))
-        return self.project.find_job_ids(filter=f)
+        try:
+            f = signac.contrib.filterparse._parse_json(query)
+            return self.project.find_jobs(filter=f)
+        except Exception as e:
+            flash('An error occurred while parsing your query.', 'danger')
+            return []
+
+    def get_job_details(self, jobs):
+        job_details = [{
+            'title': self.job_title(job),
+            'subtitle': self.job_subtitle(job),
+            'labels': job.document['stages'] if 'stages' in job.document else [],
+            'url': url_for('show_job', jobid=str(job))} for job in list(jobs)]
+        return job_details
 
     def register_routes(self):
         @self.app.context_processor
@@ -136,27 +148,27 @@ class Dashboard():
 
         @self.app.route('/search')
         def search():
-            json_query = request.args.get('q', None)
+            query = request.args.get('q', None)
+            jobs = list()
             try:
                 if request.method != 'GET':
                     raise NotImplementedError('Unsupported search method.')
-                if json_query is None:
+                if not query:
                     raise ValueError('No search query provided.')
-                query = json.loads(json_query)
                 jobs = self.job_search(query)
-                return str(jobs)
+                if not jobs:
+                    flash('No jobs found for the provided query.', 'warning')
             except Exception as e:
-                return 'Invalid search: {}'.format(e)
+                flash('Invalid search: {}'.format(e), 'danger')
+            finally:
+                job_details = self.get_job_details(jobs)
+                return render_template('jobs.html', jobs=job_details, query=query)
 
         @self.app.route('/jobs/')
         def jobs_list():
             jobs = self.get_all_jobs()
-            jobs_detailed = [{
-                'title': self.job_title(job),
-                'subtitle': self.job_subtitle(job),
-                'labels': job.document['stages'] if 'stages' in job.document else [],
-                'url': url_for('show_job', jobid=str(job))} for job in jobs]
-            return render_template('jobs.html', jobs=jobs_detailed)
+            job_details = self.get_job_details(jobs)
+            return render_template('jobs.html', jobs=job_details)
 
         @self.app.route('/jobs/<jobid>')
         def show_job(jobid):

@@ -1,6 +1,6 @@
 {% set menu = [
-    ('/dashboard', 'dashboard', 'Dashboard', 'fa-home'),
-    ('/jobs', 'jobs', 'Jobs', 'fa-th-list')
+('/dashboard', 'dashboard', 'Dashboard', 'fa-home'),
+('/jobs', 'jobs', 'Jobs', 'fa-th-list')
 ] -%}
 {% set active_page = active_page|default('dashboard') -%}
 <!doctype html>
@@ -48,12 +48,12 @@
                             <form action="{{ url_for('search') }}" method="GET" id="searchform">
                                 <div class="field has-addons searchbox">
                                     <p class="control">
-                                        <input name="q" class="input" type="text" placeholder="Search jobs">
+                                    <input name="q" class="input" type="text" placeholder="Search jobs" value="{{ query }}">
                                     </p>
                                     <p class="control">
-                                        <a class="button is-dark" onclick="document.getElementById('searchform').submit()">
-                                            &nbsp; <i class="fa fa-search"></i> &nbsp;
-                                        </a>
+                                    <a class="button is-dark" onclick="document.getElementById('searchform').submit()">
+                                        &nbsp; <i class="fa fa-search"></i> &nbsp;
+                                    </a>
                                     </p>
                                 </div>
                             </form>
@@ -85,6 +85,13 @@
                             {% endif %}
                         </div>
                     </div>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="notification is-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
                     {% if self.stats() %}
                     <div class="hero-foot">
                         <nav class="level">
