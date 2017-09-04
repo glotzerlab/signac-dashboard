@@ -1,6 +1,6 @@
 {% set menu = [
-('/dashboard', 'dashboard', 'Dashboard', 'fa-home'),
-('/jobs', 'jobs', 'Jobs', 'fa-th-list')
+('/dashboard', 'dashboard', 'Dashboard', 'fa-tachometer'),
+('/jobs', 'jobs', 'Jobs', 'fa-files-o')
 ] -%}
 {% set active_page = active_page|default('dashboard') -%}
 <!doctype html>
@@ -29,7 +29,6 @@
             <aside class="column is-2 aside hero is-fullheight is-hidden-mobile">
                 <div>
                     <div class="main">
-                        <div class="title">{{ self.title() }}</div>
                         {% for href, id, name, icon in menu %}
                         <a href="{{ href|e }}" class="item{% if id == active_page %} active{% endif %}">
                             <span class="icon"><i class="fa {{ icon }}"></i></span>
@@ -37,6 +36,28 @@
                         </a>
                         {% endfor %}
                         {% if self.sidebar() %}{% block sidebar %}{% endblock %}{% endif %}
+                        {% if modules|length > 0 %}
+                        <div class="box sidebar-box">
+                            <h2 class="subtitle is-4">Modules</h2>
+                            <form action="{{ url_for('change_modules') }}" method="POST">
+                            <input type="hidden" name="redirect" value="{{ request.url }}">
+                            {% for module in modules %}
+                            <div class="field is-horizontal">
+                                <div class="field-body">
+                                    <div class="field">
+                                        <div class="control">
+                                            <label class="checkbox">
+                                                <input type="checkbox" name="modules[{{ loop.index0 }}]"{% if module.is_enabled() %} checked{% endif %}>{{ module.name }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <input class="button is-primary" type="submit" value="Update">
+                            </form>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </aside>

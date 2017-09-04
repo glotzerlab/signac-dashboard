@@ -130,6 +130,7 @@ class Dashboard():
 
     def register_routes(self):
         @self.app.context_processor
+        @cache.cached(timeout=60*5, key_prefix='injections')
         def injections():
             injections = {
                 'APP_NAME': 'signac-dashboard',
@@ -153,6 +154,7 @@ class Dashboard():
             jobs = list()
             try:
                 if request.method != 'GET':
+                    # Someday we may support search via POST, returning json
                     raise NotImplementedError('Unsupported search method.')
                 if not query:
                     raise ValueError('No search query provided.')
@@ -163,13 +165,21 @@ class Dashboard():
                 flash('Invalid search: {}'.format(e), 'danger')
             finally:
                 job_details = self.get_job_details(jobs)
-                return render_template('jobs.html', jobs=job_details, query=query)
+                view_mode = request.args.get('view', 'list')
+                if view_mode == 'grid':
+                    return render_template('jobs_grid.html', jobs=job_details, query=query, modules=self.modules)
+                else:
+                    return render_template('jobs_list.html', jobs=job_details, query=query)
 
         @self.app.route('/jobs/')
         def jobs_list():
             jobs = self.get_all_jobs()
             job_details = self.get_job_details(jobs)
-            return render_template('jobs.html', jobs=job_details)
+            view_mode = request.args.get('view', 'list')
+            if view_mode == 'grid':
+                return render_template('jobs_grid.html', jobs=job_details, modules=self.modules)
+            else:
+                return render_template('jobs_list.html', jobs=job_details)
 
         @self.app.route('/jobs/<jobid>')
         def show_job(jobid):
@@ -190,3 +200,12 @@ class Dashboard():
                 return send_file(job.fn(filename))
             else:
                 return 'File not found.', 404
+
+        @self.app.route('/modules', methods=['POST'])
+        def change_modules():
+            for i, module in enumerate(self.modules):
+                if request.form.get('modules[{}]'.format(i)) == 'on':
+                    module.enable()
+                else:
+                    module.disable()
+            return redirect(request.form.get('redirect', url_for('home')))

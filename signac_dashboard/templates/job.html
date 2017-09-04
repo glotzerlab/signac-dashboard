@@ -7,7 +7,7 @@
 {% block panels %}
 {% if modules %}
 {% for module in modules %}
-{% if module.context == 'JobContext' %}
+{% if module.is_enabled() and module.context == 'JobContext' %}
 {% for panel in module.get_panels(job) %}
 <div class="column is-one-third-desktop is-full-mobile">
     <div class="card">
@@ -24,26 +24,3 @@
 {% endfor %}
 {% endif %}
 {% endblock %}
-
-<!--        <h1>{{ jobid }}</h1>
-        <h2>Statepoint</h2>
-        <ul>
-            {% for key in sp %}
-            <li><strong>{{ key }}:</strong> {{ sp[key] }}</li>
-            {% endfor %}
-        </ul>
-        <h2>Files</h2>
-        <ul>
-            {% for file in files %}
-            <li><a href="{{ file.url }}">{{ file.name }}</a></li>
-            {% endfor %}
-        </ul>
-        <h2>Job Document</h2>
-        <ul>
-            {% for key in doc %}
-            <li><strong>{{ key }}:</strong> {{ doc[key] }}</li>
-            {% endfor %}
-        </ul>
-    </body>
-</html>
--->
