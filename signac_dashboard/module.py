@@ -8,7 +8,7 @@ class Module():
         self.template = template
         self.enabled = enabled
 
-    def get_panels(self):
+    def get_cards(self):
         # Returns an array of dictionaries with properties 'name' and 'content':
         return [{'name': self.name, 'content': render_template(self.template)}]
 

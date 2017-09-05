@@ -4,12 +4,13 @@ from collections import OrderedDict
 
 class StatepointList(Module):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__(name='Statepoint Parameters',
                          context='JobContext',
-                         template='panels/statepoint_list.html')
+                         template='cards/statepoint_list.html',
+                         **kwargs)
 
-    def get_panels(self, job):
+    def get_cards(self, job):
         sp = OrderedDict(sorted(job.statepoint().items(), key=lambda t: t[0]))
         return [{'name': self.name,
                 'content': render_template(self.template, statepoint=sp)}]

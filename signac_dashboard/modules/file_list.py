@@ -4,12 +4,13 @@ import os
 
 class FileList(Module):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__(name='File List',
                          context='JobContext',
-                         template='panels/file_list.html')
+                         template='cards/file_list.html',
+                         **kwargs)
 
-    def get_panels(self, job):
+    def get_cards(self, job):
         job_files = os.listdir(job.workspace())
         files = list()
         for filename in job_files:

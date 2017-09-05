@@ -6,13 +6,14 @@ from collections import OrderedDict
 
 class DocumentList(Module):
 
-    def __init__(self, max_chars=None):
+    def __init__(self, max_chars=None, **kwargs):
         super().__init__(name='Job Document',
                          context='JobContext',
-                         template='panels/document_list.html')
+                         template='cards/document_list.html',
+                         **kwargs)
         self.max_chars = max_chars
 
-    def get_panels(self, job):
+    def get_cards(self, job):
         doc = OrderedDict(sorted(job.document.items(), key=lambda t: t[0]))
 
         # We manually escape the document's contents since the field is marked "safe" in the Jinja template.

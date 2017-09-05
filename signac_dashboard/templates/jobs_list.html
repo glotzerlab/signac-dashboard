@@ -1,13 +1,14 @@
 {% extends "layout.html" %}
 {% set active_page = "jobs" %}
 
-{% block title %}{{ PROJECT_NAME }}: Jobs{% endblock %}
-{% block subtitle %}{{ PROJECT_DIR_SHORT }}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block subtitle %}{{ subtitle }}{% endblock %}
 {% import "stats.html" as stats %}
 {% block stats %}
-{{ stats.stat('Statepoints', jobs|length) }}
+{#{ stats.stat('Statepoints', jobs|length) }#}
 {% endblock %}
 {% block panels %}
+{% if jobs|length > 0 %}
 <div class="column">
     <section class="panel">
         <div class="panel-block">
@@ -24,4 +25,5 @@
         </div>
     </section>
 </div>
+{% endif %}
 {% endblock %}

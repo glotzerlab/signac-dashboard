@@ -27,7 +27,7 @@ body {
   background-color: #354052;
   margin-right: -10px;
 }
-.aside .main {
+.aside .menu {
   padding: 20px 20px 20px 30px;
   color: #6F7B7E;
 }
@@ -37,19 +37,19 @@ body {
   font-weight: bold;
   text-transform: uppercase;
 }
-.aside .main .item {
+.aside .menu .item {
   display: block;
   padding: 10px 0;
   color: #6F7B7E;
 }
-.aside .main .item.active {
+.aside .menu .item.active {
   color: #F6F7F7;
 }
-.aside .main .icon {
+.aside .menu .icon {
   font-size: 19px;
   padding-right: 30px;
 }
-.aside .main .name {
+.aside .menu .name {
   font-size: 16px;
   font-weight: bold;
 }
@@ -57,6 +57,19 @@ body {
   display: block;
   background-color: #fff;
   padding: 40px 20px;
+}
+.sidebar-content {
+  padding: 1rem;
+}
+.page-heading {
+  padding: 1rem 1.5rem;
+}
+section.section.panel {
+  padding: 1rem 1.5rem;
+}
+.card-header-title.card-header-dashboard {
+  display: block;
+  background-color: whitesmoke;
 }
 .hero .tabs ul {
     border-bottom: 1px solid #d3d6db;

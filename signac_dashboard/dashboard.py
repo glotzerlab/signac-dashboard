@@ -1,5 +1,6 @@
 from flask import Flask, redirect, request, url_for, render_template, \
      send_file, flash
+from werkzeug import url_encode
 import jinja2
 from flask_assets import Environment, Bundle
 from flask_cache import Cache
@@ -125,28 +126,40 @@ class Dashboard():
             'title': self.job_title(job),
             'subtitle': self.job_subtitle(job),
             'labels': job.document['stages'] if 'stages' in job.document else [],
-            'url': url_for('show_job', jobid=str(job))} for job in list(jobs)]
+            'url': url_for('show_job', jobid=str(job)),
+            'job': job
+        } for job in list(jobs)]
         return job_details
 
     def register_routes(self):
         @self.app.context_processor
-        @cache.cached(timeout=60*5, key_prefix='injections')
         def injections():
             injections = {
                 'APP_NAME': 'signac-dashboard',
                 'PROJECT_NAME': self.project.config['project'],
                 'PROJECT_DIR': self.project.config['project_dir'],
-                'PROJECT_DIR_SHORT': ellipsis_string(self.project.config['project_dir'], length=60)
+                'modules': self.modules,
+                'enabled_modules': [i for i in range(len(self.modules)) if self.modules[i].is_enabled()]
             }
             return injections
 
+        @self.app.template_global()
+        def modify_query(**new_values):
+            args = request.args.copy()
+            for key, value in new_values.items():
+                args[key] = value
+            return '{}?{}'.format(request.path, url_encode(args))
+
         @self.app.route('/')
         def home():
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('jobs_list'))
 
         @self.app.route('/dashboard')
         def dashboard():
-            return render_template('dashboard.html')
+            project_title = self.project.config.get('project', None)
+            title = '{}: Dashboard'.format(project_title) if project_title else 'Dashboard'
+            subtitle = ellipsis_string(self.project.config['project_dir'], length=100)
+            return render_template('dashboard.html', title=title, subtitle=subtitle)
 
         @self.app.route('/search')
         def search():
@@ -165,28 +178,38 @@ class Dashboard():
                 flash('Invalid search: {}'.format(e), 'danger')
             finally:
                 job_details = self.get_job_details(jobs)
+                title = 'Search: {}'.format(query)
+                subtitle = '{} statepoints'.format(len(jobs))
                 view_mode = request.args.get('view', 'list')
                 if view_mode == 'grid':
-                    return render_template('jobs_grid.html', jobs=job_details, query=query, modules=self.modules)
+                    return render_template('jobs_grid.html', jobs=job_details, query=query, title=title, subtitle=subtitle)
                 else:
-                    return render_template('jobs_list.html', jobs=job_details, query=query)
+                    return render_template('jobs_list.html', jobs=job_details, query=query, title=title, subtitle=subtitle)
 
         @self.app.route('/jobs/')
         def jobs_list():
             jobs = self.get_all_jobs()
             job_details = self.get_job_details(jobs)
+            project_title = self.project.config.get('project', None)
+            title = '{}: Jobs'.format(project_title) if project_title else 'Jobs'
+            subtitle = '{} statepoints'.format(len(jobs))
             view_mode = request.args.get('view', 'list')
             if view_mode == 'grid':
-                return render_template('jobs_grid.html', jobs=job_details, modules=self.modules)
+                return render_template('jobs_grid.html', jobs=job_details, title=title, subtitle=subtitle)
             else:
-                return render_template('jobs_list.html', jobs=job_details)
+                return render_template('jobs_list.html', jobs=job_details, title=title, subtitle=subtitle)
 
         @self.app.route('/jobs/<jobid>')
         def show_job(jobid):
             job = self.project.open_job(id=jobid)
-            jobtitle = self.job_title(job)
-            jobsubtitle = self.job_subtitle(job)
-            return render_template('job.html', modules=self.modules, job=job, jobtitle=jobtitle, jobsubtitle=jobsubtitle)
+            job_details = self.get_job_details([job])
+            title = job_details[0]['title']
+            subtitle = job_details[0]['subtitle']
+            view_mode = request.args.get('view', 'grid')
+            if view_mode == 'grid':
+                return render_template('jobs_grid.html', jobs=job_details, title=title, subtitle=subtitle)
+            else:
+                return render_template('jobs_list.html', jobs=job_details, title=title, subtitle=subtitle)
 
         @self.app.route('/jobs/<jobid>/file/<filename>')
         def get_file(jobid, filename):

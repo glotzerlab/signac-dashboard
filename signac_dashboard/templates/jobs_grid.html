@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% set active_page = "jobs" %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block subtitle %}{{ subtitle }}{% endblock %}
+
+{% block panels %}
+{% if enabled_modules|length <= 1 %}
+<section class="section panel">
+    <div class="columns is-mobile is-multiline">
+{% endif %}
+{% for job_details in jobs %}
+{% if enabled_modules|length > 1 %}
+<section class="section panel">
+{% endif %}
+    {% if ( enabled_modules|length > 1 and jobs|length > 1 ) or ( jobs|length == 1 and query is defined ) %}
+    <h4 class="title is-4">{{ job_details.title }}</h4>
+    <h5 class="subtitle is-5"><a href="{{ job_details.url }}">{{ job_details.job|string }}</a></h5>
+    {% endif %}
+    {% if enabled_modules|length > 1 %}
+    <div class="columns is-mobile is-multiline">
+    {% endif %}
+    {% for module in modules %}
+    {% if module.is_enabled() and module.context == 'JobContext' %}
+    {% for card in module.get_cards(job_details.job) %}
+        <div class="column is-4-desktop is-full-mobile">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-title card-header-dashboard">
+                        {% if enabled_modules|length <= 1 and jobs|length > 1 %}
+                        <h5 class="title is-5">{{ job_details.title }}</h5>
+                        <h6 class="subtitle is-6"><a href="{{ job_details.url }}">{{ job_details.job|string }}</a></h6>
+                        {% endif %}
+                        {{ card.name }}
+                    </div>
+                </div>
+                <div class="card-content">
+                    {{ card.content | safe }}
+                </div>
+            </div>
+        </div>
+    {% endfor %} {# end cards #}
+    {% endif %}
+    {% endfor %} {# end modules #}
+{% if enabled_modules|length > 1 %}
+    </div>
+</section>
+{% if not loop.last %}
+<hr/>
+{% endif %}
+{% endif %}
+{% endfor %} {# end jobs #}
+{% if enabled_modules|length <= 1 %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

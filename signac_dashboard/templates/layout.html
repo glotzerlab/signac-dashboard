@@ -28,16 +28,30 @@
         <div class="columns">
             <aside class="column is-2 aside hero is-fullheight is-hidden-mobile">
                 <div>
-                    <div class="main">
+                    <div class="menu">
                         {% for href, id, name, icon in menu %}
                         <a href="{{ href|e }}" class="item{% if id == active_page %} active{% endif %}">
                             <span class="icon"><i class="fa {{ icon }}"></i></span>
                             <span class="name">{{ name }}</span>
                         </a>
                         {% endfor %}
+                    </div>
+                    <div class="sidebar-content">
                         {% if self.sidebar() %}{% block sidebar %}{% endblock %}{% endif %}
-                        {% if modules|length > 0 %}
+                        {% if modules|length > 0 and jobs is defined and jobs|length > 0 %}
                         <div class="box sidebar-box">
+                            <p class="field">
+                                <a class="button" href="{{ modify_query(view='list') }}" title="List View">
+                                    <span class="icon is-small">
+                                        <i class="fa fa-list"></i>
+                                    </span>
+                                </a>
+                                <a class="button" href="{{ modify_query(view='grid') }}" title="Grid View">
+                                    <span class="icon is-small">
+                                        <i class="fa fa-th"></i>
+                                    </span>
+                                </a>
+                            </p>
                             <h2 class="subtitle is-4">Modules</h2>
                             <form action="{{ url_for('change_modules') }}" method="POST">
                             <input type="hidden" name="redirect" value="{{ request.url }}">
@@ -91,21 +105,17 @@
                         </div>
                     </div>
                 </nav>
-                <section class="hero is-small">
-                    <div class="hero-body">
-                        <div class="container">
-                            {% if self.title() %}
-                            <h1 class="title">
-                                {{ self.title() }}
-                            </h1>
-                            {% endif %}
-                            {% if self.subtitle() %}
-                            <h2 class="subtitle">
-                                {{ self.subtitle() }}
-                            </h2>
-                            {% endif %}
-                        </div>
-                    </div>
+                <section class="page-heading">
+                    {% if self.title() %}
+                    <h1 class="title">
+                        {{ self.title() }}
+                    </h1>
+                    {% endif %}
+                    {% if self.subtitle() %}
+                    <h2 class="subtitle">
+                        {{ self.subtitle() }}
+                    </h2>
+                    {% endif %}
                     {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                     {% for category, message in messages %}
@@ -114,19 +124,13 @@
                     {% endif %}
                     {% endwith %}
                     {% if self.stats() %}
-                    <div class="hero-foot">
-                        <nav class="level">
-                            {% block stats %}{% endblock %}
-                        </nav>
-                    </div>
+                    <nav class="level">
+                        {% block stats %}{% endblock %}
+                    </nav>
                     {% endif %}
                 </section>
                 {% if self.panels() %}
-                <section class="section">
-                    <div class="columns is-mobile is-multiline">
-                        {% block panels %}{% endblock %}
-                    </div>
-                </section>
+                {% block panels %}{% endblock %}
                 {% endif %}
             </div>
         </div>
