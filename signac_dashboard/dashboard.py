@@ -27,10 +27,12 @@ class Dashboard():
         else:
             self.project = signac.get_project()
 
-        self.modules = modules
-
         self.assets = self.create_assets()
-        self.register_routes()
+        self.register_routes(self)
+        self.modules = modules
+        for module in self.modules:
+            module.register_assets(self)
+            module.register_routes(self)
 
     def create_app(self, config=None):
         app = Flask('signac-dashboard')
@@ -131,8 +133,8 @@ class Dashboard():
         } for job in list(jobs)]
         return job_details
 
-    def register_routes(self):
-        @self.app.context_processor
+    def register_routes(self, dashboard):
+        @dashboard.app.context_processor
         def injections():
             injections = {
                 'APP_NAME': 'signac-dashboard',
@@ -143,25 +145,25 @@ class Dashboard():
             }
             return injections
 
-        @self.app.template_global()
+        @dashboard.app.template_global()
         def modify_query(**new_values):
             args = request.args.copy()
             for key, value in new_values.items():
                 args[key] = value
             return '{}?{}'.format(request.path, url_encode(args))
 
-        @self.app.route('/')
+        @dashboard.app.route('/')
         def home():
             return redirect(url_for('jobs_list'))
 
-        @self.app.route('/dashboard')
-        def dashboard():
+        @dashboard.app.route('/dashboard')
+        def flow_dashboard():
             project_title = self.project.config.get('project', None)
             title = '{}: Dashboard'.format(project_title) if project_title else 'Dashboard'
             subtitle = ellipsis_string(self.project.config['project_dir'], length=100)
-            return render_template('dashboard.html', title=title, subtitle=subtitle)
+            return render_template('flow_dashboard.html', title=title, subtitle=subtitle)
 
-        @self.app.route('/search')
+        @dashboard.app.route('/search')
         def search():
             query = request.args.get('q', None)
             jobs = list()
@@ -186,7 +188,7 @@ class Dashboard():
                 else:
                     return render_template('jobs_list.html', jobs=job_details, query=query, title=title, subtitle=subtitle)
 
-        @self.app.route('/jobs/')
+        @dashboard.app.route('/jobs/')
         def jobs_list():
             jobs = self.get_all_jobs()
             job_details = self.get_job_details(jobs)
@@ -199,7 +201,7 @@ class Dashboard():
             else:
                 return render_template('jobs_list.html', jobs=job_details, title=title, subtitle=subtitle)
 
-        @self.app.route('/jobs/<jobid>')
+        @dashboard.app.route('/jobs/<jobid>')
         def show_job(jobid):
             job = self.project.open_job(id=jobid)
             job_details = self.get_job_details([job])
@@ -211,7 +213,7 @@ class Dashboard():
             else:
                 return render_template('jobs_list.html', jobs=job_details, title=title, subtitle=subtitle)
 
-        @self.app.route('/jobs/<jobid>/file/<filename>')
+        @dashboard.app.route('/jobs/<jobid>/file/<filename>')
         def get_file(jobid, filename):
             job = self.project.open_job(id=jobid)
             if(job.isfile(filename)):
@@ -224,7 +226,7 @@ class Dashboard():
             else:
                 return 'File not found.', 404
 
-        @self.app.route('/modules', methods=['POST'])
+        @dashboard.app.route('/modules', methods=['POST'])
         def change_modules():
             for i, module in enumerate(self.modules):
                 if request.form.get('modules[{}]'.format(i)) == 'on':

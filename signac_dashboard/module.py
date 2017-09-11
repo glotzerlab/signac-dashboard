@@ -23,3 +23,9 @@ class Module():
 
     def is_enabled(self):
         return self.enabled
+
+    def register_assets(self, dashboard):
+        pass
+
+    def register_routes(self, dashboard):
+        pass

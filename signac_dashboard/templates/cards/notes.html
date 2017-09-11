@@ -1,0 +1,17 @@
+<form class="notes-form" method="POST" action="{{ notes_action }}">
+  <input type="hidden" name="redirect" value="{{ request.url }}">
+  <input type="hidden" name="jobid" value="{{ jobid }}">
+  <div class="field">
+    <div class="control">
+      <textarea class="textarea" name="note_text" placeholder="Type notes here.">{{ note_text }}</textarea>
+    </div>
+  </div>
+  <div class="field is-grouped">
+		<div class="control">
+			<button class="button is-primary">Save</button>
+		</div>
+    <div class="control">
+      <p class="notes-result"></p>
+    </div>
+	</div>
+</form>
