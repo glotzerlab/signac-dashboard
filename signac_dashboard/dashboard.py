@@ -47,22 +47,22 @@ class Dashboard():
             from werkzeug.contrib.profiler import ProfilerMiddleware
             app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[10])
 
-        # Set up signac-dashboard static and template paths
-        dashboard_path = os.path.dirname(__file__)
-        app.static_folder = dashboard_path + '/static'
-        app.template_folder = dashboard_path + '/templates'
+        # Set up default signac-dashboard static and template paths
+        signac_dashboard_path = os.path.dirname(__file__)
+        app.static_folder = signac_dashboard_path + '/static'
+        app.template_folder = signac_dashboard_path + '/templates'
 
         # Set up custom template paths
-        dashboard_paths = [dashboard_path]
-        for custom_path in list(app.config.get('DASHBOARD_DIRS', [])):
-            dashboard_paths.append(custom_path)
-        template_loader = jinja2.ChoiceLoader([
-            jinja2.FileSystemLoader(
-                (dashpath + '/templates' for dashpath in dashboard_paths)
-            ),
-            app.jinja_loader
-        ])
-        app.jinja_loader = template_loader
+        # The paths in DASHBOARD_DIRS give the preferred order of template loading
+        loader_list = list()
+        for dashpath in list(app.config.get('DASHBOARD_PATHS', [])):
+            logger.warning("Adding '{}' to dashboard paths.".format(dashpath))
+            loader_list.append(jinja2.FileSystemLoader(dashpath + '/templates'))
+
+        # The default loader goes last and is overridden by any custom paths
+        loader_list.append(app.jinja_loader)
+
+        app.jinja_loader = jinja2.ChoiceLoader(loader_list)
 
         turbolinks(app)
 
