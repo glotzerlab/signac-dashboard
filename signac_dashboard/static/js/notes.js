@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).on('turbolinks:load', function() {
   $('form.notes-form').submit(function(event) {
     // Stop form from submitting normally
     event.preventDefault();
