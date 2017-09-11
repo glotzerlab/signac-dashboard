@@ -3,10 +3,6 @@
 
 {% block title %}{{ title }}{% endblock %}
 {% block subtitle %}{{ subtitle }}{% endblock %}
-{% import "stats.html" as stats %}
-{% block stats %}
-{#{ stats.stat('Statepoints', jobs|length) }#}
-{% endblock %}
 {% block panels %}
 {% if jobs|length > 0 %}
 <div class="column">

@@ -156,13 +156,6 @@ class Dashboard():
         def home():
             return redirect(url_for('jobs_list'))
 
-        @dashboard.app.route('/dashboard')
-        def flow_dashboard():
-            project_title = self.project.config.get('project', None)
-            title = '{}: Dashboard'.format(project_title) if project_title else 'Dashboard'
-            subtitle = ellipsis_string(self.project.config['project_dir'], length=100)
-            return render_template('flow_dashboard.html', title=title, subtitle=subtitle)
-
         @dashboard.app.route('/search')
         def search():
             query = request.args.get('q', None)
