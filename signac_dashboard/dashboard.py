@@ -1,3 +1,6 @@
+# Copyright (c) 2017 The Regents of the University of Michigan
+# All rights reserved.
+# This software is licensed under the BSD 3-Clause License.
 from flask import Flask, redirect, request, url_for, render_template, \
      send_file, flash
 from werkzeug import url_encode

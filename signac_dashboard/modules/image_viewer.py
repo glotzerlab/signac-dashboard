@@ -1,3 +1,6 @@
+# Copyright (c) 2017 The Regents of the University of Michigan
+# All rights reserved.
+# This software is licensed under the BSD 3-Clause License.
 from signac_dashboard.module import Module
 from flask import render_template, url_for
 import os
