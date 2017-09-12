@@ -14,10 +14,16 @@ The software is currently in an early development stage.
   * Bradley Dice (bdice@umich.edu)
 
 ## Usage
-
 This software is an installable package similar to signac-flow, where users' code includes a class that inherits from the base class implemented in signac-dashboard. This enables high extensibility to meet project-specific needs.
 
+### Dissecting the Dashboard Structure
+- *Jobs* are how signac manages data. Each job has a statepoint (which contains job metadata) and a document (for persistent storage of key-value pairs). Jobs can be displayed in *list view* or *grid view*. The list view provides quick descriptions and status information from many jobs, while the grid view is intended to show text and media content from one or more jobs.
+- *Templates* provide the HTML structure of the dashboard's pages, written in Jinja template syntax for rendering content on the server
+- *Modules* are server-side Python code that interface with your signac data to display content. Generally, a module will render content from a specific *job* into a *card template*.
+- *Cards* are a type of template that is shown in *grid view* and contains content rendered by a *module*.
+
 ### Quickstart
+The code below will open a dashboard for an newly-initialized (empty) project, with no jobs and no modules loaded.
 
 ```python
 #!/usr/bin/env python3
