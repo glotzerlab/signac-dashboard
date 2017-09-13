@@ -12,6 +12,7 @@ import os
 import re
 import json
 import logging
+import numbers
 import signac
 from collections import OrderedDict
 from .util import *
@@ -97,11 +98,40 @@ class Dashboard:
                     port += 1
                 pass
 
+    @cache.memoize(timeout=60*5)
+    def _project_basic_index(self, include_job_document=False):
+        return self.project.index(include_job_document=include_job_document)
+
+    @cache.cached(timeout=60*5)
+    def _schema_variables(self):
+        _index = self._project_basic_index()
+        sp_index = self.project.build_job_statepoint_index(
+            exclude_const=True, index=_index)
+        for keys, _ in sp_index:
+            yield keys
 
     def job_title(self, job):
         # Overload this method with a function that returns
         # a human-readable form of the job title.
-        return str(job)
+
+        def _format_num(num):
+            if isinstance(num, numbers.Real):
+                return str(round(num, 2))
+            return str(num)
+
+        try:
+            s = []
+            for keys in sorted(self._schema_variables()):
+                v = job.statepoint()[keys[0]]
+                for key in keys[1:]:
+                    v = v[key]
+                s.append('{}={}'.format('.'.join(keys), _format_num(v)))
+            return ' '.join(s)
+        except Exception as error:
+            logger.warning(
+                "Error while generating job title: '{}'. "
+                "Returning job-id as fallback.".format(error))
+            return str(job)
 
     def job_subtitle(self, job):
         # Overload this method with a function that returns
