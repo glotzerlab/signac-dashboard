@@ -3,10 +3,12 @@
 # This software is licensed under the BSD 3-Clause License.
 from flask import Flask, g
 from .dashboard import Dashboard
+from . import modules
 
 
 __version__ = '0.0.1'
 __all__ = [
-    'Dashboard'
+    'Dashboard',
+    'modules',
     ]
 
