@@ -1,7 +1,13 @@
 # Copyright (c) 2017 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
+import sys
 from setuptools import setup, find_packages
+
+if sys.version_info < (3, 4, 0):
+    print("Error: signac-dashboard requires Python version >= 3.4")
+    sys.exit(1)
+
 
 setup(
     name='signac-dashboard',
