@@ -133,10 +133,14 @@ class Dashboard:
                 "Returning job-id as fallback.".format(error))
             return str(job)
 
+    @cache.cached(timeout=60*5)
+    def _project_min_len_unique_id(self):
+        return self.project.min_len_unique_id()
+
     def job_subtitle(self, job):
         # Overload this method with a function that returns
         # a human-readable form of the job subtitle.
-        return str(job)
+        return str(job)[:max(8, self._project_min_len_unique_id())]
 
     def job_sorter(self, job):
         # Overload this method to return a value that
