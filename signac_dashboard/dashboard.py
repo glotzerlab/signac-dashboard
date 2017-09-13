@@ -19,16 +19,18 @@ from .util import *
 logger = logging.getLogger(__name__)
 cache = Cache(config={'CACHE_TYPE': 'simple'})
 
-class Dashboard():
+class Dashboard:
 
     def __init__(self, config=None, project=None, modules=None):
         self.app = self.create_app(config)
         cache.init_app(self.app)
+        if modules is None:
+            modules = []
 
-        if project:
-            self.project = project
-        else:
+        if project is None:
             self.project = signac.get_project()
+        else:
+            self.project = project
 
         self.assets = self.create_assets()
         self.register_routes(self)
