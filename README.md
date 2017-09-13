@@ -13,10 +13,13 @@ The signac-dashboard interface allows users to rapidly view data managed in a [s
 
 ## Installation
 
-Clone the repository with `git clone https://bitbucket.org/glotzer/signac-dashboard.git` and then install with
-
+To install this package, first clone the repository, *e.g.*, with
 ```bash
-$ python setup.py install --user
+$ git clone https://bitbucket.org/glotzer/signac-dashboard.git
+```
+and then install using pip:
+```bash
+$ pip install -r requirements.txt
 ```
 
 ## Usage
