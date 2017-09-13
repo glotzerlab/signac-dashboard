@@ -1,8 +1,0 @@
-signac>=0.8
-flask
-Flask-Assets
-Flask-Cache
-Flask-Turbolinks
-libsass
-cssmin
-jsmin

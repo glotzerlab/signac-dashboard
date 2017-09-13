@@ -9,6 +9,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
+        'signac>=0.8',
         'flask',
         'Flask-Assets',
         'Flask-Cache',

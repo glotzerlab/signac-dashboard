@@ -19,7 +19,7 @@ $ git clone https://bitbucket.org/glotzer/signac-dashboard.git
 ```
 and then install using pip:
 ```bash
-$ pip install -r requirements.txt
+$ pip install .
 ```
 
 ## Usage
