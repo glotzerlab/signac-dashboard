@@ -25,6 +25,14 @@ setup(
         'jsmin'
     ],
 
+    classifiers=[
+        "Development Status :: 2 - Pre-Alpha",
+        "License :: OSI Approved :: BSD License",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+    ],
+
     author='Bradley Dice',
     author_email='bdice@bradleydice.com',
     description="Data visualization based on signac.",
