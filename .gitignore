@@ -4,3 +4,5 @@
 *.swp
 __pycache__
 signac_dashboard.egg-info/
+build/
+dist/
