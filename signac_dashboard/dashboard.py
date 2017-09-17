@@ -12,12 +12,14 @@ import os
 import re
 import json
 import logging
+import numbers
 import signac
 from collections import OrderedDict
 from .util import *
 
 logger = logging.getLogger(__name__)
 cache = Cache(config={'CACHE_TYPE': 'simple'})
+DEFAULT_CACHE_TIME = 60*5
 
 class Dashboard:
 
@@ -97,28 +99,66 @@ class Dashboard:
                     port += 1
                 pass
 
+    @cache.memoize(timeout=DEFAULT_CACHE_TIME)
+    def _project_basic_index(self, include_job_document=False):
+        index = list()
+        for item in self.project.index(include_job_document=include_job_document):
+            index.append(item)
+        return index
+
+    @cache.cached(timeout=DEFAULT_CACHE_TIME, key_prefix='_schema_variables')
+    def _schema_variables(self):
+        _index = self._project_basic_index()
+        sp_index = self.project.build_job_statepoint_index(
+            exclude_const=True, index=_index)
+        schema_variables = list()
+        for keys, _ in sp_index:
+            schema_variables.append(keys)
+        return schema_variables
 
     def job_title(self, job):
         # Overload this method with a function that returns
         # a human-readable form of the job title.
-        return str(job)
+
+        def _format_num(num):
+            if isinstance(num, numbers.Real):
+                return str(round(num, 2))
+            return str(num)
+
+        try:
+            s = []
+            for keys in sorted(self._schema_variables()):
+                v = job.statepoint()[keys[0]]
+                for key in keys[1:]:
+                    v = v[key]
+                s.append('{}={}'.format('.'.join(keys), _format_num(v)))
+            return ' '.join(s)
+        except Exception as error:
+            logger.warning(
+                "Error while generating job title: '{}'. "
+                "Returning job-id as fallback.".format(error))
+            return str(job)
+
+    @cache.cached(timeout=DEFAULT_CACHE_TIME, key_prefix='_project_min_len_unique_id')
+    def _project_min_len_unique_id(self):
+        return self.project.min_len_unique_id()
 
     def job_subtitle(self, job):
         # Overload this method with a function that returns
         # a human-readable form of the job subtitle.
-        return str(job)
+        return str(job)[:max(8, self._project_min_len_unique_id())]
 
     def job_sorter(self, job):
         # Overload this method to return a value that
         # can be used as a sorting index.
         return self.job_title(job)
 
-    @cache.cached(timeout=60*5, key_prefix='all_jobs')
+    @cache.cached(timeout=DEFAULT_CACHE_TIME, key_prefix='get_all_jobs')
     def get_all_jobs(self):
         all_jobs = sorted(self.project.find_jobs(), key=lambda job: self.job_sorter(job))
         return all_jobs
 
-    @cache.memoize(timeout=60*5)
+    @cache.memoize(timeout=DEFAULT_CACHE_TIME)
     def job_search(self, query):
         try:
             f = signac.contrib.filterparse._parse_json(query)
