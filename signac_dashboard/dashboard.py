@@ -19,6 +19,7 @@ from .util import *
 
 logger = logging.getLogger(__name__)
 cache = Cache(config={'CACHE_TYPE': 'simple'})
+DEFAULT_CACHE_TIME = 60*5
 
 class Dashboard:
 
@@ -98,17 +99,22 @@ class Dashboard:
                     port += 1
                 pass
 
-    @cache.memoize(timeout=60*5)
+    @cache.memoize(timeout=DEFAULT_CACHE_TIME)
     def _project_basic_index(self, include_job_document=False):
-        return self.project.index(include_job_document=include_job_document)
+        index = list()
+        for item in self.project.index(include_job_document=include_job_document):
+            index.append(item)
+        return index
 
-    @cache.cached(timeout=60*5)
+    @cache.cached(timeout=DEFAULT_CACHE_TIME, key_prefix='_schema_variables')
     def _schema_variables(self):
         _index = self._project_basic_index()
         sp_index = self.project.build_job_statepoint_index(
             exclude_const=True, index=_index)
+        schema_variables = list()
         for keys, _ in sp_index:
-            yield keys
+            schema_variables.append(keys)
+        return schema_variables
 
     def job_title(self, job):
         # Overload this method with a function that returns
@@ -133,7 +139,7 @@ class Dashboard:
                 "Returning job-id as fallback.".format(error))
             return str(job)
 
-    @cache.cached(timeout=60*5)
+    @cache.cached(timeout=DEFAULT_CACHE_TIME, key_prefix='_project_min_len_unique_id')
     def _project_min_len_unique_id(self):
         return self.project.min_len_unique_id()
 
@@ -147,12 +153,12 @@ class Dashboard:
         # can be used as a sorting index.
         return self.job_title(job)
 
-    @cache.cached(timeout=60*5, key_prefix='all_jobs')
+    @cache.cached(timeout=DEFAULT_CACHE_TIME, key_prefix='get_all_jobs')
     def get_all_jobs(self):
         all_jobs = sorted(self.project.find_jobs(), key=lambda job: self.job_sorter(job))
         return all_jobs
 
-    @cache.memoize(timeout=60*5)
+    @cache.memoize(timeout=DEFAULT_CACHE_TIME)
     def job_search(self, query):
         try:
             f = signac.contrib.filterparse._parse_json(query)
