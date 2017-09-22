@@ -12,6 +12,9 @@
         <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}" />
         <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
         <meta name="apple-mobile-web-app-title" content="{{ APP_NAME }}">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="initial-scale=1.0">
         <title>
             {% block title %}Page Title{% endblock %}{% if self.subtitle() %} - {% block subtitle %}{% endblock %}{% else %} - {{ APP_NAME }}{% endif %}
         </title>
@@ -80,7 +83,7 @@
                         <div class="nav-left">
                             <a class="nav-item" href="/">{{ APP_NAME }}</a>
                             <form action="{{ url_for('search') }}" method="GET" id="searchform">
-                                <div class="field has-addons searchbox">
+                                <div class="field has-addons searchbox is-hidden-mobile">
                                     <p class="control">
                                     <input name="q" class="input" type="text" placeholder="Search jobs" value="{{ query }}">
                                     </p>
@@ -98,6 +101,18 @@
                             <span></span>
                         </span>
                         <div class="nav-right nav-menu is-hidden-tablet">
+                            <form action="{{ url_for('search') }}" method="GET" id="searchform">
+                                <div class="field has-addons searchbox">
+                                    <p class="control">
+                                    <input name="q" class="input" type="text" placeholder="Search jobs" value="{{ query }}">
+                                    </p>
+                                    <p class="control">
+                                    <a class="button is-dark" onclick="document.getElementById('searchform').submit()">
+                                        &nbsp; <i class="fa fa-search"></i> &nbsp;
+                                    </a>
+                                    </p>
+                                </div>
+                            </form>
                             {% for href, id, name, icon in menu.content %}
                             <a href="{{ href|e }}" class="nav-item{% if id == menu.active_page %} is-active{% endif %}">{{ name }}</a>
                             {% endfor %}
