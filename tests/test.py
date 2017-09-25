@@ -25,7 +25,6 @@ class DashboardTestCase(unittest.TestCase):
 
     def test_get_jobs(self):
         rv = self.test_client.get('/jobs', follow_redirects=True)
-        print(rv.data)
         assert b'dashboard-test-project' in rv.get_data()
 
 if __name__ == '__main__':
