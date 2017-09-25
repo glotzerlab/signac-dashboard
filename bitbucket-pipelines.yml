@@ -1,0 +1,18 @@
+# This is a Bitbucket Pipeline configuration for Python.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Dockerhub as your build environment.
+image: python:3.6
+
+pipelines:
+  default:
+    - step:
+        script:
+          - python --version
+          - pip --version
+#         - pip install -U flake8
+#         - python -m flake8 --show-source signac_dashboard/
+          - git submodule update --init --recursive
+          - python setup.py build
+          - pip install .
+          - python -m unittest discover tests/ -v
