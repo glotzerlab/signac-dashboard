@@ -20,4 +20,7 @@ def simplified_keys(project):
 def ellipsis_string(string, length=60):
     string = str(string)
     half = int(length / 2)
-    return string if len(string) < length else string[:half] + "..." + string[-half:]
+    if len(string) < length:
+        return string
+    else:
+        return string[:half] + "..." + string[-half:]

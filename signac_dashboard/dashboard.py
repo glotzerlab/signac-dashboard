@@ -10,12 +10,9 @@ from flask_cache import Cache
 from flask_turbolinks import turbolinks
 import os
 import re
-import json
 import logging
 import numbers
 import signac
-from collections import OrderedDict
-from .util import *
 
 logger = logging.getLogger(__name__)
 cache = Cache(config={'CACHE_TYPE': 'simple'})
@@ -85,8 +82,9 @@ class Dashboard:
         # JavaScript is combined into one file and minified
         js_all = Bundle('js/*.js', filters='jsmin', output='gen/app.min.js')
         # SCSS (Sassy CSS) is compiled to CSS and minified
-        scss_all = Bundle(
-            'scss/app.scss', filters='libsass,cssmin', output='gen/app.min.css')
+        scss_all = Bundle('scss/app.scss',
+                          filters='libsass,cssmin',
+                          output='gen/app.min.css')
         assets.register('js_all', js_all)
         assets.register('scss_all', scss_all)
         return assets
@@ -106,7 +104,9 @@ class Dashboard:
     @cache.memoize(timeout=DEFAULT_CACHE_TIME)
     def _project_basic_index(self, include_job_document=False):
         index = list()
-        for item in self.project.index(include_job_document=include_job_document):
+        for item in self.project.index(
+            include_job_document=include_job_document
+        ):
             index.append(item)
         return index
 
@@ -143,7 +143,8 @@ class Dashboard:
                 "Returning job-id as fallback.".format(error))
             return str(job)
 
-    @cache.cached(timeout=DEFAULT_CACHE_TIME, key_prefix='_project_min_len_unique_id')
+    @cache.cached(timeout=DEFAULT_CACHE_TIME,
+                  key_prefix='_project_min_len_unique_id')
     def _project_min_len_unique_id(self):
         return self.project.min_len_unique_id()
 
@@ -177,7 +178,8 @@ class Dashboard:
         job_details = [{
             'title': self.job_title(job),
             'subtitle': self.job_subtitle(job),
-            'labels': job.document['stages'] if 'stages' in job.document else [],
+            'labels': job.document['stages']
+            if 'stages' in job.document else [],
             'url': url_for('show_job', jobid=str(job)),
             'job': job
         } for job in list(jobs)]
@@ -191,7 +193,8 @@ class Dashboard:
                 'PROJECT_NAME': self.project.config['project'],
                 'PROJECT_DIR': self.project.config['project_dir'],
                 'modules': self.modules,
-                'enabled_modules': [i for i in range(len(self.modules)) if self.modules[i].is_enabled()]
+                'enabled_modules': [i for i in range(len(self.modules))
+                                    if self.modules[i].is_enabled()]
             }
             return injections
 
@@ -227,9 +230,17 @@ class Dashboard:
                 subtitle = '{} statepoints'.format(len(jobs))
                 view_mode = request.args.get('view', 'list')
                 if view_mode == 'grid':
-                    return render_template('jobs_grid.html', jobs=job_details, query=query, title=title, subtitle=subtitle)
+                    return render_template('jobs_grid.html',
+                                           jobs=job_details,
+                                           query=query,
+                                           title=title,
+                                           subtitle=subtitle)
                 else:
-                    return render_template('jobs_list.html', jobs=job_details, query=query, title=title, subtitle=subtitle)
+                    return render_template('jobs_list.html',
+                                           jobs=job_details,
+                                           query=query,
+                                           title=title,
+                                           subtitle=subtitle)
 
         @dashboard.app.route('/jobs/')
         def jobs_list():
@@ -241,9 +252,15 @@ class Dashboard:
             subtitle = '{} statepoints'.format(len(jobs))
             view_mode = request.args.get('view', 'list')
             if view_mode == 'grid':
-                return render_template('jobs_grid.html', jobs=job_details, title=title, subtitle=subtitle)
+                return render_template('jobs_grid.html',
+                                       jobs=job_details,
+                                       title=title,
+                                       subtitle=subtitle)
             else:
-                return render_template('jobs_list.html', jobs=job_details, title=title, subtitle=subtitle)
+                return render_template('jobs_list.html',
+                                       jobs=job_details,
+                                       title=title,
+                                       subtitle=subtitle)
 
         @dashboard.app.route('/jobs/<jobid>')
         def show_job(jobid):
@@ -253,9 +270,15 @@ class Dashboard:
             subtitle = job_details[0]['subtitle']
             view_mode = request.args.get('view', 'grid')
             if view_mode == 'grid':
-                return render_template('jobs_grid.html', jobs=job_details, title=title, subtitle=subtitle)
+                return render_template('jobs_grid.html',
+                                       jobs=job_details,
+                                       title=title,
+                                       subtitle=subtitle)
             else:
-                return render_template('jobs_list.html', jobs=job_details, title=title, subtitle=subtitle)
+                return render_template('jobs_list.html',
+                                       jobs=job_details,
+                                       title=title,
+                                       subtitle=subtitle)
 
         @dashboard.app.route('/jobs/<jobid>/file/<filename>')
         def get_file(jobid, filename):
@@ -265,7 +288,8 @@ class Dashboard:
                 textfile_regexes = ['job-.*\.[oe][0-9]*', '.*\.log', '.*\.dat']
                 for regex in textfile_regexes:
                     if(re.match('job-.*\.[oe][0-9]*', filename) is not None):
-                        return send_file(job.fn(filename), mimetype='text/plain')
+                        return send_file(job.fn(filename),
+                                         mimetype='text/plain')
                 return send_file(job.fn(filename))
             else:
                 return 'File not found.', 404

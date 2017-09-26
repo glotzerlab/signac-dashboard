@@ -2,11 +2,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard.module import Module
-from signac_dashboard.util import ellipsis_string
-from flask import render_template, url_for, redirect, request
-from flask_assets import Bundle
-from jinja2 import escape
-from collections import OrderedDict
+from flask import render_template, url_for, request
 
 
 class Notes(Module):
