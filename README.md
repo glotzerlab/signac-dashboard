@@ -63,3 +63,55 @@ MyDashboard().run()
 - *Templates* provide the HTML structure of the dashboard's pages, written in Jinja template syntax for rendering content on the server
 - *Modules* are server-side Python code that interface with your signac data to display content. Generally, a module will render content from a specific *job* into a *card template*.
 - *Cards* are a type of template that is shown in *grid view* and contains content rendered by a *module*.
+
+## Included Modules
+
+Defining a module requires a *name* for display, a *context* to determine when the module should be shown (currently only `'JobContext'` is supported), and a *template* (written in HTML/Jinja-compatible syntax) where the content will be rendered. An optional `enabled` argument can be set to `False` to disable the module until it is selected by the user. A module must be a subclass of `Module` and define the function `get_cards()` which returns an array of dictionaries with properties `'name'` and `'content'`, like so:
+
+```python
+class MyModule(Module):
+
+    def get_cards(self):
+        return [{'name': 'My Module', 'content': render_template('path/to/template.html')}]
+```
+
+### Statepoint
+
+The statepoint module shows the key-value pairs in the statepoint.
+
+```python
+sp_mod = StatepointList()
+```
+
+### Document
+
+The document module shows the key-value pairs in the job document, with long values optionally truncated (default is no truncation).
+
+```python
+doc_mod = DocumentList(max_chars=140)  # Output will be truncated to one tweet length
+```
+
+### File List
+
+The File List module shows a listing of the job's workspace directory with links to each file. This can be very slow since it has to read the disk for every job displayed, use with caution in large signac projects.
+
+```python
+file_mod = FileList(enabled=False)  # Recommended to disable this module by default
+```
+
+### Image Viewer
+
+View images in any format that is supported by an HTML `<img>` tag in your browser. The module defaults to showing all images of PNG, JPG, or GIF types. A filename or glob can be defined to select specific filenames. Multiple Image Viewer modules can be defined to enable/disable each image type.
+
+```python
+img_mod = ImageViewer()  # Shows all PNG/JPG/GIF images
+img_mod = ImageViewer(name='Bond Order Diagram', img_globs=['bod.png'])
+```
+
+### Notes
+
+The Notes module uses the `'notes'` key in the job document to store plain text, perhaps human-readable descriptions of a job that may be useful in later analysis.
+
+```python
+notes_mod = Notes()
+```
