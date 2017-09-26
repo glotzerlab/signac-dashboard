@@ -2,7 +2,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from flask import Flask, redirect, request, url_for, render_template, \
-     send_file, flash
+    send_file, flash
 from werkzeug import url_encode
 import jinja2
 from flask_assets import Environment, Bundle
@@ -19,7 +19,8 @@ from .util import *
 
 logger = logging.getLogger(__name__)
 cache = Cache(config={'CACHE_TYPE': 'simple'})
-DEFAULT_CACHE_TIME = 60*5
+DEFAULT_CACHE_TIME = 60 * 5
+
 
 class Dashboard:
 
@@ -62,11 +63,13 @@ class Dashboard:
         app.template_folder = signac_dashboard_path + '/templates'
 
         # Set up custom template paths
-        # The paths in DASHBOARD_DIRS give the preferred order of template loading
+        # The paths in DASHBOARD_DIRS give the preferred order of template
+        # loading
         loader_list = list()
         for dashpath in list(app.config.get('DASHBOARD_PATHS', [])):
             logger.warning("Adding '{}' to dashboard paths.".format(dashpath))
-            loader_list.append(jinja2.FileSystemLoader(dashpath + '/templates'))
+            loader_list.append(
+                jinja2.FileSystemLoader(dashpath + '/templates'))
 
         # The default loader goes last and is overridden by any custom paths
         loader_list.append(app.jinja_loader)
@@ -82,7 +85,8 @@ class Dashboard:
         # JavaScript is combined into one file and minified
         js_all = Bundle('js/*.js', filters='jsmin', output='gen/app.min.js')
         # SCSS (Sassy CSS) is compiled to CSS and minified
-        scss_all = Bundle('scss/app.scss', filters='libsass,cssmin', output='gen/app.min.css')
+        scss_all = Bundle(
+            'scss/app.scss', filters='libsass,cssmin', output='gen/app.min.css')
         assets.register('js_all', js_all)
         assets.register('scss_all', scss_all)
         return assets
@@ -155,7 +159,8 @@ class Dashboard:
 
     @cache.cached(timeout=DEFAULT_CACHE_TIME, key_prefix='get_all_jobs')
     def get_all_jobs(self):
-        all_jobs = sorted(self.project.find_jobs(), key=lambda job: self.job_sorter(job))
+        all_jobs = sorted(self.project.find_jobs(),
+                          key=lambda job: self.job_sorter(job))
         return all_jobs
 
     @cache.memoize(timeout=DEFAULT_CACHE_TIME)
@@ -231,7 +236,8 @@ class Dashboard:
             jobs = self.get_all_jobs()
             job_details = self.get_job_details(jobs)
             project_title = self.project.config.get('project', None)
-            title = '{}: Jobs'.format(project_title) if project_title else 'Jobs'
+            title = '{}: Jobs'.format(
+                project_title) if project_title else 'Jobs'
             subtitle = '{} statepoints'.format(len(jobs))
             view_mode = request.args.get('view', 'list')
             if view_mode == 'grid':
@@ -258,7 +264,7 @@ class Dashboard:
                 # Return job-compress.o827643 and similar files as plain text
                 textfile_regexes = ['job-.*\.[oe][0-9]*', '.*\.log', '.*\.dat']
                 for regex in textfile_regexes:
-                    if(re.match('job-.*\.[oe][0-9]*',filename) is not None):
+                    if(re.match('job-.*\.[oe][0-9]*', filename) is not None):
                         return send_file(job.fn(filename), mimetype='text/plain')
                 return send_file(job.fn(filename))
             else:

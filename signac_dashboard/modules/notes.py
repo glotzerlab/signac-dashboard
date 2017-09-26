@@ -8,6 +8,7 @@ from flask_assets import Bundle
 from jinja2 import escape
 from collections import OrderedDict
 
+
 class Notes(Module):
 
     def __init__(self, max_chars=None, **kwargs):
@@ -22,7 +23,7 @@ class Notes(Module):
         notes_action = url_for('update_notes')
         return [{'name': self.name, 'content': render_template(
             self.template, notes_action=notes_action, note_text=note_text,
-            jobid=str(job) )}]
+            jobid=str(job))}]
 
     def register_routes(self, dashboard):
         @dashboard.app.route('/notes/update', methods=['POST'])
@@ -31,5 +32,5 @@ class Notes(Module):
             jobid = request.form.get('jobid')
             job = dashboard.project.open_job(id=jobid)
             job.document['notes'] = note_text
-            return "Saved." #redirect(request.form.get('redirect', url_for('home')))
-
+            # redirect(request.form.get('redirect', url_for('home')))
+            return "Saved."

@@ -3,6 +3,7 @@
 # This software is licensed under the BSD 3-Clause License.
 from flask import render_template
 
+
 class Module():
 
     def __init__(self, name, context, template, enabled=True):
@@ -12,7 +13,8 @@ class Module():
         self.enabled = enabled
 
     def get_cards(self):
-        # Returns an array of dictionaries with properties 'name' and 'content':
+        # Returns an array of dictionaries with properties 'name' and
+        # 'content':
         return [{'name': self.name, 'content': render_template(self.template)}]
 
     def enable(self):

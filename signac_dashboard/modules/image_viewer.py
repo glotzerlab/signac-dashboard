@@ -7,6 +7,7 @@ import os
 import glob
 import itertools
 
+
 class ImageViewer(Module):
 
     def __init__(self, name='Image Viewer', img_globs=['*.png', '*.jpg', '*.gif'], **kwargs):
@@ -20,10 +21,12 @@ class ImageViewer(Module):
         def make_card(filename):
             return {'name': self.name + ': ' + filename,
                     'content': render_template(self.template,
-                                               imgsrc = url_for('get_file', jobid=str(job), filename=filename),
+                                               imgsrc=url_for('get_file', jobid=str(
+                                                   job), filename=filename),
                                                filename=filename)}
 
-        image_globs = [glob.iglob(job.workspace() + os.sep + image_glob) for image_glob in self.img_globs]
+        image_globs = [glob.iglob(job.workspace() + os.sep + image_glob)
+                       for image_glob in self.img_globs]
         image_files = itertools.chain(*image_globs)
         for filepath in image_files:
             yield make_card(os.path.basename(filepath))
