@@ -5,6 +5,7 @@ from signac_dashboard.module import Module
 from flask import render_template, url_for
 import os
 
+
 class FileList(Module):
 
     def __init__(self, **kwargs):
@@ -23,4 +24,4 @@ class FileList(Module):
             })
         files = sorted(files, key=lambda file: file['name'])
         return [{'name': self.name,
-                'content': render_template(self.template, files=files)}]
+                 'content': render_template(self.template, files=files)}]

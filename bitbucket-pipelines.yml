@@ -10,8 +10,8 @@ pipelines:
         script:
           - python --version
           - pip --version
-#         - pip install -U flake8
-#         - python -m flake8 --show-source signac_dashboard/
+          - pip install -U flake8
+          - python -m flake8 --show-source signac_dashboard/
           - git submodule update --init --recursive
           - python setup.py build
           - pip install .

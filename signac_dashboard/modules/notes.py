@@ -2,11 +2,8 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard.module import Module
-from signac_dashboard.util import ellipsis_string
-from flask import render_template, url_for, redirect, request
-from flask_assets import Bundle
-from jinja2 import escape
-from collections import OrderedDict
+from flask import render_template, url_for, request
+
 
 class Notes(Module):
 
@@ -21,7 +18,7 @@ class Notes(Module):
         notes_action = url_for('update_notes')
         return [{'name': self.name, 'content': render_template(
             self.template, notes_action=notes_action, note_text=note_text,
-            jobid=str(job) )}]
+            jobid=str(job))}]
 
     def register_routes(self, dashboard):
         @dashboard.app.route('/notes/update', methods=['POST'])
@@ -30,5 +27,5 @@ class Notes(Module):
             jobid = request.form.get('jobid')
             job = dashboard.project.open_job(id=jobid)
             job.document['notes'] = note_text
-            return "Saved." #redirect(request.form.get('redirect', url_for('home')))
-
+            # redirect(request.form.get('redirect', url_for('home')))
+            return "Saved."
