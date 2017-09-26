@@ -10,12 +10,11 @@ from collections import OrderedDict
 
 class Notes(Module):
 
-    def __init__(self, max_chars=None, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(name='Notes',
                          context='JobContext',
                          template='cards/notes.html',
                          **kwargs)
-        self.max_chars = max_chars
 
     def get_cards(self, job):
         note_text = job.document.get('notes', '')
