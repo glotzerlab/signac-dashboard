@@ -75,17 +75,17 @@ class MyModule(Module):
         return [{'name': 'My Module', 'content': render_template('path/to/template.html')}]
 ```
 
-### Statepoint
+### Statepoint Parameters
 
-The statepoint module shows the key-value pairs in the statepoint.
+The `StatepointList` module shows the key-value pairs in the statepoint.
 
 ```python
 sp_mod = StatepointList()
 ```
 
-### Document
+### Job Document
 
-The document module shows the key-value pairs in the job document, with long values optionally truncated (default is no truncation).
+The `DocumentList` module shows the key-value pairs in the job document, with long values optionally truncated (default is no truncation).
 
 ```python
 doc_mod = DocumentList(max_chars=140)  # Output will be truncated to one tweet length
@@ -93,7 +93,7 @@ doc_mod = DocumentList(max_chars=140)  # Output will be truncated to one tweet l
 
 ### File List
 
-The File List module shows a listing of the job's workspace directory with links to each file. This can be very slow since it has to read the disk for every job displayed, use with caution in large signac projects.
+The `FileList` module shows a listing of the job's workspace directory with links to each file. This can be very slow since it has to read the disk for every job displayed, use with caution in large signac projects.
 
 ```python
 file_mod = FileList(enabled=False)  # Recommended to disable this module by default
@@ -101,7 +101,7 @@ file_mod = FileList(enabled=False)  # Recommended to disable this module by defa
 
 ### Image Viewer
 
-View images in any format that is supported by an HTML `<img>` tag in your browser. The module defaults to showing all images of PNG, JPG, or GIF types. A filename or glob can be defined to select specific filenames. Multiple Image Viewer modules can be defined to enable/disable each image type.
+The `ImageViewer` module displays images in any format that works with a standard HTML `<img>` tag. The module defaults to showing all images of PNG, JPG, or GIF types. A filename or glob can be defined to select specific filenames. Multiple Image Viewer modules can be defined to enable/disable each image type.
 
 ```python
 img_mod = ImageViewer()  # Shows all PNG/JPG/GIF images
@@ -110,7 +110,7 @@ img_mod = ImageViewer(name='Bond Order Diagram', img_globs=['bod.png'])
 
 ### Notes
 
-The Notes module uses the `'notes'` key in the job document to store plain text, perhaps human-readable descriptions of a job that may be useful in later analysis.
+The `Notes` module uses the `'notes'` key in the job document to store plain text, perhaps human-readable descriptions of a job that may be useful in later analysis.
 
 ```python
 notes_mod = Notes()
