@@ -115,3 +115,7 @@ The `Notes` module uses the `'notes'` key in the job document to store plain tex
 ```python
 notes_mod = Notes()
 ```
+
+## Searching jobs
+
+The search bar accepts JSON-formatted queries in the same way as the `signac find` command-line tool. For example, using the query `{"key": "value"}` will return all jobs where the job statepoint `key` is set to `value`. To search jobs by their document key-value pairs, use `doc:` before the JSON-formatted query, like `doc:{"key": "value"}`.

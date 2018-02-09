@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 ### Added
+- README documentation on searching
+
+## 0.1.2 - 2018-02-08
+### Added
 - Search jobs with a document filter with `doc:{"key":"value"}`
 - Unit tests for job search
 - README documentation is much more complete
