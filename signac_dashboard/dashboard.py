@@ -166,10 +166,18 @@ class Dashboard:
 
     @cache.memoize(timeout=DEFAULT_CACHE_TIME)
     def job_search(self, query):
+        querytype = 'statepoint'
+        if query[:4] == 'doc:':
+            query = query[4:]
+            querytype = 'document'
+
         try:
             f = signac.contrib.filterparse._parse_json(query)
-            return sorted(self.project.find_jobs(filter=f),
-                          key=lambda job: self.job_sorter(job))
+            if querytype == 'document':
+                jobs = self.project.find_jobs(doc_filter=f)
+            else:
+                jobs = self.project.find_jobs(filter=f)
+            return sorted(jobs, key=lambda job: self.job_sorter(job))
         except Exception as e:
             flash('An error occurred while parsing your query.', 'danger')
             return []
