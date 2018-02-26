@@ -1,4 +1,5 @@
 {% macro render_pagination(pagination) %}
+{% if pagination.total_count > 0 %}
 <div class="column">
     <nav class="pagination is-centered" role="navigation" aria-label="pagination">
         {% if pagination.has_prev %}
@@ -30,4 +31,5 @@
         </ul>
     </nav>
 </div>
+{% endif %}
 {% endmacro %}

@@ -2,7 +2,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from flask import Flask, redirect, request, url_for, render_template, \
-    send_file, flash
+    send_file, flash, abort
 from werkzeug import url_encode
 import jinja2
 from flask_assets import Environment, Bundle
@@ -13,6 +13,8 @@ import re
 import logging
 from functools import lru_cache
 import numbers
+from math import ceil
+from json import JSONDecodeError
 import signac
 from .pagination import Pagination
 
@@ -197,9 +199,11 @@ class Dashboard:
             else:
                 jobs = self.project.find_jobs(filter=f)
             return sorted(jobs, key=lambda job: self.job_sorter(job))
-        except Exception as e:
-            flash('An error occurred while parsing your query.', 'danger')
-            return []
+        except JSONDecodeError as error:
+            flash('Failed to parse query argument. '
+                  'Ensure that \'{}\' is valid JSON!'.format(query),
+                  'warning')
+            raise error
 
     @lru_cache(maxsize=65536)
     def _job_details(self, job, show_labels=False):
@@ -211,6 +215,40 @@ class Dashboard:
             if show_labels and 'stages' in job.document else [],
             'url': url_for('show_job', jobid=job._id)
         }
+
+    def _setup_pagination(self, jobs):
+        try:
+            page = int(request.args.get('page', 1))
+            assert page >= 1
+            if jobs is not None:
+                assert page <= ceil(len(jobs) / self.config['PER_PAGE'])
+        except Exception as e:
+            flash('Pagination Error. Defaulting to page 1.', 'danger')
+            page = 1
+        pagination = Pagination(page, self.config['PER_PAGE'],
+                                len(jobs) if jobs is not None else 0)
+        return pagination
+
+    def _render_job_view(self, *args, **kwargs):
+        view_mode = request.args.get('view', kwargs.get(
+            'default_view', 'list'))
+        if view_mode == 'grid':
+            return render_template('jobs_grid.html', *args, **kwargs)
+        elif view_mode == 'list':
+            return render_template('jobs_list.html', *args, **kwargs)
+        else:
+            return self._render_error(
+                    ValueError('Invalid view mode: {}'.format(view_mode)))
+
+    def _render_error(self, error):
+        if isinstance(error, Exception):
+            error_string = "{}: {}".format(type(error).__name__, error)
+            logger.error(error_string)
+            flash(error_string, 'danger')
+        else:
+            logger.error(error)
+            flash(error, 'danger')
+        return render_template('error.html')
 
     def get_job_details(self, jobs):
         show_labels = self.config.get('labels', False)
@@ -242,7 +280,6 @@ class Dashboard:
 
         @dashboard.app.route('/search')
         def search():
-            page = int(request.args.get('page', 1))
             query = request.args.get('q', None)
             jobs = []
             try:
@@ -254,58 +291,38 @@ class Dashboard:
                 jobs = self.job_search(query)
                 if not jobs:
                     flash('No jobs found for the provided query.', 'warning')
-            except Exception as e:
-                flash('Invalid search: {}'.format(e), 'danger')
-            finally:
-                pagination = Pagination(page, self.config['PER_PAGE'], len(jobs))
-                page_start = pagination.first_item()
-                page_end = pagination.last_item()
-                job_details = self.get_job_details(jobs[page_start:page_end])
+            except Exception as error:
+                return self._render_error(error)
+            else:
+                pagination = self._setup_pagination(jobs)
+                job_details = self.get_job_details(
+                        pagination.paginate(jobs))
                 title = 'Search: {}'.format(query)
-                subtitle = '{} to {} of {} jobs'.format(page_start+1, page_end, len(jobs))
-                view_mode = request.args.get('view', 'list')
-                if view_mode == 'grid':
-                    return render_template('jobs_grid.html',
-                                           jobs=job_details,
-                                           query=query,
-                                           title=title,
-                                           subtitle=subtitle,
-                                           pagination=pagination)
-                else:
-                    return render_template('jobs_list.html',
-                                           jobs=job_details,
-                                           query=query,
-                                           title=title,
-                                           subtitle=subtitle,
-                                           pagination=pagination)
+                subtitle = pagination.item_counts()
+                return self._render_job_view(default_view='list',
+                                             jobs=job_details,
+                                             query=query,
+                                             title=title,
+                                             subtitle=subtitle,
+                                             pagination=pagination)
 
         @dashboard.app.route('/jobs/')
         def jobs_list():
-            page = int(request.args.get('page', 1))
             jobs = self.get_all_jobs()
-            pagination = Pagination(page, self.config['PER_PAGE'], len(jobs))
-            page_start = pagination.first_item()
-            page_end = pagination.last_item()
+            pagination = self._setup_pagination(jobs)
             if not jobs:
                 flash('No jobs found.', 'warning')
-            job_details = self.get_job_details(jobs[page_start:page_end])
+            job_details = self.get_job_details(
+                    pagination.paginate(jobs))
             project_title = self.project.config.get('project', None)
             title = '{}: Jobs'.format(
                 project_title) if project_title else 'Jobs'
-            subtitle = '{} to {} of {} jobs'.format(page_start+1, page_end, len(jobs))
-            view_mode = request.args.get('view', 'list')
-            if view_mode == 'grid':
-                return render_template('jobs_grid.html',
-                                       jobs=job_details,
-                                       title=title,
-                                       subtitle=subtitle,
-                                       pagination=pagination)
-            else:
-                return render_template('jobs_list.html',
-                                       jobs=job_details,
-                                       title=title,
-                                       subtitle=subtitle,
-                                       pagination=pagination)
+            subtitle = pagination.item_counts()
+            return self._render_job_view(default_view='list',
+                                         jobs=job_details,
+                                         title=title,
+                                         subtitle=subtitle,
+                                         pagination=pagination)
 
         @dashboard.app.route('/jobs/<jobid>')
         def show_job(jobid):
@@ -313,17 +330,10 @@ class Dashboard:
             job_details = self.get_job_details([job])
             title = job_details[0]['title']
             subtitle = job_details[0]['subtitle']
-            view_mode = request.args.get('view', 'grid')
-            if view_mode == 'grid':
-                return render_template('jobs_grid.html',
-                                       jobs=job_details,
-                                       title=title,
-                                       subtitle=subtitle)
-            else:
-                return render_template('jobs_list.html',
-                                       jobs=job_details,
-                                       title=title,
-                                       subtitle=subtitle)
+            return self._render_job_view(default_view='grid',
+                                         jobs=job_details,
+                                         title=title,
+                                         subtitle=subtitle)
 
         @dashboard.app.route('/jobs/<jobid>/file/<filename>')
         def get_file(jobid, filename):
@@ -337,7 +347,7 @@ class Dashboard:
                                          mimetype='text/plain')
                 return send_file(job.fn(filename))
             else:
-                return 'File not found.', 404
+                abort(404)
 
         @dashboard.app.route('/modules', methods=['POST'])
         def change_modules():
@@ -347,3 +357,7 @@ class Dashboard:
                 else:
                     module.disable()
             return redirect(request.form.get('redirect', url_for('home')))
+
+        @dashboard.app.errorhandler(404)
+        def page_not_found(error):
+            return self._render_error(str(error))

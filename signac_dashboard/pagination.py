@@ -26,10 +26,30 @@ class Pagination(object):
         return self.page < self.pages
 
     def first_item(self):
-        return max((self.page - 1) * self.per_page, 0)
+        if self.per_page is None:
+            return 0
+        else:
+            return max((self.page - 1) * self.per_page, 0)
 
     def last_item(self):
-        return min(self.page * self.per_page, self.total_count)
+        if self.per_page is None:
+            return self.total_count
+        else:
+            return min(self.page * self.per_page, self.total_count)
+
+    def paginate(self, items):
+        if items is None:
+            return []
+        else:
+            return items[self.first_item():self.last_item()]
+
+    def item_counts(self, tag='jobs'):
+        if self.total_count > 0:
+            return '{} to {} of {} {}'.format(
+                    self.first_item() + 1, self.last_item(),
+                    self.total_count, tag)
+        else:
+            return '{} {}'.format(self.total_count, tag)
 
     def iter_pages(self, left_edge=2, left_current=3,
                    right_current=5, right_edge=2):
