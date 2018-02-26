@@ -43,7 +43,7 @@ class DashboardTestCase(unittest.TestCase):
     def test_job_count(self):
         rv = self.test_client.get('/jobs', follow_redirects=True)
         response = str(rv.get_data())
-        assert '{} statepoints'.format(self.project.num_jobs()) in response
+        assert '{} jobs'.format(self.project.num_jobs()) in response
 
     def test_sp_search(self):
         dictquery = {'a': 0}
@@ -52,7 +52,7 @@ class DashboardTestCase(unittest.TestCase):
         rv = self.test_client.get('/search?q={}'.format(query),
                                   follow_redirects=True)
         response = str(rv.get_data())
-        assert '{} statepoints'.format(true_num_jobs) in response
+        assert '{} jobs'.format(true_num_jobs) in response
 
     def test_doc_search(self):
         dictquery = {'sum': 1}
@@ -61,7 +61,7 @@ class DashboardTestCase(unittest.TestCase):
         rv = self.test_client.get('/search?q={}'.format(query),
                                   follow_redirects=True)
         response = str(rv.get_data())
-        assert '{} statepoints'.format(true_num_jobs) in response
+        assert '{} jobs'.format(true_num_jobs) in response
 
 
 if __name__ == '__main__':
