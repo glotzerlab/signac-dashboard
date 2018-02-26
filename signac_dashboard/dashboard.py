@@ -11,6 +11,7 @@ from flask_turbolinks import turbolinks
 import os
 import re
 import logging
+from functools import lru_cache
 import numbers
 import signac
 
@@ -22,6 +23,9 @@ DEFAULT_CACHE_TIME = 60 * 5
 class Dashboard:
 
     def __init__(self, config=None, project=None, modules=None):
+        if config is None:
+            config = {}
+        self.config = config
         self.app = self.create_app(config)
         cache.init_app(self.app)
         if modules is None:
@@ -62,7 +66,7 @@ class Dashboard:
         # Set up custom template paths
         # The paths in DASHBOARD_DIRS give the preferred order of template
         # loading
-        loader_list = list()
+        loader_list = []
         for dashpath in list(app.config.get('DASHBOARD_PATHS', [])):
             logger.warning("Adding '{}' to dashboard paths.".format(dashpath))
             loader_list.append(
@@ -103,7 +107,7 @@ class Dashboard:
 
     @cache.memoize(timeout=DEFAULT_CACHE_TIME)
     def _project_basic_index(self, include_job_document=False):
-        index = list()
+        index = []
         for item in self.project.index(
             include_job_document=include_job_document
         ):
@@ -115,7 +119,7 @@ class Dashboard:
         _index = self._project_basic_index()
         sp_index = self.project.build_job_statepoint_index(
             exclude_const=True, index=_index)
-        schema_variables = list()
+        schema_variables = []
         for keys, _ in sp_index:
             schema_variables.append(keys)
         return schema_variables
@@ -182,16 +186,19 @@ class Dashboard:
             flash('An error occurred while parsing your query.', 'danger')
             return []
 
-    def get_job_details(self, jobs):
-        job_details = [{
+    @lru_cache(maxsize=65536)
+    def _job_details(self, job, show_labels=False):
+        return {
             'title': self.job_title(job),
             'subtitle': self.job_subtitle(job),
             'labels': job.document['stages']
-            if 'stages' in job.document else [],
-            'url': url_for('show_job', jobid=str(job)),
-            'job': job
-        } for job in list(jobs)]
-        return job_details
+            if show_labels and 'stages' in job.document else [],
+            'url': url_for('show_job', jobid=job._id)
+        }
+
+    def get_job_details(self, jobs):
+        show_labels = 'labels' in self.config and self.config['labels']
+        return [self._job_details(job, show_labels) for job in list(jobs)]
 
     def register_routes(self, dashboard):
         @dashboard.app.context_processor
@@ -220,7 +227,7 @@ class Dashboard:
         @dashboard.app.route('/search')
         def search():
             query = request.args.get('q', None)
-            jobs = list()
+            jobs = []
             try:
                 if request.method != 'GET':
                     # Someday we may support search via POST, returning json
