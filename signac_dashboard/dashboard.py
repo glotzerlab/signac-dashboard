@@ -43,6 +43,12 @@ class Dashboard:
         else:
             self.project = project
 
+        # Try to update the project cache. Requires signac 0.9.2 or later.
+        try:
+            self.project.update_cache()
+        except:
+            pass
+
         self.assets = self.create_assets()
         self.register_routes(self)
 
