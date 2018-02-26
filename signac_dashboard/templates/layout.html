@@ -1,4 +1,6 @@
 {% import 'menu.jinja' as menu %}
+{% import 'pagination.jinja' as paginator %}
+
 <!doctype html>
 <html lang="en">
     <head>
@@ -138,8 +140,14 @@
                     {% endif %}
                     {% endwith %}
                 </section>
+                {% if pagination is defined %}
+                {{ paginator.render_pagination(pagination) }}
+                {% endif %}
                 {% if self.panels() %}
                 {% block panels %}{% endblock %}
+                {% endif %}
+                {% if pagination is defined %}
+                {{ paginator.render_pagination(pagination) }}
                 {% endif %}
             </div>
         </div>

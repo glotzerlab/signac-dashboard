@@ -14,6 +14,7 @@ import logging
 from functools import lru_cache
 import numbers
 import signac
+from .pagination import Pagination
 
 logger = logging.getLogger(__name__)
 cache = Cache(config={'CACHE_TYPE': 'simple'})
@@ -25,9 +26,13 @@ class Dashboard:
     def __init__(self, config=None, project=None, modules=None):
         if config is None:
             config = {}
+        config['PAGINATION'] = config.get('PAGINATION', True)
+        config['PER_PAGE'] = config.get('PER_PAGE', 25)
         self.config = config
         self.app = self.create_app(config)
+
         cache.init_app(self.app)
+
         if modules is None:
             modules = []
 
@@ -38,6 +43,7 @@ class Dashboard:
 
         self.assets = self.create_assets()
         self.register_routes(self)
+
         self.modules = modules
         for module in self.modules:
             module.register_assets(self)
@@ -76,6 +82,13 @@ class Dashboard:
         loader_list.append(app.jinja_loader)
 
         app.jinja_loader = jinja2.ChoiceLoader(loader_list)
+
+        # Add pagination support from http://flask.pocoo.org/snippets/44/
+        def url_for_other_page(page):
+            args = request.args.copy()
+            args['page'] = page
+            return url_for(request.endpoint, **args)
+        app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 
         turbolinks(app)
 
@@ -189,6 +202,7 @@ class Dashboard:
     @lru_cache(maxsize=65536)
     def _job_details(self, job, show_labels=False):
         return {
+            'job': job,
             'title': self.job_title(job),
             'subtitle': self.job_subtitle(job),
             'labels': job.document['stages']
@@ -197,7 +211,7 @@ class Dashboard:
         }
 
     def get_job_details(self, jobs):
-        show_labels = 'labels' in self.config and self.config['labels']
+        show_labels = self.config.get('labels', False)
         return [self._job_details(job, show_labels) for job in list(jobs)]
 
     def register_routes(self, dashboard):
@@ -226,6 +240,7 @@ class Dashboard:
 
         @dashboard.app.route('/search')
         def search():
+            page = int(request.args.get('page', 1))
             query = request.args.get('q', None)
             jobs = []
             try:
@@ -240,42 +255,55 @@ class Dashboard:
             except Exception as e:
                 flash('Invalid search: {}'.format(e), 'danger')
             finally:
-                job_details = self.get_job_details(jobs)
+                pagination = Pagination(page, self.config['PER_PAGE'], len(jobs))
+                page_start = pagination.first_item()
+                page_end = pagination.last_item()
+                job_details = self.get_job_details(jobs[page_start:page_end])
                 title = 'Search: {}'.format(query)
-                subtitle = '{} statepoints'.format(len(jobs))
+                subtitle = '{} to {} of {} jobs'.format(page_start+1, page_end, len(jobs))
                 view_mode = request.args.get('view', 'list')
                 if view_mode == 'grid':
                     return render_template('jobs_grid.html',
                                            jobs=job_details,
                                            query=query,
                                            title=title,
-                                           subtitle=subtitle)
+                                           subtitle=subtitle,
+                                           pagination=pagination)
                 else:
                     return render_template('jobs_list.html',
                                            jobs=job_details,
                                            query=query,
                                            title=title,
-                                           subtitle=subtitle)
+                                           subtitle=subtitle,
+                                           pagination=pagination)
 
         @dashboard.app.route('/jobs/')
         def jobs_list():
+            page = int(request.args.get('page', 1))
             jobs = self.get_all_jobs()
-            job_details = self.get_job_details(jobs)
+            pagination = Pagination(page, self.config['PER_PAGE'], len(jobs))
+            page_start = pagination.first_item()
+            page_end = pagination.last_item()
+            if not jobs:
+                flash('No jobs found.', 'warning')
+            job_details = self.get_job_details(jobs[page_start:page_end])
             project_title = self.project.config.get('project', None)
             title = '{}: Jobs'.format(
                 project_title) if project_title else 'Jobs'
-            subtitle = '{} statepoints'.format(len(jobs))
+            subtitle = '{} to {} of {} jobs'.format(page_start+1, page_end, len(jobs))
             view_mode = request.args.get('view', 'list')
             if view_mode == 'grid':
                 return render_template('jobs_grid.html',
                                        jobs=job_details,
                                        title=title,
-                                       subtitle=subtitle)
+                                       subtitle=subtitle,
+                                       pagination=pagination)
             else:
                 return render_template('jobs_list.html',
                                        jobs=job_details,
                                        title=title,
-                                       subtitle=subtitle)
+                                       subtitle=subtitle,
+                                       pagination=pagination)
 
         @dashboard.app.route('/jobs/<jobid>')
         def show_job(jobid):

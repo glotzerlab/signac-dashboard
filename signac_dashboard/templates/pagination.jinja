@@ -1,0 +1,33 @@
+{% macro render_pagination(pagination) %}
+<div class="column">
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        {% if pagination.has_prev %}
+        <a class="pagination-previous" href="{{ url_for_other_page(pagination.page - 1)
+        }}">&laquo; Previous</a>
+        {% else %}
+        <a class="pagination-previous" disabled>&laquo; Previous</a>
+        {% endif %}
+        {% if pagination.has_next %}
+        <a class="pagination-next" href="{{ url_for_other_page(pagination.page + 1)
+        }}">Next &raquo;</a>
+        {% else %}
+        <a class="pagination-next" disabled>Next &raquo;</a>
+        {% endif %}
+        <ul class="pagination-list">
+            {%- for page in pagination.iter_pages() %}
+            {% if page %}
+            {% if page != pagination.page %}
+            <li><a class="pagination-link" aria-label="Goto page {{ page
+            }}" href="{{ url_for_other_page(page) }}">{{ page }}</a></li>
+            {% else %}
+            <li><a class="pagination-link is-current" aria-label="Page {{ page
+            }}" aria-current="page" href="{{ url_for_other_page(page) }}">{{ page }}</a></li>
+            {% endif %}
+            {% else %}
+            <li><span class="pagination-ellipsis">&hellip;</span></li>
+            {% endif %}
+            {%- endfor %}
+        </ul>
+    </nav>
+</div>
+{% endmacro %}
