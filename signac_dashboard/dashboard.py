@@ -142,7 +142,9 @@ class Dashboard:
         # a human-readable form of the job title.
 
         def _format_num(num):
-            if isinstance(num, numbers.Real):
+            if isinstance(num, bool):
+                return str(num)
+            elif isinstance(num, numbers.Real):
                 return str(round(num, 2))
             return str(num)
 
