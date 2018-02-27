@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 ### Added
 - README documentation on searching
+- Added support for signac cache
+- Added LRU cache for job details
+- Added pagination support for much faster loading
+
+### Changed
+- Error handling is cleaner
+- Refactored job views
+- Job titles show statepoint booleans as True/False
 
 ## 0.1.2 - 2018-02-08
 ### Added

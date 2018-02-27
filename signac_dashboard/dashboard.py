@@ -13,7 +13,6 @@ import re
 import logging
 from functools import lru_cache
 import numbers
-from math import ceil
 from json import JSONDecodeError
 import signac
 from .pagination import Pagination
@@ -46,7 +45,7 @@ class Dashboard:
         # Try to update the project cache. Requires signac 0.9.2 or later.
         try:
             self.project.update_cache()
-        except:
+        except Exception:
             pass
 
         self.assets = self.create_assets()
@@ -223,16 +222,22 @@ class Dashboard:
         }
 
     def _setup_pagination(self, jobs):
+        total_count = len(jobs) if isinstance(jobs, list) else 0
         try:
             page = int(request.args.get('page', 1))
             assert page >= 1
-            if jobs is not None:
-                assert page <= ceil(len(jobs) / self.config['PER_PAGE'])
         except Exception as e:
             flash('Pagination Error. Defaulting to page 1.', 'danger')
             page = 1
-        pagination = Pagination(page, self.config['PER_PAGE'],
-                                len(jobs) if jobs is not None else 0)
+        pagination = Pagination(page, self.config['PER_PAGE'], total_count)
+        try:
+            assert page <= pagination.pages
+        except Exception as e:
+            page = pagination.pages
+            flash('Pagination Error. Displaying page {}.'.format(page),
+                  'danger')
+            pagination = Pagination(
+                    page, self.config['PER_PAGE'], total_count)
         return pagination
 
     def _render_job_view(self, *args, **kwargs):

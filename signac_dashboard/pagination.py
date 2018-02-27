@@ -6,6 +6,11 @@ from math import ceil
 
 class Pagination(object):
     """Pagination adapted from http://flask.pocoo.org/snippets/44/
+
+    :param int page: Current page number.
+    :param int per_page: Number of items per page. If 0 or `None`, all items
+                         will be displayed on one page.
+    :param int total_count: The total number of items being paginated.
     """
 
     def __init__(self, page, per_page, total_count):
@@ -15,7 +20,10 @@ class Pagination(object):
 
     @property
     def pages(self):
-        return int(ceil(self.total_count / float(self.per_page)))
+        if self.per_page is None or self.per_page == 0:
+            return 1
+        else:
+            return int(ceil(self.total_count / float(self.per_page)))
 
     @property
     def has_prev(self):
