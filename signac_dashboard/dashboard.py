@@ -337,28 +337,39 @@ class Dashboard:
 
         @dashboard.app.route('/jobs/<jobid>')
         def show_job(jobid):
-            job = self.project.open_job(id=jobid)
-            job_details = self.get_job_details([job])
-            title = job_details[0]['title']
-            subtitle = job_details[0]['subtitle']
-            return self._render_job_view(default_view='grid',
-                                         jobs=job_details,
-                                         title=title,
-                                         subtitle=subtitle)
+            try:
+                job = self.project.open_job(id=jobid)
+            except KeyError:
+                abort(404, 'The job id requested could not be found.')
+            else:
+                job_details = self.get_job_details([job])
+                title = job_details[0]['title']
+                subtitle = job_details[0]['subtitle']
+                return self._render_job_view(default_view='grid',
+                                             jobs=job_details,
+                                             title=title,
+                                             subtitle=subtitle)
 
         @dashboard.app.route('/jobs/<jobid>/file/<filename>')
         def get_file(jobid, filename):
-            job = self.project.open_job(id=jobid)
-            if(job.isfile(filename)):
-                # Return job-compress.o827643 and similar files as plain text
-                textfile_regexes = ['job-.*\.[oe][0-9]*', '.*\.log', '.*\.dat']
-                for regex in textfile_regexes:
-                    if(re.match('job-.*\.[oe][0-9]*', filename) is not None):
-                        return send_file(job.fn(filename),
-                                         mimetype='text/plain')
-                return send_file(job.fn(filename))
+            try:
+                job = self.project.open_job(id=jobid)
+            except KeyError:
+                abort(404, 'The job id requested could not be found.')
             else:
-                abort(404)
+                if job.isfile(filename):
+                    # Return job-compress.o827643 (and similar) as plaintext
+                    textfile_regexes = ['job-.*\.[oe][0-9]*',
+                                        '.*\.log',
+                                        '.*\.dat']
+                    for regex in textfile_regexes:
+                        if re.match('job-.*\.[oe][0-9]*',
+                                    filename) is not None:
+                            return send_file(job.fn(filename),
+                                             mimetype='text/plain')
+                    return send_file(job.fn(filename))
+                else:
+                    abort(404, 'The file requested does not exist.')
 
         @dashboard.app.route('/modules', methods=['POST'])
         def change_modules():
