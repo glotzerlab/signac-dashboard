@@ -11,11 +11,15 @@ import itertools
 class VideoViewer(Module):
 
     def __init__(self, name='Video Viewer',
-                 img_globs=['*.mp4', '*.m4v'], **kwargs):
+                 img_globs=['*.mp4', '*.m4v'],
+                 preload='none',    # auto|metadata|none
+                 poster=None, **kwargs):
         super().__init__(name=name,
                          context='JobContext',
                          template='cards/video_viewer.html',
                          **kwargs)
+        self.preload = preload
+        self.poster = poster
         self.img_globs = img_globs
 
     def get_cards(self, job):
@@ -26,6 +30,10 @@ class VideoViewer(Module):
                         videosrc=url_for('get_file',
                                          jobid=str(job),
                                          filename=filename),
+                        postersrc=url_for('get_file',
+                                          jobid=str(job),
+                                          filename=self.poster),
+                        preload=self.preload,
                         filename=filename)}
 
         image_globs = [glob.iglob(job.workspace() + os.sep + image_glob)
