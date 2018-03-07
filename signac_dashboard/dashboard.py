@@ -11,9 +11,10 @@ from flask_turbolinks import turbolinks
 import os
 import re
 import logging
+import shlex
 from functools import lru_cache
 import numbers
-from json import JSONDecodeError
+import json
 import signac
 from .pagination import Pagination
 
@@ -198,13 +199,18 @@ class Dashboard:
             querytype = 'document'
 
         try:
-            f = signac.contrib.filterparse._parse_json(query)
+            try:
+                f = json.loads(query)
+            except json.JSONDecodeError as error:
+                query = shlex.split(query)
+                f = signac.contrib.filterparse.parse_filter_arg(query)
+                flash("Search interpreted as '{}'.".format(f))
             if querytype == 'document':
                 jobs = self.project.find_jobs(doc_filter=f)
             else:
                 jobs = self.project.find_jobs(filter=f)
             return sorted(jobs, key=lambda job: self.job_sorter(job))
-        except JSONDecodeError as error:
+        except json.JSONDecodeError as error:
             flash('Failed to parse query argument. '
                   'Ensure that \'{}\' is valid JSON!'.format(query),
                   'warning')
