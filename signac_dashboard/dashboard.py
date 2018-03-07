@@ -199,12 +199,15 @@ class Dashboard:
             querytype = 'document'
 
         try:
-            try:
-                f = json.loads(query)
-            except json.JSONDecodeError as error:
-                query = shlex.split(query)
-                f = signac.contrib.filterparse.parse_filter_arg(query)
-                flash("Search interpreted as '{}'.".format(f))
+            if query is None:
+                f = None
+            else:
+                try:
+                    f = json.loads(query)
+                except json.JSONDecodeError as error:
+                    query = shlex.split(query)
+                    f = signac.contrib.filterparse.parse_filter_arg(query)
+                    flash("Search string interpreted as '{}'.".format(f))
             if querytype == 'document':
                 jobs = self.project.find_jobs(doc_filter=f)
             else:
@@ -303,8 +306,6 @@ class Dashboard:
                 if request.method != 'GET':
                     # Someday we may support search via POST, returning json
                     raise NotImplementedError('Unsupported search method.')
-                if not query:
-                    raise ValueError('No search query provided.')
                 jobs = self.job_search(query)
                 if not jobs:
                     flash('No jobs found for the provided query.', 'warning')
