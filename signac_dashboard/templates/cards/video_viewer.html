@@ -1,0 +1,7 @@
+<div class="video">
+  <video width="100%" height="auto" preload="{{ preload }}"
+    {% if postersrc is not none %}poster="{{ postersrc }}"{% endif %} controls>
+  <source src="{{ videosrc }}" type="video/mp4">
+  Your browser does not support the video tag.
+  </video>
+</div>
