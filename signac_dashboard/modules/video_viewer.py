@@ -11,7 +11,7 @@ import itertools
 class VideoViewer(Module):
 
     def __init__(self, name='Video Viewer',
-                 img_globs=['*.mp4', '*.m4v'],
+                 video_globs=['*.mp4', '*.m4v'],
                  preload='none',    # auto|metadata|none
                  poster=None, **kwargs):
         super().__init__(name=name,
@@ -20,24 +20,34 @@ class VideoViewer(Module):
                          **kwargs)
         self.preload = preload
         self.poster = poster
-        self.img_globs = img_globs
+        self.video_globs = video_globs
 
     def get_cards(self, job):
         def make_card(filename):
+            jobid = str(job)
+            if job.isfile(filename):
+                videosrc = url_for('get_file',
+                                   jobid=jobid,
+                                   filename=filename)
+            else:
+                raise FileNotFoundError('The filename {} could not be found '
+                                        'for job {}.'.format(filename, jobid))
+            if self.poster is not None and job.isfile(self.poster):
+                postersrc = url_for('get_file',
+                                    jobid=jobid,
+                                    filename=self.poster)
+            else:
+                postersrc = None
             return {'name': self.name + ': ' + filename,
                     'content': render_template(
                         self.template,
-                        videosrc=url_for('get_file',
-                                         jobid=str(job),
-                                         filename=filename),
-                        postersrc=url_for('get_file',
-                                          jobid=str(job),
-                                          filename=self.poster),
+                        videosrc=videosrc,
+                        postersrc=postersrc,
                         preload=self.preload,
                         filename=filename)}
 
-        image_globs = [glob.iglob(job.workspace() + os.sep + image_glob)
-                       for image_glob in self.img_globs]
-        image_files = itertools.chain(*image_globs)
-        for filepath in image_files:
+        video_globs = [glob.iglob(job.workspace() + os.sep + video_glob)
+                       for video_glob in self.video_globs]
+        video_files = itertools.chain(*video_globs)
+        for filepath in video_files:
             yield make_card(os.path.basename(filepath))
