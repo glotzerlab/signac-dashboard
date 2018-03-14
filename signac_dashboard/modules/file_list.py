@@ -8,20 +8,26 @@ import os
 
 class FileList(Module):
 
-    def __init__(self, **kwargs):
+    def __init__(self, prefix_jobid=True, **kwargs):
         super().__init__(name='File List',
                          context='JobContext',
                          template='cards/file_list.html',
                          **kwargs)
+        self.prefix_jobid = prefix_jobid
+
+    def download_name(self, job, filename):
+        if self.prefix_jobid:
+            return '{}_{}'.format(str(job), filename)
+        else:
+            return filename
 
     def get_cards(self, job):
         job_files = os.listdir(job.workspace())
-        files = list()
-        for filename in job_files:
-            files.append({
+        files = sorted([{
                 'name': filename,
-                'url': url_for('get_file', jobid=str(job), filename=filename)
-            })
-        files = sorted(files, key=lambda file: file['name'])
+                'url': url_for('get_file', jobid=str(job), filename=filename),
+                'download': self.download_name(job, filename)
+            } for filename in os.listdir(job.workspace())],
+            key=lambda filedata: filedata['name'])
         return [{'name': self.name,
                  'content': render_template(self.template, files=files)}]
