@@ -22,7 +22,6 @@ class FileList(Module):
             return filename
 
     def get_cards(self, job):
-        job_files = os.listdir(job.workspace())
         files = sorted([{
                 'name': filename,
                 'url': url_for('get_file', jobid=str(job), filename=filename),
