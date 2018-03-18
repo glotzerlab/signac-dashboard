@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Refactored job views
 - Job titles show statepoint booleans as True/False
 
+### Fixed
+- Heterogeneous schemas can generate job titles
+
 ## 0.1.2 - 2018-02-08
 ### Added
 - Search jobs with a document filter with `doc:{"key":"value"}`

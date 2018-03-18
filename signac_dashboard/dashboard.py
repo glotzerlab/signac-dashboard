@@ -160,9 +160,13 @@ class Dashboard:
             s = []
             for keys in sorted(self._schema_variables()):
                 v = job.statepoint()[keys[0]]
-                for key in keys[1:]:
-                    v = v[key]
-                s.append('{}={}'.format('.'.join(keys), _format_num(v)))
+                try:
+                    for key in keys[1:]:
+                        v = v[key]
+                except KeyError:  # Particular key is present in overall
+                    continue      # schema, but not this state point.
+                else:
+                    s.append('{}={}'.format('.'.join(keys), _format_num(v)))
             return ' '.join(s)
         except Exception as error:
             logger.warning(
