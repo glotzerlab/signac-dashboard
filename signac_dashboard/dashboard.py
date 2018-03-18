@@ -163,8 +163,8 @@ class Dashboard:
                 try:
                     for key in keys[1:]:
                         v = v[key]
-                except KeyError:
-                    continue    # Particular key not present in this job's state point
+                except KeyError:  # Particular key is present in overall
+                    continue      # schema, but not this state point.
                 else:
                     s.append('{}={}'.format('.'.join(keys), _format_num(v)))
             return ' '.join(s)
