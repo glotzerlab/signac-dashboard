@@ -119,3 +119,13 @@ notes_mod = Notes()
 ## Searching jobs
 
 The search bar accepts JSON-formatted queries in the same way as the `signac find` command-line tool. For example, using the query `{"key": "value"}` will return all jobs where the job statepoint `key` is set to `value`. To search jobs by their document key-value pairs, use `doc:` before the JSON-formatted query, like `doc:{"key": "value"}`.
+
+
+## Tips for Developers
+
+During continuous integration, the code is checked with `flake8`. Run the following commands to [set up a pre-commit hook](http://flake8.pycqa.org/en/latest/user/using-hooks.html) that will ensure your code is compliant before pushing.
+
+```bash
+flake8 --install-hook git
+git config --bool flake8.strict true
+```
