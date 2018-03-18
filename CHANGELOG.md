@@ -10,11 +10,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added support for signac cache
 - Added LRU cache for job details
 - Added pagination support for much faster loading
+- Added VideoViewer module
 
 ### Changed
 - Error handling is cleaner
 - Refactored job views
 - Job titles show statepoint booleans as True/False
+- Added job id prefix to downloaded filenames so they can be distinguished
 
 ### Fixed
 - Heterogeneous schemas can generate job titles
