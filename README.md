@@ -80,6 +80,7 @@ class MyModule(Module):
 The `StatepointList` module shows the key-value pairs in the statepoint.
 
 ```python
+from signac_dashboard.modules.statepoint_list import StatepointList
 sp_mod = StatepointList()
 ```
 
@@ -88,6 +89,7 @@ sp_mod = StatepointList()
 The `DocumentList` module shows the key-value pairs in the job document, with long values optionally truncated (default is no truncation).
 
 ```python
+from signac_dashboard.modules.document_list import DocumentList
 doc_mod = DocumentList(max_chars=140)  # Output will be truncated to one tweet length
 ```
 
@@ -96,16 +98,31 @@ doc_mod = DocumentList(max_chars=140)  # Output will be truncated to one tweet l
 The `FileList` module shows a listing of the job's workspace directory with links to each file. This can be very slow since it has to read the disk for every job displayed, use with caution in large signac projects.
 
 ```python
+from signac_dashboard.modules.file_list import FileList
 file_mod = FileList(enabled=False)  # Recommended to disable this module by default
 ```
 
 ### Image Viewer
 
-The `ImageViewer` module displays images in any format that works with a standard HTML `<img>` tag. The module defaults to showing all images of PNG, JPG, or GIF types. A filename or glob can be defined to select specific filenames. Multiple Image Viewer modules can be defined to enable/disable each image type.
+The `ImageViewer` module displays images in any format that works with a standard HTML `<img>` tag. The module defaults to showing all images of PNG, JPG, or GIF types. A filename or glob can be defined to select specific filenames. Multiple Image Viewer modules can be defined with different filenames or globs to enable/disable cards individually.
 
 ```python
+from signac_dashboard.modules.image_viewer import ImageViewer
 img_mod = ImageViewer()  # Shows all PNG/JPG/GIF images
 img_mod = ImageViewer(name='Bond Order Diagram', img_globs=['bod.png'])
+```
+
+### Video Viewer
+
+The `VideoViewer` module displays videos using a standard HTML `<video>` tag. The module defaults to showing all videos of MP4 or M4V types. A filename or glob can be defined to select specific filenames, which may be of any format supported by your browser with the `<video>` tag. A "poster" can be defined, which shows a thumbnail with that filename before the video is started. Videos do not preload by default, since file sizes can be large and there may be many videos on a page. To enable preloading, use the argument `preload='auto'` or `preload='metadata'`. Multiple Video Viewer modules can be defined with different filenames or globs to enable/disable cards individually.
+
+```python
+from signac_dashboard.modules.video_viewer import VideoViewer
+video_mod = VideoViewer()  # Shows all MP4/M4V videos
+video_mod = VideoViewer(name='Cool Science Video',
+                        video_globs=['cool_science.mp4'],
+                        poster='cool_science_thumbnail.jpg',
+                        preload='none')
 ```
 
 ### Notes
@@ -113,6 +130,7 @@ img_mod = ImageViewer(name='Bond Order Diagram', img_globs=['bod.png'])
 The `Notes` module uses the `'notes'` key in the job document to store plain text, perhaps human-readable descriptions of a job that may be useful in later analysis.
 
 ```python
+from signac_dashboard.modules.notes import Notes
 notes_mod = Notes()
 ```
 
