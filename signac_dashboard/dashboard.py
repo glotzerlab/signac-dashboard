@@ -1,22 +1,22 @@
 # Copyright (c) 2018 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
-from flask import Flask, redirect, request, url_for, render_template, \
-    send_file, flash, abort
+
+from flask import Flask, request, url_for, render_template, flash
 from werkzeug import url_encode
 import jinja2
 from flask_assets import Environment, Bundle
 from flask_cache import Cache
 from flask_turbolinks import turbolinks
 import os
-import re
 import logging
 import shlex
 from functools import lru_cache
-import numbers
+from numbers import Real
 import json
 import signac
 from .pagination import Pagination
+from .util import LazyView
 
 logger = logging.getLogger(__name__)
 cache = Cache(config={'CACHE_TYPE': 'simple'})
@@ -50,21 +50,21 @@ class Dashboard:
             pass
 
         self.assets = self.create_assets()
-        self.register_routes(self)
+        self.register_routes()
 
         self.modules = modules
         for module in self.modules:
             module.register_assets(self)
             module.register_routes(self)
 
-    def create_app(self, config=None):
+    def create_app(self, config={}):
         app = Flask('signac-dashboard')
         app.config.update(dict(
             SECRET_KEY=b'NlHFEbC89JkfGLC3Lpk8'
         ))
 
         # Load the provided config
-        app.config.update(config or {})
+        app.config.update(config)
 
         # Enable profiling
         if app.config.get('PROFILE'):
@@ -152,7 +152,7 @@ class Dashboard:
         def _format_num(num):
             if isinstance(num, bool):
                 return str(num)
-            elif isinstance(num, numbers.Real):
+            elif isinstance(num, Real):
                 return str(round(num, 2))
             return str(num)
 
@@ -278,7 +278,9 @@ class Dashboard:
         show_labels = self.config.get('labels', False)
         return [self._job_details(job, show_labels) for job in list(jobs)]
 
-    def register_routes(self, dashboard):
+    def register_routes(self):
+        dashboard = self
+
         @dashboard.app.context_processor
         def injections():
             injections = {
@@ -298,98 +300,18 @@ class Dashboard:
                 args[key] = value
             return '{}?{}'.format(request.path, url_encode(args))
 
-        @dashboard.app.route('/')
-        def home():
-            return redirect(url_for('jobs_list'))
+        def url(import_name, url_rules=[], **options):
+            view = LazyView(dashboard=self,
+                            import_name='signac_dashboard.' + import_name)
+            for url_rule in url_rules:
+                dashboard.app.add_url_rule(url_rule, view_func=view, **options)
 
-        @dashboard.app.route('/search')
-        def search():
-            query = request.args.get('q', None)
-            jobs = []
-            try:
-                if request.method != 'GET':
-                    # Someday we may support search via POST, returning json
-                    raise NotImplementedError('Unsupported search method.')
-                jobs = self.job_search(query)
-                if not jobs:
-                    flash('No jobs found for the provided query.', 'warning')
-            except Exception as error:
-                return self._render_error(error)
-            else:
-                pagination = self._setup_pagination(jobs)
-                job_details = self.get_job_details(
-                        pagination.paginate(jobs))
-                title = 'Search: {}'.format(query)
-                subtitle = pagination.item_counts()
-                return self._render_job_view(default_view='list',
-                                             jobs=job_details,
-                                             query=query,
-                                             title=title,
-                                             subtitle=subtitle,
-                                             pagination=pagination)
-
-        @dashboard.app.route('/jobs/')
-        def jobs_list():
-            jobs = self.get_all_jobs()
-            pagination = self._setup_pagination(jobs)
-            if not jobs:
-                flash('No jobs found.', 'warning')
-            job_details = self.get_job_details(
-                    pagination.paginate(jobs))
-            project_title = self.project.config.get('project', None)
-            title = '{}: Jobs'.format(
-                project_title) if project_title else 'Jobs'
-            subtitle = pagination.item_counts()
-            return self._render_job_view(default_view='list',
-                                         jobs=job_details,
-                                         title=title,
-                                         subtitle=subtitle,
-                                         pagination=pagination)
-
-        @dashboard.app.route('/jobs/<jobid>')
-        def show_job(jobid):
-            try:
-                job = self.project.open_job(id=jobid)
-            except KeyError:
-                abort(404, 'The job id requested could not be found.')
-            else:
-                job_details = self.get_job_details([job])
-                title = job_details[0]['title']
-                subtitle = job_details[0]['subtitle']
-                return self._render_job_view(default_view='grid',
-                                             jobs=job_details,
-                                             title=title,
-                                             subtitle=subtitle)
-
-        @dashboard.app.route('/jobs/<jobid>/file/<filename>')
-        def get_file(jobid, filename):
-            try:
-                job = self.project.open_job(id=jobid)
-            except KeyError:
-                abort(404, 'The job id requested could not be found.')
-            else:
-                if job.isfile(filename):
-                    # Return job-compress.o827643 (and similar) as plaintext
-                    textfile_regexes = ['job-.*\.[oe][0-9]*',
-                                        '.*\.log',
-                                        '.*\.dat']
-                    for regex in textfile_regexes:
-                        if re.match('job-.*\.[oe][0-9]*',
-                                    filename) is not None:
-                            return send_file(job.fn(filename),
-                                             mimetype='text/plain')
-                    return send_file(job.fn(filename))
-                else:
-                    abort(404, 'The file requested does not exist.')
-
-        @dashboard.app.route('/modules', methods=['POST'])
-        def change_modules():
-            for i, module in enumerate(self.modules):
-                if request.form.get('modules[{}]'.format(i)) == 'on':
-                    module.enable()
-                else:
-                    module.disable()
-            return redirect(request.form.get('redirect', url_for('home')))
+        url('views.home', ['/'])
+        url('views.search', ['/search'])
+        url('views.jobs_list', ['/jobs/'])
+        url('views.show_job', ['/jobs/<jobid>'])
+        url('views.get_file', ['/jobs/<jobid>/file/<filename>'])
+        url('views.change_modules', ['/modules'], methods=['POST'])
 
         @dashboard.app.errorhandler(404)
         def page_not_found(error):
