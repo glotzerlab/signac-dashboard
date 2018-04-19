@@ -10,13 +10,17 @@ import itertools
 
 class VideoViewer(Module):
 
-    def __init__(self, name='Video Viewer',
+    def __init__(self,
+                 name='Video Viewer',
+                 context='JobContext',
+                 template='cards/video_viewer.html',
                  video_globs=['*.mp4', '*.m4v'],
                  preload='none',    # auto|metadata|none
-                 poster=None, **kwargs):
+                 poster=None,
+                 **kwargs):
         super().__init__(name=name,
-                         context='JobContext',
-                         template='cards/video_viewer.html',
+                         context=context,
+                         template=template,
                          **kwargs)
         self.preload = preload
         self.poster = poster

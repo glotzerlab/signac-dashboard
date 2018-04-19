@@ -65,7 +65,7 @@
                                     <div class="field">
                                         <div class="control">
                                             <label class="checkbox">
-                                                <input type="checkbox" name="modules[{{ loop.index0 }}]"{% if module.is_enabled() %} checked{% endif %}>{{ module.name }}
+                                                <input type="checkbox" name="modules[{{ loop.index0 }}]"{% if module.enabled %} checked{% endif %}>{{ module.name }}
                                             </label>
                                         </div>
                                     </div>

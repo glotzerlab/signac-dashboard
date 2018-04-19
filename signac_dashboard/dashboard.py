@@ -15,10 +15,12 @@ import logging
 import warnings
 import shlex
 import argparse
+from importlib import import_module
 from functools import lru_cache
 from numbers import Real
 import json
 import signac
+from .module import ModuleEncoder
 from .pagination import Pagination
 from .util import LazyView
 
@@ -37,11 +39,13 @@ class Dashboard:
             self.project = project
 
         try:
-            dashboard_settings = self.project.document.dashboard()
+            # This dashboard document is read-only
+            dash_doc = self.project.document.dashboard()
         except AttributeError:
-            dashboard_settings = {}
-        self.config = config or dashboard_settings.get('config', {})
-        self.modules = modules
+            dash_doc = {}
+        self.config = config or dash_doc.get('config', {})
+        self.modules = modules or Dashboard.decode_modules(
+            dash_doc.get('modules', []))
 
         # Try to update the project cache. Requires signac 0.9.2 or later.
         with warnings.catch_warnings():
@@ -51,11 +55,51 @@ class Dashboard:
             except Exception:
                 pass
 
+    @classmethod
+    def encode_modules(cls, modules, target='dict'):
+        json_modules = json.dumps(modules, cls=ModuleEncoder,
+                                  sort_keys=True, indent=4)
+        if target == 'json':
+            return json_modules
+        else:
+            return json.loads(json_modules)
+
+    @property
+    def encoded_modules(self):
+        return Dashboard.encode_modules(self.modules)
+
+    @classmethod
+    def decode_modules(cls, json_modules, enabled_modules=None):
+        modules = []
+        if type(json_modules) == str:
+            json_modules = json.loads(json_modules)
+        if enabled_modules is None:
+            enabled_modules = list(range(len(json_modules)))
+        for i, module in enumerate(json_modules):
+            if type(module) == dict and \
+                    '_module' in module and \
+                    '_moduletype' in module:
+                try:
+                    _module = module['_module']
+                    _moduletype = module['_moduletype']
+                    modulecls = getattr(import_module(_module), _moduletype)
+                    module = modulecls(
+                        **{k: v for k, v in module.items()
+                           if k not in ['_module', '_moduletype']})
+                    if i in enabled_modules:
+                        module.enable()
+                    else:
+                        module.disable()
+                    modules.append(module)
+                except Exception:
+                    logger.warning('Could not import module:', module)
+        return modules
+
     def create_app(self, config={}):
         app = Flask('signac-dashboard')
-        app.config.update(dict(
-            SECRET_KEY=b'NlHFEbC89JkfGLC3Lpk8'
-        ))
+        app.config.update({
+            'SECRET_KEY': os.urandom(24)
+        })
 
         # Load the provided config
         app.config.update(config)
@@ -101,18 +145,24 @@ class Dashboard:
         assets.register('scss_all', scss_all)
         return assets
 
-    def run(self, host='localhost', port=8888, *args, **kwargs):
-
+    def prepare(self):
         # Set configuration defaults and save to the project document
         self.config.setdefault('PAGINATION', True)
         self.config.setdefault('PER_PAGE', 25)
 
         self.project.document.setdefault('dashboard', {})
-        self.project.document['dashboard'].setdefault('config', self.config)
+
+        # This dash_doc is synced to the project document
+        dash_doc = self.project.document.dashboard
+        dash_doc.setdefault('config', self.config)
+        dash_doc.setdefault('module_views', {})
+        dash_doc['module_views'].setdefault('Default', self.encoded_modules)
 
         self.app = self.create_app(self.config)
 
         with warnings.catch_warnings():
+            warnings.simplefilter(action='ignore',
+                                  category=DeprecationWarning)
             warnings.simplefilter(action='ignore',
                                   category=ExtDeprecationWarning)
             cache.init_app(self.app)
@@ -123,6 +173,8 @@ class Dashboard:
         for module in self.modules:
             module.register_assets(self)
             module.register_routes(self)
+
+    def run(self, host='localhost', port=8888, *args, **kwargs):
 
         max_retries = 5
         for _ in range(max_retries):
@@ -298,15 +350,16 @@ class Dashboard:
 
         @dashboard.app.context_processor
         def injections():
-            session.setdefault('modules', self.modules)
+            session.setdefault('modules', self.encoded_modules)
             session.setdefault('enabled_modules',
                                [i for i in range(len(self.modules))
-                                if self.modules[i].is_enabled()])
+                                if self.modules[i].enabled])
             return {
                 'APP_NAME': 'signac-dashboard',
                 'PROJECT_NAME': self.project.config['project'],
                 'PROJECT_DIR': self.project.config['project_dir'],
-                'modules': session['modules'],
+                'modules': Dashboard.decode_modules(
+                    session['modules'], session['enabled_modules']),
                 'enabled_modules': session['enabled_modules']}
 
         # Add pagination support from http://flask.pocoo.org/snippets/44/
@@ -342,6 +395,7 @@ class Dashboard:
             host = kwargs.pop('host', 'localhost')
             port = kwargs.pop('port', 8888)
             self.config['PROFILE'] = kwargs.pop('profile')
+            self.prepare()
             self.run(host=host, port=port)
 
         if parser is None:

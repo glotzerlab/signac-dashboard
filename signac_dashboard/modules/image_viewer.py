@@ -10,11 +10,15 @@ import itertools
 
 class ImageViewer(Module):
 
-    def __init__(self, name='Image Viewer',
-                 img_globs=['*.png', '*.jpg', '*.gif'], **kwargs):
+    def __init__(self,
+                 name='Image Viewer',
+                 context='JobContext',
+                 template='cards/image_viewer.html',
+                 img_globs=['*.png', '*.jpg', '*.gif'],
+                 **kwargs):
         super().__init__(name=name,
-                         context='JobContext',
-                         template='cards/image_viewer.html',
+                         context=context,
+                         template=template,
                          **kwargs)
         self.img_globs = img_globs
 

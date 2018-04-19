@@ -10,10 +10,15 @@ from collections import OrderedDict
 
 class DocumentList(Module):
 
-    def __init__(self, max_chars=None, **kwargs):
-        super().__init__(name='Job Document',
-                         context='JobContext',
-                         template='cards/document_list.html',
+    def __init__(self,
+                 name='Job Document',
+                 context='JobContext',
+                 template='cards/document_list.html',
+                 max_chars=None,
+                 **kwargs):
+        super().__init__(name=name,
+                         context=context,
+                         template=template,
                          **kwargs)
         self.max_chars = max_chars
 

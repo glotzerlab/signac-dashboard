@@ -91,11 +91,13 @@ def get_file(dashboard, jobid, filename):
 
 
 def change_modules(dashboard):
-    for i, module in enumerate(session['modules']):
+    enabled_modules = set(session.get('enabled_modules', []))
+    for i, module in enumerate(session.get('modules', [])):
         if request.form.get('modules[{}]'.format(i)) == 'on':
-            module.enable()
+            enabled_modules.add(i)
         else:
-            module.disable()
+            enabled_modules.discard(i)
+    session['enabled_modules'] = list(enabled_modules)
     return redirect(request.form.get('redirect', url_for('home')))
 
 

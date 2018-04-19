@@ -7,10 +7,14 @@ from flask import render_template, url_for, request
 
 class Notes(Module):
 
-    def __init__(self, **kwargs):
-        super().__init__(name='Notes',
-                         context='JobContext',
-                         template='cards/notes.html',
+    def __init__(self,
+                 name='Notes',
+                 context='JobContext',
+                 template='cards/notes.html',
+                 **kwargs):
+        super().__init__(name=name,
+                         context=context,
+                         template=template,
                          **kwargs)
 
     def get_cards(self, job):

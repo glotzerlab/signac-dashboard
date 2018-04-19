@@ -8,10 +8,14 @@ from collections import OrderedDict
 
 class StatepointList(Module):
 
-    def __init__(self, **kwargs):
-        super().__init__(name='Statepoint Parameters',
-                         context='JobContext',
-                         template='cards/statepoint_list.html',
+    def __init__(self,
+                 name='Statepoint Parameters',
+                 context='JobContext',
+                 template='cards/statepoint_list.html',
+                 **kwargs):
+        super().__init__(name=name,
+                         context=context,
+                         template=template,
                          **kwargs)
 
     def get_cards(self, job):

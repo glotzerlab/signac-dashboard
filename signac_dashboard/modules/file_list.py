@@ -8,10 +8,15 @@ import os
 
 class FileList(Module):
 
-    def __init__(self, prefix_jobid=True, **kwargs):
-        super().__init__(name='File List',
-                         context='JobContext',
-                         template='cards/file_list.html',
+    def __init__(self,
+                 name='File List',
+                 context='JobContext',
+                 template='cards/file_list.html',
+                 prefix_jobid=True,
+                 **kwargs):
+        super().__init__(name=name,
+                         context=context,
+                         template=template,
                          **kwargs)
         self.prefix_jobid = prefix_jobid
 
