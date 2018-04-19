@@ -2,15 +2,19 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
-from flask import Flask, request, url_for, render_template, flash
+from flask import Flask, session, request, url_for, render_template, flash
+from flask.exthook import ExtDeprecationWarning
 from werkzeug import url_encode
 import jinja2
 from flask_assets import Environment, Bundle
 from flask_cache import Cache
 from flask_turbolinks import turbolinks
 import os
+import sys
 import logging
+import warnings
 import shlex
+import argparse
 from functools import lru_cache
 from numbers import Real
 import json
@@ -25,37 +29,27 @@ DEFAULT_CACHE_TIME = 60 * 5
 
 class Dashboard:
 
-    def __init__(self, config=None, project=None, modules=None):
-        if config is None:
-            config = {}
-        config['PAGINATION'] = config.get('PAGINATION', True)
-        config['PER_PAGE'] = config.get('PER_PAGE', 25)
-        self.config = config
-        self.app = self.create_app(config)
-
-        cache.init_app(self.app)
-
-        if modules is None:
-            modules = []
+    def __init__(self, config={}, project=None, modules=[]):
 
         if project is None:
             self.project = signac.get_project()
         else:
             self.project = project
 
-        # Try to update the project cache. Requires signac 0.9.2 or later.
         try:
-            self.project.update_cache()
-        except Exception:
-            pass
-
-        self.assets = self.create_assets()
-        self.register_routes()
-
+            dashboard_settings = self.project.document.dashboard()
+        except AttributeError:
+            dashboard_settings = {}
+        self.config = config or dashboard_settings.get('config', {})
         self.modules = modules
-        for module in self.modules:
-            module.register_assets(self)
-            module.register_routes(self)
+
+        # Try to update the project cache. Requires signac 0.9.2 or later.
+        with warnings.catch_warnings():
+            warnings.simplefilter(action='ignore', category=FutureWarning)
+            try:
+                self.project.update_cache()
+            except Exception:
+                pass
 
     def create_app(self, config={}):
         app = Flask('signac-dashboard')
@@ -91,13 +85,6 @@ class Dashboard:
 
         app.jinja_loader = jinja2.ChoiceLoader(loader_list)
 
-        # Add pagination support from http://flask.pocoo.org/snippets/44/
-        def url_for_other_page(page):
-            args = request.args.copy()
-            args['page'] = page
-            return url_for(request.endpoint, **args)
-        app.jinja_env.globals['url_for_other_page'] = url_for_other_page
-
         turbolinks(app)
 
         return app
@@ -115,6 +102,28 @@ class Dashboard:
         return assets
 
     def run(self, host='localhost', port=8888, *args, **kwargs):
+
+        # Set configuration defaults and save to the project document
+        self.config.setdefault('PAGINATION', True)
+        self.config.setdefault('PER_PAGE', 25)
+
+        self.project.document.setdefault('dashboard', {})
+        self.project.document['dashboard'].setdefault('config', self.config)
+
+        self.app = self.create_app(self.config)
+
+        with warnings.catch_warnings():
+            warnings.simplefilter(action='ignore',
+                                  category=ExtDeprecationWarning)
+            cache.init_app(self.app)
+
+        self.assets = self.create_assets()
+        self.register_routes()
+
+        for module in self.modules:
+            module.register_assets(self)
+            module.register_routes(self)
+
         max_retries = 5
         for _ in range(max_retries):
             try:
@@ -278,20 +287,34 @@ class Dashboard:
         show_labels = self.config.get('labels', False)
         return [self._job_details(job, show_labels) for job in list(jobs)]
 
+    def url(self, import_name, url_rules=[], **options):
+        view = LazyView(dashboard=self,
+                        import_name='signac_dashboard.' + import_name)
+        for url_rule in url_rules:
+            self.app.add_url_rule(url_rule, view_func=view, **options)
+
     def register_routes(self):
         dashboard = self
 
         @dashboard.app.context_processor
         def injections():
-            injections = {
+            session.setdefault('modules', self.modules)
+            session.setdefault('enabled_modules',
+                               [i for i in range(len(self.modules))
+                                if self.modules[i].is_enabled()])
+            return {
                 'APP_NAME': 'signac-dashboard',
                 'PROJECT_NAME': self.project.config['project'],
                 'PROJECT_DIR': self.project.config['project_dir'],
-                'modules': self.modules,
-                'enabled_modules': [i for i in range(len(self.modules))
-                                    if self.modules[i].is_enabled()]
-            }
-            return injections
+                'modules': session['modules'],
+                'enabled_modules': session['enabled_modules']}
+
+        # Add pagination support from http://flask.pocoo.org/snippets/44/
+        @dashboard.app.template_global()
+        def url_for_other_page(page):
+            args = request.args.copy()
+            args['page'] = page
+            return url_for(request.endpoint, **args)
 
         @dashboard.app.template_global()
         def modify_query(**new_values):
@@ -300,19 +323,42 @@ class Dashboard:
                 args[key] = value
             return '{}?{}'.format(request.path, url_encode(args))
 
-        def url(import_name, url_rules=[], **options):
-            view = LazyView(dashboard=self,
-                            import_name='signac_dashboard.' + import_name)
-            for url_rule in url_rules:
-                dashboard.app.add_url_rule(url_rule, view_func=view, **options)
-
-        url('views.home', ['/'])
-        url('views.search', ['/search'])
-        url('views.jobs_list', ['/jobs/'])
-        url('views.show_job', ['/jobs/<jobid>'])
-        url('views.get_file', ['/jobs/<jobid>/file/<filename>'])
-        url('views.change_modules', ['/modules'], methods=['POST'])
-
         @dashboard.app.errorhandler(404)
         def page_not_found(error):
             return self._render_error(str(error))
+
+        self.url('views.home', ['/'])
+        self.url('views.search', ['/search'])
+        self.url('views.jobs_list', ['/jobs/'])
+        self.url('views.show_job', ['/jobs/<jobid>'])
+        self.url('views.get_file', ['/jobs/<jobid>/file/<filename>'])
+        self.url('views.change_modules', ['/modules'], methods=['POST'])
+
+    def main(self, parser=None):
+        """Call this function to use the dashboard command line interface."""
+
+        def _run(args):
+            kwargs = vars(args)
+            host = kwargs.pop('host', 'localhost')
+            port = kwargs.pop('port', 8888)
+            self.config['PROFILE'] = kwargs.pop('profile')
+            self.run(host=host, port=port)
+
+        if parser is None:
+            parser = argparse.ArgumentParser()
+
+        subparsers = parser.add_subparsers()
+
+        parser_run = subparsers.add_parser('run')
+        parser_run.add_argument(
+            '-p', '--profile',
+            action='store_true',
+            help='Profile dashboard server performance.')
+        parser_run.set_defaults(func=_run)
+
+        args = parser.parse_args()
+        if not hasattr(args, 'func'):
+            parser.print_usage()
+            sys.exit(2)
+
+        sys.exit(args.func(args))

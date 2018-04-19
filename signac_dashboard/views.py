@@ -2,8 +2,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
-from flask import redirect, request, url_for, send_file, \
-    flash, abort
+from flask import session, redirect, request, url_for, send_file, flash, abort
 import re
 
 
@@ -92,7 +91,7 @@ def get_file(dashboard, jobid, filename):
 
 
 def change_modules(dashboard):
-    for i, module in enumerate(dashboard.modules):
+    for i, module in enumerate(session['modules']):
         if request.form.get('modules[{}]'.format(i)) == 'on':
             module.enable()
         else:
