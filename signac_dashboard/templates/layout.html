@@ -7,10 +7,9 @@
         {% block head %}
         <meta charset="utf-8">
         <meta name="viewpoint" content="width=device-width,initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-        {% assets "scss_all" %}
+        {%- assets "scss_all" %}
         <link rel="stylesheet" href="{{ ASSET_URL }}">
-        {% endassets %}
+        {%- endassets %}
         <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}" />
         <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
         <meta name="apple-mobile-web-app-title" content="{{ APP_NAME }}">
@@ -21,12 +20,16 @@
             {% block title %}Page Title{% endblock %}{% if self.subtitle() %} - {% block subtitle %}{% endblock %}{% else %} - {{ APP_NAME }}{% endif %}
         </title>
         {% endblock %}
-        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-        {% assets "js_all" %}
+        {%- assets "jquery" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}
+        {%- assets "js_all" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        {% endassets %}
+        <!-- Module assets -->
+        {%- for assetfile in module_assets %}
+        <script type="text/javascript" src="{{ assetfile.url }}"></script>
+        {%- endfor %}
     </head>
     <body>
         <div class="columns">
@@ -35,7 +38,7 @@
                     <div class="menu">
                         {% for href, id, name, icon in menu.content %}
                         <a href="{{ href|e }}" class="item{% if id == menu.active_page %} active{% endif %}">
-                            <span class="icon"><i class="fa {{ icon }}"></i></span>
+                            <span class="icon"><i class="{{ icon }}"></i></span>
                             <span class="name">{{ name }}</span>
                         </a>
                         {% endfor %}
@@ -47,12 +50,12 @@
                             <p class="field">
                                 <a class="button" href="{{ modify_query(view='list') }}" title="List View">
                                     <span class="icon is-small">
-                                        <i class="fa fa-list"></i>
+                                        <i class="fas fa-list-ul"></i>
                                     </span>
                                 </a>
                                 <a class="button" href="{{ modify_query(view='grid') }}" title="Grid View">
                                     <span class="icon is-small">
-                                        <i class="fa fa-th"></i>
+                                        <i class="fas fa-th"></i>
                                     </span>
                                 </a>
                             </p>
@@ -91,7 +94,7 @@
                                     </p>
                                     <p class="control">
                                     <a class="button is-dark" onclick="document.getElementById('searchform').submit()">
-                                        &nbsp; <i class="fa fa-search"></i> &nbsp;
+                                        &nbsp; <i class="fas fa-search"></i> &nbsp;
                                     </a>
                                     </p>
                                 </div>
@@ -110,7 +113,7 @@
                                     </p>
                                     <p class="control">
                                     <a class="button is-dark" onclick="document.getElementById('searchform').submit()">
-                                        &nbsp; <i class="fa fa-search"></i> &nbsp;
+                                        &nbsp; <i class="fas fa-search"></i> &nbsp;
                                     </a>
                                     </p>
                                 </div>

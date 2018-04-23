@@ -85,13 +85,14 @@ class Dashboard:
                     modulecls = getattr(import_module(_module), _moduletype)
                     module = modulecls(
                         **{k: v for k, v in module.items()
-                           if k not in ['_module', '_moduletype']})
+                           if not k.startswith('_')})
                     if i in enabled_modules:
                         module.enable()
                     else:
                         module.disable()
                     modules.append(module)
-                except Exception:
+                except Exception as e:
+                    logger.error(e)
                     logger.warning('Could not import module:', module)
         return modules
 
@@ -116,7 +117,7 @@ class Dashboard:
         app.template_folder = signac_dashboard_path + '/templates'
 
         # Set up custom template paths
-        # The paths in DASHBOARD_DIRS give the preferred order of template
+        # The paths in DASHBOARD_PATHS give the preferred order of template
         # loading
         loader_list = []
         for dashpath in list(app.config.get('DASHBOARD_PATHS', [])):
@@ -135,15 +136,23 @@ class Dashboard:
 
     def create_assets(self):
         assets = Environment(self.app)
+        # jQuery is served as a standalone file
+        jquery = Bundle('js/jquery-*.min.js', output='gen/jquery.min.js')
         # JavaScript is combined into one file and minified
-        js_all = Bundle('js/*.js', filters='jsmin', output='gen/app.min.js')
+        js_all = Bundle('js/js_all/*.js',
+                        filters='jsmin',
+                        output='gen/app.min.js')
         # SCSS (Sassy CSS) is compiled to CSS and minified
         scss_all = Bundle('scss/app.scss',
                           filters='libsass,cssmin',
                           output='gen/app.min.css')
+        assets.register('jquery', jquery)
         assets.register('js_all', js_all)
         assets.register('scss_all', scss_all)
         return assets
+
+    def register_module_asset(self, asset):
+        self.module_assets.append(asset)
 
     def prepare(self):
         # Set configuration defaults and save to the project document
@@ -170,6 +179,7 @@ class Dashboard:
         self.assets = self.create_assets()
         self.register_routes()
 
+        self.module_assets = []
         for module in self.modules:
             module.register_assets(self)
             module.register_routes(self)
@@ -360,7 +370,9 @@ class Dashboard:
                 'PROJECT_DIR': self.project.config['project_dir'],
                 'modules': Dashboard.decode_modules(
                     session['modules'], session['enabled_modules']),
-                'enabled_modules': session['enabled_modules']}
+                'enabled_modules': session['enabled_modules'],
+                'module_assets': self.module_assets
+            }
 
         # Add pagination support from http://flask.pocoo.org/snippets/44/
         @dashboard.app.template_global()
