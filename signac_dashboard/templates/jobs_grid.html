@@ -16,7 +16,7 @@
 {% endif %}
     {% if ( enabled_modules|length > 1 and jobs|length > 1 ) or ( jobs|length == 1 and query is defined ) %}
     <h4 class="title is-4">{{ job_details.title }}</h4>
-    <h5 class="subtitle is-5"><a href="{{ job_details.url }}">{{ job_details.job|string }}</a></h5>
+    <h5 class="subtitle is-5"><a href="{{ url_for('show_job', jobid=job_details.job._id) }}">{{ job_details.job|string }}</a></h5>
     {% endif %}
     {% if enabled_modules|length > 1 %}
     <div class="columns is-mobile is-multiline">
@@ -32,7 +32,7 @@
                     <div class="card-header-title card-header-dashboard">
                         {% if enabled_modules|length <= 1 and jobs|length > 1 %}
                         <h5 class="title is-5">{{ job_details.title }}</h5>
-                        <h6 class="subtitle is-6"><a href="{{ job_details.url }}">{{ job_details.job|string }}</a></h6>
+                        <h6 class="subtitle is-6"><a href="{{ url_for('show_job', jobid=job_details.job._id) }}">{{ job_details.job|string }}</a></h6>
                         {% endif %}
                         {{ card.name }}
                     </div>

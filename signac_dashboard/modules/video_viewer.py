@@ -2,7 +2,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard.module import Module
-from flask import render_template, url_for
+from flask import render_template
 import os
 import glob
 import itertools
@@ -28,25 +28,15 @@ class VideoViewer(Module):
 
     def get_cards(self, job):
         def make_card(filename):
-            jobid = str(job)
-            if job.isfile(filename):
-                videosrc = url_for('get_file',
-                                   jobid=jobid,
-                                   filename=filename)
-            else:
+            jobid = job._id
+            if not job.isfile(filename):
                 raise FileNotFoundError('The filename {} could not be found '
                                         'for job {}.'.format(filename, jobid))
-            if self.poster is not None and job.isfile(self.poster):
-                postersrc = url_for('get_file',
-                                    jobid=jobid,
-                                    filename=self.poster)
-            else:
-                postersrc = None
             return {'name': self.name + ': ' + filename,
                     'content': render_template(
                         self.template,
-                        videosrc=videosrc,
-                        postersrc=postersrc,
+                        poster=self.poster if job.isfile(
+                            self.poster) else None,
                         preload=self.preload,
                         filename=filename)}
 

@@ -1,3 +1,3 @@
 <div class="image">
-  <img src="{{ imgsrc }}" alt="{{ filename }}" title="{{ filename }}" />
+  <img src="{{ url_for('get_file', jobid=jobid, filename=filename) }}" alt="{{ filename }}" title="{{ filename }}" />
 </div>

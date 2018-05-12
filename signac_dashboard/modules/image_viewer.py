@@ -2,7 +2,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard.module import Module
-from flask import render_template, url_for
+from flask import render_template
 import os
 import glob
 import itertools
@@ -27,9 +27,7 @@ class ImageViewer(Module):
             return {'name': self.name + ': ' + filename,
                     'content': render_template(
                         self.template,
-                        imgsrc=url_for('get_file',
-                                       jobid=str(job),
-                                       filename=filename),
+                        jobid=job._id,
                         filename=filename)}
 
         image_globs = [glob.iglob(job.workspace() + os.sep + image_glob)

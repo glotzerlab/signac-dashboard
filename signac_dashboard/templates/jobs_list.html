@@ -9,10 +9,10 @@
     <section class="panel">
         <div class="panel-block">
             <ul>
-                {% for job in jobs %}
+                {% for job_details in jobs %}
                 <li>
-                    <a href="{{ job.url }}">{{ job.title }} &mdash; {{ job.subtitle }}</a>
-                    {% for label in job.labels %}
+                    <a href="{{ url_for('show_job', jobid=job_details.job._id) }}">{{ job_details.title }} &mdash; {{ job_details.subtitle }}</a>
+                    {% for label in job_details.labels %}
                     <span class="tag">{{ label }}</span>
                     {% endfor %}
                 </li>

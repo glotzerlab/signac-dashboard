@@ -2,7 +2,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard.module import Module
-from flask import render_template, url_for
+from flask import render_template
 import os
 
 
@@ -29,7 +29,7 @@ class FileList(Module):
     def get_cards(self, job):
         files = sorted([{
                 'name': filename,
-                'url': url_for('get_file', jobid=str(job), filename=filename),
+                'jobid': job._id,
                 'download': self.download_name(job, filename)
             } for filename in os.listdir(job.workspace())],
             key=lambda filedata: filedata['name'])

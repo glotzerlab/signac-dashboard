@@ -302,7 +302,6 @@ class Dashboard:
             'subtitle': self.job_subtitle(job),
             'labels': job.document['stages']
             if show_labels and 'stages' in job.document else [],
-            'url': url_for('show_job', jobid=job._id)
         }
 
     def _setup_pagination(self, jobs):
@@ -349,9 +348,12 @@ class Dashboard:
         show_labels = self.config.get('labels', False)
         return [self._job_details(job, show_labels) for job in list(jobs)]
 
-    def url(self, import_name, url_rules=[], **options):
+    def url(self, import_name, url_rules=[], import_file='signac_dashboard',
+            **options):
+        if import_file is not None:
+            import_name = import_file + '.' + import_name
         view = LazyView(dashboard=self,
-                        import_name='signac_dashboard.' + import_name)
+                        import_name=import_name)
         for url_rule in url_rules:
             self.app.add_url_rule(url_rule, view_func=view, **options)
 

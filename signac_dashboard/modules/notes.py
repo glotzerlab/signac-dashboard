@@ -2,7 +2,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard.module import Module
-from flask import render_template, url_for, request, abort
+from flask import render_template, request, abort
 from jinja2.exceptions import TemplateNotFound
 
 
@@ -20,10 +20,8 @@ class Notes(Module):
 
     def get_cards(self, job):
         note_text = job.document.get('notes', '')
-        notes_action = url_for('notes_update')
         return [{'name': self.name, 'content': render_template(
-            self.template, notes_action=notes_action, note_text=note_text,
-            jobid=str(job))}]
+            self.template, note_text=note_text, jobid=job._id)}]
 
     def register_routes(self, dashboard):
         @dashboard.app.route('/module/notes/update', methods=['POST'])
