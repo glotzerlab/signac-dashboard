@@ -28,7 +28,11 @@
         {% endassets %}
         <!-- Module assets -->
         {%- for assetfile in module_assets %}
+        {%- if assetfile.url.endswith('css') %}
+        <link rel="stylesheet" href="{{ assetfile.url }}">
+        {%- else %}
         <script type="text/javascript" src="{{ assetfile.url }}"></script>
+        {%- endif %}
         {%- endfor %}
     </head>
     <body>
