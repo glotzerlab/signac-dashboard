@@ -55,6 +55,9 @@ class Dashboard:
             except Exception:
                 pass
 
+    def get_cache(self):
+        return cache
+
     @classmethod
     def encode_modules(cls, modules, target='dict'):
         json_modules = json.dumps(modules, cls=ModuleEncoder,
