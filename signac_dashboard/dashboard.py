@@ -412,6 +412,7 @@ class Dashboard:
             host = kwargs.pop('host', 'localhost')
             port = kwargs.pop('port', 8888)
             self.config['PROFILE'] = kwargs.pop('profile')
+            self.config['DEBUG'] = kwargs.pop('debug')
             self.prepare()
             self.run(host=host, port=port)
 
@@ -424,7 +425,17 @@ class Dashboard:
         parser_run.add_argument(
             '-p', '--profile',
             action='store_true',
-            help='Profile dashboard server performance.')
+            help='Enable flask performance profiling.')
+        parser_run.add_argument(
+            '-d', '--debug',
+            action='store_true',
+            help='Enable flask debug mode.')
+        parser_run.add_argument(
+            '--host', type=str,
+            help='Host (binding address). Default: localhost')
+        parser_run.add_argument(
+            '--port', type=int,
+            help='Port to listen on. Default: 8888')
         parser_run.set_defaults(func=_run)
 
         args = parser.parse_args()
