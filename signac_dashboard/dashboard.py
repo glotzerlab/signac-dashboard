@@ -41,7 +41,7 @@ class Dashboard:
             dash_doc = {}
         self.config = config or dash_doc.get('config', {})
         self.modules = modules or Dashboard.decode_modules(
-            dash_doc.get('modules', []))
+            dash_doc.get('module_views', {}).get('Default', []))
 
         # Try to update the project cache. Requires signac 0.9.2 or later.
         with warnings.catch_warnings():
@@ -69,6 +69,7 @@ class Dashboard:
         modules = []
         if type(json_modules) == str:
             json_modules = json.loads(json_modules)
+        logger.info("Loading modules: {}".format(json_modules))
         if enabled_modules is None:
             enabled_modules = list(range(len(json_modules)))
         for i, module in enumerate(json_modules):

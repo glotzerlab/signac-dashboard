@@ -4,17 +4,20 @@
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard import Dashboard
 import signac_dashboard.modules
-from signac import init_project
+import signac
 
 if __name__ == '__main__':
-    project = init_project('dashboard-test-project')
-    for a in range(10):
-        for b in range(10):
-            project.open_job({'a': a, 'b': b}).init()
+    try:
+        project = signac.get_project()
+    except LookupError:
+        project = signac.init_project('dashboard-test-project')
+        for a in range(10):
+            for b in range(10):
+                project.open_job({'a': a, 'b': b}).init()
 
-    # Create a list of all the modules, with their default settings
     modules = []
-    for m in signac_dashboard.modules.__all__:
-        modules.append(getattr(signac_dashboard.modules, m).__call__())
-
+    if 'dashboard' not in project.document:
+        # Initialize a new Dashboard using all modules with default settings
+        for m in signac_dashboard.modules.__all__:
+            modules.append(getattr(signac_dashboard.modules, m).__call__())
     Dashboard(modules=modules).main()
