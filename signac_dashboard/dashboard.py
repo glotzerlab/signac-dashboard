@@ -6,7 +6,6 @@ from flask import Flask, request, url_for, render_template, flash
 from werkzeug import url_encode
 import jinja2
 from flask_assets import Environment, Bundle
-from flask_cache import Cache
 from flask_turbolinks import turbolinks
 import os
 import logging
@@ -19,8 +18,6 @@ from .pagination import Pagination
 from .util import LazyView
 
 logger = logging.getLogger(__name__)
-cache = Cache(config={'CACHE_TYPE': 'simple'})
-DEFAULT_CACHE_TIME = 60 * 5
 
 
 class Dashboard:
@@ -32,8 +29,6 @@ class Dashboard:
         config['PER_PAGE'] = config.get('PER_PAGE', 25)
         self.config = config
         self.app = self.create_app(config)
-
-        cache.init_app(self.app)
 
         if modules is None:
             modules = []
@@ -126,7 +121,6 @@ class Dashboard:
                     port += 1
                 pass
 
-    @cache.memoize(timeout=DEFAULT_CACHE_TIME)
     def _project_basic_index(self, include_job_document=False):
         index = []
         for item in self.project.index(
@@ -135,7 +129,6 @@ class Dashboard:
             index.append(item)
         return index
 
-    @cache.cached(timeout=DEFAULT_CACHE_TIME, key_prefix='_schema_variables')
     def _schema_variables(self):
         _index = self._project_basic_index()
         sp_index = self.project.build_job_statepoint_index(
@@ -174,8 +167,6 @@ class Dashboard:
                 "Returning job-id as fallback.".format(error))
             return str(job)
 
-    @cache.cached(timeout=DEFAULT_CACHE_TIME,
-                  key_prefix='_project_min_len_unique_id')
     def _project_min_len_unique_id(self):
         return self.project.min_len_unique_id()
 
@@ -189,13 +180,11 @@ class Dashboard:
         # can be used as a sorting index.
         return self.job_title(job)
 
-    @cache.cached(timeout=DEFAULT_CACHE_TIME, key_prefix='get_all_jobs')
     def get_all_jobs(self):
         all_jobs = sorted(self.project.find_jobs(),
                           key=lambda job: self.job_sorter(job))
         return all_jobs
 
-    @cache.memoize(timeout=DEFAULT_CACHE_TIME)
     def job_search(self, query):
         querytype = 'statepoint'
         if query[:4] == 'doc:':
