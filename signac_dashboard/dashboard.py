@@ -410,18 +410,6 @@ class Dashboard:
             help="Display the version number and exit.")
         subparsers = parser.add_subparsers()
 
-        # This is a hack, as argparse itself does not
-        # allow to parse only --version without any
-        # of the other required arguments.
-        if '--version' in sys.argv:
-            from . import __version__
-            print('signac-dashboard', __version__)
-            sys.exit(0)
-
-        args = parser.parse_args()
-        if args.debug:
-            logger.setLevel(logging.DEBUG)
-
         parser_run = subparsers.add_parser('run')
         parser_run.add_argument(
             '-p', '--profile',
@@ -439,9 +427,38 @@ class Dashboard:
             help='Port to listen on. Default: 8888')
         parser_run.set_defaults(func=_run)
 
+        # This is a hack, as argparse itself does not
+        # allow to parse only --version without any
+        # of the other required arguments.
+        if '--version' in sys.argv:
+            from . import __version__
+            print('signac-dashboard', __version__)
+            sys.exit(0)
+
         args = parser.parse_args()
+
+        if args.debug:
+            logger.setLevel(logging.DEBUG)
+
         if not hasattr(args, 'func'):
             parser.print_usage()
             sys.exit(2)
-
-        sys.exit(args.func(args))
+        try:
+            args.func(args)
+        except KeyboardInterrupt:
+            logger.error("Interrupted.")
+            if args.debug:
+                raise
+            sys.exit(1)
+        except RuntimeWarning as warning:
+            logger.warning("Warning: {}".format(warning))
+            if args.debug:
+                raise
+            sys.exit(1)
+        except Exception as error:
+            logger.error('Error: {}'.format(error))
+            if args.debug:
+                raise
+            sys.exit(1)
+        else:
+            sys.exit(0)
