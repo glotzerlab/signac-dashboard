@@ -2,7 +2,8 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
-from flask import session, redirect, request, url_for, send_file, flash, abort
+from flask import (session, redirect, request, url_for, send_file, flash,
+                   abort, render_template)
 import re
 
 
@@ -99,6 +100,10 @@ def change_modules(dashboard):
             enabled_modules.discard(i)
     session['enabled_modules'] = list(enabled_modules)
     return redirect(request.form.get('redirect', url_for('home')))
+
+
+def settings(dashboard):
+    return render_template('settings.html')
 
 
 def page_not_found(dashboard, error):

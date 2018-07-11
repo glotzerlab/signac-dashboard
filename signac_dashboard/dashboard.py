@@ -379,6 +379,7 @@ class Dashboard:
             return self._render_error(str(error))
 
         self.url('views.home', ['/'])
+        self.url('views.settings', ['/settings'])
         self.url('views.search', ['/search'])
         self.url('views.jobs_list', ['/jobs/'])
         self.url('views.show_job', ['/jobs/<jobid>'])
