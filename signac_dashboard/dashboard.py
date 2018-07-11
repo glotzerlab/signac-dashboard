@@ -385,7 +385,7 @@ class Dashboard:
         self.url('views.get_file', ['/jobs/<jobid>/file/<filename>'])
         self.url('views.change_modules', ['/modules'], methods=['POST'])
 
-    def main(self, parser=None):
+    def main(self):
         """Call this function to use the dashboard command line interface."""
 
         def _run(args):
@@ -397,10 +397,30 @@ class Dashboard:
             self.prepare()
             self.run(host=host, port=port)
 
-        if parser is None:
-            parser = argparse.ArgumentParser()
-
+        parser = argparse.ArgumentParser(
+            description="signac-dashboard is a web-based data visualization "
+                        "and analysis tool, part of the signac framework.")
+        parser.add_argument(
+            '--debug',
+            action='store_true',
+            help="Show traceback on error for debugging.")
+        parser.add_argument(
+            '--version',
+            action='store_true',
+            help="Display the version number and exit.")
         subparsers = parser.add_subparsers()
+
+        # This is a hack, as argparse itself does not
+        # allow to parse only --version without any
+        # of the other required arguments.
+        if '--version' in sys.argv:
+            from . import __version__
+            print('signac-dashboard', __version__)
+            sys.exit(0)
+
+        args = parser.parse_args()
+        if args.debug:
+            logger.setLevel(logging.DEBUG)
 
         parser_run = subparsers.add_parser('run')
         parser_run.add_argument(

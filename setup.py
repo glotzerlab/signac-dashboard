@@ -37,4 +37,9 @@ setup(
     keywords='visualization dashboard signac framework',
     url='https://bitbucket.org/glotzer/signac-dashboard',
 
+    entry_points={
+        'console_scripts': [
+            'signac-dashboard = signac_dashboard.__main__:main',
+        ],
+    },
 )
