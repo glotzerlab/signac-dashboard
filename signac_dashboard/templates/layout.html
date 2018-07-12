@@ -48,7 +48,7 @@
                     </div>
                     <div class="sidebar-content">
                         {% if self.sidebar() %}{% block sidebar %}{% endblock %}{% endif %}
-                        {% if modules|length > 0 and jobs is defined and jobs|length > 0 %}
+                        {% if modules|length > 0 and g.jobs is defined and g.jobs|length > 0 %}
                         <div class="box sidebar-box">
                             <p class="field">
                                 <a class="button" href="{{ modify_query(view='list') }}" title="List View">
