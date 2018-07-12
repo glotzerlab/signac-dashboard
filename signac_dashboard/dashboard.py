@@ -266,7 +266,8 @@ class Dashboard:
                 except json.JSONDecodeError as error:
                     query = shlex.split(query)
                     f = signac.contrib.filterparse.parse_filter_arg(query)
-                    flash("Search string interpreted as '{}'.".format(f))
+                    flash("Search string interpreted as '{}'.".format(
+                        json.dumps(f)))
             if querytype == 'document':
                 jobs = self.project.find_jobs(doc_filter=f)
             else:
