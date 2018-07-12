@@ -1,15 +1,14 @@
 {% extends "layout.html" %}
-{% set active_page = "jobs" %}
 
-{% block title %}{{ title }}{% endblock %}
-{% block subtitle %}{{ subtitle }}{% endblock %}
+{% block title %}{{ g.title }}{% endblock %}
+{% block subtitle %}{{ g.subtitle }}{% endblock %}
 {% block panels %}
-{% if jobs|length > 0 %}
+{% if g.jobs|length > 0 %}
 <div class="column">
     <section class="panel">
         <div class="panel-block">
             <ul>
-                {% for job_details in jobs %}
+                {% for job_details in g.jobs %}
                 <li>
                     <a href="{{ url_for('show_job', jobid=job_details.job._id) }}">{{ job_details.title }} &mdash; {{ job_details.subtitle }}</a>
                     {% for label in job_details.labels %}

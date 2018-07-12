@@ -3,7 +3,7 @@
 # This software is licensed under the BSD 3-Clause License.
 
 from flask import (session, redirect, request, url_for, send_file, flash,
-                   abort, render_template)
+                   abort, render_template, g)
 import re
 
 
@@ -24,35 +24,25 @@ def search(dashboard):
     except Exception as error:
         return dashboard._render_error(error)
     else:
-        pagination = dashboard._setup_pagination(jobs)
-        job_details = dashboard.get_job_details(
-                pagination.paginate(jobs))
-        title = 'Search: {}'.format(query)
-        subtitle = pagination.item_counts()
-        return dashboard._render_job_view(default_view='list',
-                                          jobs=job_details,
-                                          query=query,
-                                          title=title,
-                                          subtitle=subtitle,
-                                          pagination=pagination)
+        g.query = query
+        g.pagination = dashboard._setup_pagination(jobs)
+        g.jobs = dashboard.get_job_details(
+                g.pagination.paginate(jobs))
+        g.title = 'Search: {}'.format(query)
+        g.subtitle = g.pagination.item_counts()
+        return dashboard._render_job_view(default_view='list')
 
 
 def jobs_list(dashboard):
     jobs = dashboard.get_all_jobs()
-    pagination = dashboard._setup_pagination(jobs)
+    g.pagination = dashboard._setup_pagination(jobs)
     if not jobs:
         flash('No jobs found.', 'warning')
-    job_details = dashboard.get_job_details(
-            pagination.paginate(jobs))
+    g.jobs = dashboard.get_job_details(g.pagination.paginate(jobs))
     project_title = dashboard.project.config.get('project', None)
-    title = '{}: Jobs'.format(
-        project_title) if project_title else 'Jobs'
-    subtitle = pagination.item_counts()
-    return dashboard._render_job_view(default_view='list',
-                                      jobs=job_details,
-                                      title=title,
-                                      subtitle=subtitle,
-                                      pagination=pagination)
+    g.title = '{}: Jobs'.format(project_title) if project_title else 'Jobs'
+    g.subtitle = g.pagination.item_counts()
+    return dashboard._render_job_view(default_view='list')
 
 
 def show_job(dashboard, jobid):
@@ -61,13 +51,10 @@ def show_job(dashboard, jobid):
     except KeyError:
         abort(404, 'The job id requested could not be found.')
     else:
-        job_details = dashboard.get_job_details([job])
-        title = job_details[0]['title']
-        subtitle = job_details[0]['subtitle']
-        return dashboard._render_job_view(default_view='grid',
-                                          jobs=job_details,
-                                          title=title,
-                                          subtitle=subtitle)
+        g.jobs = dashboard.get_job_details([job])
+        g.title = g.jobs[0]['title']
+        g.subtitle = g.jobs[0]['subtitle']
+        return dashboard._render_job_view(default_view='grid')
 
 
 def get_file(dashboard, jobid, filename):
@@ -103,6 +90,7 @@ def change_modules(dashboard):
 
 
 def settings(dashboard):
+    g.active_page = 'settings'
     return render_template('settings.html')
 
 

@@ -2,7 +2,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
-from flask import Flask, session, request, url_for, render_template, flash
+from flask import Flask, session, request, url_for, render_template, flash, g
 from werkzeug import url_encode
 import jinja2
 from flask_assets import Environment, Bundle
@@ -308,6 +308,7 @@ class Dashboard:
         return pagination
 
     def _render_job_view(self, *args, **kwargs):
+        g.active_page = 'jobs'
         view_mode = request.args.get('view', kwargs.get(
             'default_view', 'list'))
         if view_mode == 'grid':
