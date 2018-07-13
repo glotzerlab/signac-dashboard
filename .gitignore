@@ -7,3 +7,4 @@ signac_dashboard.egg-info/
 build/
 dist/
 .signac_sp_cache.json.gz
+doc/_*
