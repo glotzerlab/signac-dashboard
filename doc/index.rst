@@ -25,8 +25,8 @@ Welcome to signac-dashboard's documentation!
 
 About
 -----
-``signac-dashboard`` is a data visualization, analysis, and "dashboard" monitoring tool as part of the [signac framework](https://glotzerlab.engin.umich.edu/signac).
-The signac-dashboard interface allows users to rapidly view data managed in a [signac project](http://signac.readthedocs.io/en/latest/projects.html).
+``signac-dashboard`` is a data visualization, analysis, and "dashboard" monitoring tool as part of the `signac framework <https://glotzerlab.engin.umich.edu/signac>`_.
+The signac-dashboard interface allows users to rapidly view data managed in a `signac project <http://signac.readthedocs.io/en/latest/projects.html>`_.
 
 
 .. important::
