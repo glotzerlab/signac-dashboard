@@ -146,14 +146,14 @@
                     {% endif %}
                     {% endwith %}
                 </section>
-                {% if pagination is defined %}
-                {{ paginator.render_pagination(pagination) }}
+                {% if g.pagination is defined %}
+                {{ paginator.render_pagination(g.pagination) }}
                 {% endif %}
                 {% if self.panels() %}
                 {% block panels %}{% endblock %}
                 {% endif %}
-                {% if pagination is defined %}
-                {{ paginator.render_pagination(pagination) }}
+                {% if g.pagination is defined %}
+                {{ paginator.render_pagination(g.pagination) }}
                 {% endif %}
             </div>
         </div>
