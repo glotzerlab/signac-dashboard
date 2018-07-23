@@ -6,7 +6,7 @@ from flask import Flask, redirect, request, url_for, render_template, \
 from werkzeug import url_encode
 import jinja2
 from flask_assets import Environment, Bundle
-from flask_cache import Cache
+from flask_caching import Cache
 from flask_turbolinks import turbolinks
 import os
 import re

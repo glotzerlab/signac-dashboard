@@ -17,7 +17,7 @@ setup(
         'signac>=0.8',
         'Flask>=0.12',
         'Flask-Assets',
-        'Flask-Cache',
+        'flask_caching',
         'Flask-Turbolinks',
         'libsass',
         'cssmin',
