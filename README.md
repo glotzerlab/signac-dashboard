@@ -2,7 +2,7 @@
 
 ## About
 
-Data visualization, analysis, and "dashboard" monitoring tool as part of the [signac framework](https://glotzerlab.engin.umich.edu/signac).
+Data visualization, analysis, and "dashboard" monitoring tool as part of the [signac framework](http://www.signac.io).
 The signac-dashboard interface allows users to rapidly view data managed in a [signac project](http://signac.readthedocs.io/en/latest/projects.html).
 
 *The software is currently in an early development stage.*
@@ -24,6 +24,10 @@ and then install using pip:
 ```bash
 $ pip install .
 ```
+
+## Documentation
+
+Documentation is hosted on [signac-dashboard.readthedocs.io](https://signac-dashboard.readthedocs.io/en/latest/).
 
 ## Usage
 
