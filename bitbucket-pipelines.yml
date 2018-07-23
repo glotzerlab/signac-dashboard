@@ -16,3 +16,49 @@ pipelines:
           - python setup.py build
           - pip install .
           - python -m unittest discover tests/ -v
+  branches:
+    release-*:
+      - step:
+          name: 'build and test'
+          script:
+            - python --version
+            - pip --version
+            - pip install -U flake8
+            - python -m flake8 --show-source signac_dashboard/
+            - git submodule update --init --recursive
+            - python setup.py build
+            - pip install .
+            - python -m unittest discover tests/ -v
+      - step:
+          name: 'deploy-test.pypi.org'
+          deployment: test
+          script:
+            - python --version
+            - python -m pip --version
+            - python -m pip install -U twine wheel setuptools
+            - python -m twine --version
+            - python -m wheel version
+            - bash .test-deploy.bash
+  tags:
+   v*:
+      - step:
+          name: 'build and test'
+          script:
+            - python --version
+            - pip --version
+            - pip install -U flake8
+            - python -m flake8 --show-source signac_dashboard/
+            - git submodule update --init --recursive
+            - python setup.py build
+            - pip install .
+            - python -m unittest discover tests/ -v
+      - step:
+          name: 'deploy-test.pypi.org'
+          deployment: test
+          script:
+            - python --version
+            - python -m pip --version
+            - python -m pip install -U twine wheel setuptools
+            - python -m twine --version
+            - python -m wheel version
+            - bash .deploy.bash
