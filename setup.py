@@ -1,18 +1,26 @@
 # Copyright (c) 2018 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
-import sys
+import os
 from setuptools import setup, find_packages
 
-if sys.version_info < (3, 4, 0):
-    print('Error: signac-dashboard requires Python version >= 3.4')
-    sys.exit(1)
+description = 'Data visualization based on signac.'
+
+try:
+    this_path = os.path.dirname(os.path.abspath(__file__))
+    fn_readme = os.path.join(this_path, 'README.md')
+    with open(fn_readme) as fh:
+        long_description = fh.read()
+except (IOError, OSError):
+    long_description = description
+
 
 setup(
     name='signac-dashboard',
     version='0.1.4',
     packages=find_packages(),
     include_package_data=True,
+    python_requires='>=3.4',
     install_requires=[
         'signac>=0.8',
         'Flask>=0.12',
@@ -33,7 +41,9 @@ setup(
 
     author='Bradley Dice',
     author_email='bdice@bradleydice.com',
-    description='Data visualization based on signac.',
+    description=description,
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     keywords='visualization dashboard signac framework',
     url='https://bitbucket.org/glotzer/signac-dashboard',
 
