@@ -20,8 +20,8 @@ password: ${PYPI_PASSWORD}
 
 [testpypi]
 repository: https://test.pypi.org/legacy/
-username: ${PYPI_USERNAME}
-password: ${PYPI_PASSWORD}
+username: ${PYPI_TEST_USERNAME}
+password: ${PYPI_TEST_PASSWORD}
 EOF
 
 python setup.py bdist_wheel
