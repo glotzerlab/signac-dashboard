@@ -6,7 +6,6 @@ from flask import Flask, redirect, request, url_for, render_template, \
 from werkzeug import url_encode
 import jinja2
 from flask_assets import Environment, Bundle
-from flask_cache import Cache
 from flask_turbolinks import turbolinks
 import os
 import re
@@ -19,8 +18,6 @@ import signac
 from .pagination import Pagination
 
 logger = logging.getLogger(__name__)
-cache = Cache(config={'CACHE_TYPE': 'simple'})
-DEFAULT_CACHE_TIME = 60 * 5
 
 
 class Dashboard:
@@ -32,8 +29,6 @@ class Dashboard:
         config['PER_PAGE'] = config.get('PER_PAGE', 25)
         self.config = config
         self.app = self.create_app(config)
-
-        cache.init_app(self.app)
 
         if modules is None:
             modules = []
