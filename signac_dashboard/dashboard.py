@@ -126,7 +126,7 @@ class Dashboard:
                     port += 1
                 pass
 
-    @cache.memoize(timeout=DEFAULT_CACHE_TIME)
+    @lru_cache()
     def _project_basic_index(self, include_job_document=False):
         index = []
         for item in self.project.index(
@@ -135,7 +135,7 @@ class Dashboard:
             index.append(item)
         return index
 
-    @cache.cached(timeout=DEFAULT_CACHE_TIME, key_prefix='_schema_variables')
+    @lru_cache()
     def _schema_variables(self):
         _index = self._project_basic_index()
         sp_index = self.project.build_job_statepoint_index(
@@ -174,8 +174,7 @@ class Dashboard:
                 "Returning job-id as fallback.".format(error))
             return str(job)
 
-    @cache.cached(timeout=DEFAULT_CACHE_TIME,
-                  key_prefix='_project_min_len_unique_id')
+    @lru_cache()
     def _project_min_len_unique_id(self):
         return self.project.min_len_unique_id()
 
@@ -189,13 +188,13 @@ class Dashboard:
         # can be used as a sorting index.
         return self.job_title(job)
 
-    @cache.cached(timeout=DEFAULT_CACHE_TIME, key_prefix='get_all_jobs')
+    @lru_cache()
     def get_all_jobs(self):
         all_jobs = sorted(self.project.find_jobs(),
                           key=lambda job: self.job_sorter(job))
         return all_jobs
 
-    @cache.memoize(timeout=DEFAULT_CACHE_TIME)
+    @lru_cache(maxsize=100)
     def job_search(self, query):
         querytype = 'statepoint'
         if query[:4] == 'doc:':
