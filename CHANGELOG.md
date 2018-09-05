@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.1.4 - 2018-07-23
+### Fixed
+- Removed `flask_cache` and replaced with `lru_cache` to fix compatibility with Flask 1.0.
+
 ## 0.1.3 - 2018-04-02
 ### Added
 - README documentation on searching

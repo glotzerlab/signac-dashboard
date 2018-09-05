@@ -6,7 +6,7 @@ from .module import Module
 from . import modules
 
 
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 
 __all__ = [
     '__version__',

@@ -28,7 +28,6 @@ logger = logging.getLogger(__name__)
 class Dashboard:
 
     def __init__(self, config={}, project=None, modules=[]):
-
         if project is None:
             self.project = signac.get_project()
         else:
