@@ -172,8 +172,15 @@ class Dashboard:
 
         self.module_assets = []
         for module in self.modules:
-            module.register_assets(self)
-            module.register_routes(self)
+            try:
+                module.register_assets(self)
+                module.register_routes(self)
+            except Exception as e:
+                logger.error('Error while registering {} module: {}'.format(
+                    module.name, e))
+                logger.error('Removing module {} from dashboard.'.format(
+                    module.name))
+                self.modules.remove(module)
 
     def run(self, host='localhost', port=8888, *args, **kwargs):
 
