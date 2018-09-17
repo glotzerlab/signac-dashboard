@@ -399,7 +399,10 @@ class Dashboard:
         self.url('views.jobs_list', ['/jobs/'])
         self.url('views.show_job', ['/jobs/<jobid>'])
         self.url('views.get_file', ['/jobs/<jobid>/file/<filename>'])
-        self.url('views.change_modules', ['/modules'], methods=['POST'])
+        self.url('views.get_modules', ['/modules'], methods=['GET'])
+        self.url('views.set_modules', ['/modules'], methods=['POST'])
+        self.url('views.set_module_states', ['/module-states'],
+                 methods=['POST'])
 
     def main(self):
         """Call this function to use the dashboard command line interface."""

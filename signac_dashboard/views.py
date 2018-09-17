@@ -3,8 +3,9 @@
 # This software is licensed under the BSD 3-Clause License.
 
 from flask import (session, redirect, request, url_for, send_file, flash,
-                   abort, render_template, g)
+                   abort, render_template, jsonify, g)
 import re
+from .dashboard import Dashboard
 
 
 def home(dashboard):
@@ -78,7 +79,7 @@ def get_file(dashboard, jobid, filename):
             abort(404, 'The file requested does not exist.')
 
 
-def change_modules(dashboard):
+def set_module_states(dashboard):
     enabled_modules = set(session.get('enabled_modules', []))
     for i, module in enumerate(session.get('modules', [])):
         if request.form.get('modules[{}]'.format(i)) == 'on':
@@ -87,6 +88,16 @@ def change_modules(dashboard):
             enabled_modules.discard(i)
     session['enabled_modules'] = list(enabled_modules)
     return redirect(request.form.get('redirect', url_for('home')))
+
+
+def get_modules(dashboard):
+    return jsonify(Dashboard.encode_modules(
+        session.get('modules', [])))
+
+
+def set_modules(dashboard):
+    return jsonify(Dashboard.encode_modules(
+        session.get('modules', [])))
 
 
 def settings(dashboard):

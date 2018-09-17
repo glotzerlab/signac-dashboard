@@ -39,3 +39,7 @@ class Module():
 
     def register_routes(self, dashboard):
         pass
+
+    @property
+    def options(self):
+        return {'name': 'str', 'enabled': 'bool'}

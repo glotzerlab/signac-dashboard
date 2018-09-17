@@ -63,7 +63,7 @@
                                 </a>
                             </p>
                             <h2 class="subtitle is-4">Modules</h2>
-                            <form action="{{ url_for('change_modules') }}" method="POST">
+                            <form action="{{ url_for('set_module_states') }}" method="POST">
                             <input type="hidden" name="redirect" value="{{ request.url }}">
                             {% for module in modules %}
                             <div class="field is-horizontal">
