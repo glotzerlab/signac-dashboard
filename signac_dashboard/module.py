@@ -6,19 +6,23 @@ from json import JSONEncoder
 
 
 class ModuleEncoder(JSONEncoder):
-    def default(self, o):
-        return o.__dict__
+    def default(self, obj):
+        return obj.__dict__
 
 
 class Module():
 
-    def __init__(self, name, context, template, enabled=True):
+    def __init__(self, name, context, template, enabled=True, options=None):
         self._module = self.__module__
         self._moduletype = self.__class__.__name__
         self.name = name
         self.context = context
         self.template = template
         self.enabled = enabled
+        if options is not None:
+            self.options = {k: v for k, v in options.items()}
+        else:
+            self.options = {'name': 'str', 'enabled': 'bool'}
 
     def get_cards(self):
         # Returns an array of dictionaries with properties 'name' and
@@ -39,7 +43,3 @@ class Module():
 
     def register_routes(self, dashboard):
         pass
-
-    @property
-    def options(self):
-        return {'name': 'str', 'enabled': 'bool'}
