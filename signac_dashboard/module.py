@@ -22,7 +22,16 @@ class Module():
         if options is not None:
             self.options = {k: v for k, v in options.items()}
         else:
-            self.options = {'name': 'str', 'enabled': 'bool'}
+            self.options = {
+                'name': {
+                    'type': 'str',
+                    'description': 'Name',
+                },
+                'enabled': {
+                    'type': 'bool',
+                    'description': 'Enabled by Default',
+                },
+            }
 
     def get_cards(self):
         # Returns an array of dictionaries with properties 'name' and
