@@ -161,8 +161,13 @@
             {% block footer %}
             <div class="container">
                 <div class="has-text-centered">
-                    <p><strong>{{ APP_NAME }}</strong> by <a href="https://glotzerlab.engin.umich.edu">the Glotzer Group</a></p>
-                    <p>part of the <a href="https://glotzerlab.engin.umich.edu/signac/">signac</a> data management framework</p>
+                    <p><strong>{{ APP_NAME }} {{ APP_VERSION }}</strong> by <a href="https://glotzerlab.engin.umich.edu">the Glotzer Group</a></p>
+                    <p>part of the <a href="http://signac.io/">signac</a> data management framework</p>
+                    <p>
+                        <a href="https://signac-dashboard.readthedocs.io/en/latest/">documentation</a> |
+                        <a href="https://bitbucket.org/glotzer/signac-dashboard/">source</a> |
+                        <a href="https://bitbucket.org/glotzer/signac-dashboard/src/master/LICENSE.txt">license</a>
+                    </p>
                 </div>
             </div>
             {% endblock %}

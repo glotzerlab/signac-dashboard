@@ -4,9 +4,8 @@
 from .dashboard import Dashboard
 from .module import Module
 from . import modules
+from .version import __version__
 
-
-__version__ = '0.1.4'
 
 __all__ = [
     '__version__',

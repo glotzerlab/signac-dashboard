@@ -18,6 +18,8 @@ from functools import lru_cache
 from numbers import Real
 import json
 import signac
+
+from .version import __version__
 from .module import ModuleEncoder
 from .pagination import Pagination
 from .util import LazyView
@@ -367,6 +369,7 @@ class Dashboard:
                                 if self.modules[i].enabled])
             return {
                 'APP_NAME': 'signac-dashboard',
+                'APP_VERSION': __version__,
                 'PROJECT_NAME': self.project.config['project'],
                 'PROJECT_DIR': self.project.config['project_dir'],
                 'modules': Dashboard.decode_modules(
@@ -447,7 +450,6 @@ class Dashboard:
         # allow to parse only --version without any
         # of the other required arguments.
         if '--version' in sys.argv:
-            from . import __version__
             print('signac-dashboard', __version__)
             sys.exit(0)
 
