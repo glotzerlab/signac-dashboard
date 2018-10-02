@@ -35,7 +35,7 @@ You can start a dashboard to visualize *signac* project data in the browser, by 
 
 ### Start a Dashboard
 
-The code below will open a dashboard for an newly-initialized (empty) project, with no jobs and one module loaded.
+The code below will open a dashboard for an newly-initialized (empty) project, with no jobs and one module loaded. Write the file `dashboard.py` with these contents:
 
 ```python
 #!/usr/bin/env python3
@@ -47,6 +47,8 @@ if __name__ == '__main__':
     dashboard = Dashboard(modules=[ImageViewer()])
     dashboard.main()
 ```
+
+Then launch the dashboard with `python dashboard.py run`.
 
 ### Specifying a custom job title
 
