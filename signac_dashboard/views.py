@@ -64,16 +64,15 @@ def get_file(dashboard, jobid, filename):
         abort(404, 'The job id requested could not be found.')
     else:
         if job.isfile(filename):
-            # Return job-compress.o827643 (and similar) as plaintext
-            textfile_regexes = ['job-.*\.[oe][0-9]*',
-                                '.*\.log',
-                                '.*\.dat']
+            mimetype = None
+            cache_timeout = 0
+            # Return logs as plaintext
+            textfile_regexes = ['job-.*\.[oe][0-9]*', '.*\.log', '.*\.dat']
             for regex in textfile_regexes:
-                if re.match('job-.*\.[oe][0-9]*',
-                            filename) is not None:
-                    return send_file(job.fn(filename),
-                                     mimetype='text/plain')
-            return send_file(job.fn(filename))
+                if re.match(regex, filename) is not None:
+                    mimetype = 'text/plain'
+            return send_file(job.fn(filename), mimetype=mimetype,
+                             cache_timeout=cache_timeout)
         else:
             abort(404, 'The file requested does not exist.')
 
