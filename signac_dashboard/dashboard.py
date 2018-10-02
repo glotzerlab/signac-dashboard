@@ -97,7 +97,8 @@ class Dashboard:
     def create_app(self, config={}):
         app = Flask('signac-dashboard')
         app.config.update({
-            'SECRET_KEY': os.urandom(24)
+            'SECRET_KEY': os.urandom(24),
+            'SEND_FILE_MAX_AGE_DEFAULT': 300,  # Cache control for static files
         })
 
         # Load the provided config
@@ -360,6 +361,12 @@ class Dashboard:
 
     def register_routes(self):
         dashboard = self
+
+        @dashboard.app.after_request
+        def prevent_caching(response):
+            if 'Cache-Control' not in response.headers:
+                response.headers['Cache-Control'] = 'no-store'
+            return response
 
         @dashboard.app.context_processor
         def injections():
