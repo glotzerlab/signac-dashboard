@@ -46,7 +46,7 @@ The code below will open a dashboard for an newly-initialized (empty) project, w
 
     if __name__ == '__main__':
         dashboard = Dashboard(modules=[ImageViewer()])
-        dashboard.run(host='localhost', port=8888)
+        dashboard.main()
 
 
 Specifying a custom job title
@@ -61,7 +61,8 @@ By creating a class that inherits from :py:class:`~.Dashboard` (which we'll call
         def job_title(self, job):
             return 'Concentration(A) = {}'.format(job.sp['conc_A'])
 
-    MyDashboard().main()
+    if __name__ == '__main__':
+        MyDashboard().main()
 
 Dissecting the Dashboard Structure
 ----------------------------------

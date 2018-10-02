@@ -31,7 +31,7 @@ Documentation is hosted on [signac-dashboard.readthedocs.io](https://signac-dash
 
 ## Usage
 
-You can start a dashboard to visualize *signac* project data in the browser, by importing the `Dashboard` class and calling its run function.
+You can start a dashboard to visualize *signac* project data in the browser, by importing the `Dashboard` class and calling its `main` function.
 
 ### Start a Dashboard
 
@@ -45,7 +45,7 @@ from signac_dashboard.modules import ImageViewer
 
 if __name__ == '__main__':
     dashboard = Dashboard(modules=[ImageViewer()])
-    dashboard.run(host='localhost', port=8888)
+    dashboard.main()
 ```
 
 ### Specifying a custom job title
@@ -58,7 +58,8 @@ class MyDashboard(Dashboard):
     def job_title(self, job):
         return 'Concentration(A) = {}'.format(job.sp['conc_A'])
 
-MyDashboard().run()
+if __name__ == '__main__':
+    MyDashboard().main()
 ```
 
 ## Dissecting the Dashboard Structure

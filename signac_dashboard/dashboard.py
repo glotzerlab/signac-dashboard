@@ -409,8 +409,8 @@ class Dashboard:
 
         def _run(args):
             kwargs = vars(args)
-            host = kwargs.pop('host', 'localhost')
-            port = kwargs.pop('port', 8888)
+            host = kwargs.pop('host')
+            port = kwargs.pop('port')
             self.config['PROFILE'] = kwargs.pop('profile')
             self.config['DEBUG'] = kwargs.pop('debug')
             self.prepare()
@@ -440,9 +440,11 @@ class Dashboard:
             help='Enable flask debug mode.')
         parser_run.add_argument(
             '--host', type=str,
+            default='localhost',
             help='Host (binding address). Default: localhost')
         parser_run.add_argument(
             '--port', type=int,
+            default=8888,
             help='Port to listen on. Default: 8888')
         parser_run.set_defaults(func=_run)
 
