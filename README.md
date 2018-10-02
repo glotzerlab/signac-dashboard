@@ -48,6 +48,17 @@ if __name__ == '__main__':
     dashboard.run(host='localhost', port=8888)
 ```
 
+## Running on a remote compute cluster
+
+Use SSH Tunneling. Connect to the remote host with
+
+```bash
+ssh jglaser@remote.server.org -L 8888:localhost:8888
+```
+
+to forward the connection to your computer (port 8888).
+
+
 ### Specifying a custom job title
 
 By creating a class that inherits from `Dashboard` (which we'll call `MyDashboard`), we can begin to customize some of the functions that make up the dashboard, like `job_title(job)`, which gives a human-readable title to each job.
