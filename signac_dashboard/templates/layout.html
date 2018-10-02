@@ -147,13 +147,13 @@
                     {% endwith %}
                 </section>
                 {% if g.pagination is defined %}
-                {{ paginator.render_pagination(g.pagination) }}
+                {{ paginator.render_pagination(g.pagination) | safe }}
                 {% endif %}
                 {% if self.panels() %}
                 {% block panels %}{% endblock %}
                 {% endif %}
                 {% if g.pagination is defined %}
-                {{ paginator.render_pagination(g.pagination) }}
+                {{ paginator.render_pagination(g.pagination) | safe }}
                 {% endif %}
             </div>
         </div>
