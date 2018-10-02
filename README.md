@@ -42,7 +42,6 @@ The code below will open a dashboard for an newly-initialized (empty) project, w
 from signac_dashboard import Dashboard
 from signac_dashboard.modules import ImageViewer
 
-
 if __name__ == '__main__':
     dashboard = Dashboard(modules=[ImageViewer()])
     dashboard.run(host='localhost', port=8888)
@@ -70,7 +69,6 @@ ssh username@remote.server.org -L 8888:localhost:8888
 ```
 
 to forward port 8888 on the host to port 8888 on your local computer.
-
 
 ## Dissecting the Dashboard Structure
 
@@ -152,7 +150,6 @@ notes_mod = Notes()
 ## Searching jobs
 
 The search bar accepts JSON-formatted queries in the same way as the `signac find` command-line tool. For example, using the query `{"key": "value"}` will return all jobs where the job statepoint `key` is set to `value`. To search jobs by their document key-value pairs, use `doc:` before the JSON-formatted query, like `doc:{"key": "value"}`.
-
 
 ## Tips for Developers
 
