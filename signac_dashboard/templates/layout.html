@@ -40,7 +40,7 @@
                 <div>
                     <div class="menu">
                         {% for href, id, name, icon in menu.content %}
-                        <a href="{{ href|e }}" class="item{% if id == g.active_page %} active{% endif %}">
+                        <a href="{{ href | e }}" class="item{% if id == g.active_page %} active{% endif %}">
                             <span class="icon"><i class="{{ icon }}"></i></span>
                             <span class="name">{{ name }}</span>
                         </a>
@@ -48,7 +48,7 @@
                     </div>
                     <div class="sidebar-content">
                         {% if self.sidebar() %}{% block sidebar %}{% endblock %}{% endif %}
-                        {% if modules|length > 0 and g.jobs is defined and g.jobs|length > 0 %}
+                        {% if modules | length > 0 and g.jobs is defined and g.jobs | length > 0 %}
                         <div class="box sidebar-box">
                             <p class="field">
                                 <a class="button" href="{{ modify_query(view='list') }}" title="List View">
@@ -122,7 +122,7 @@
                                 </div>
                             </form>
                             {% for href, id, name, icon in menu.content %}
-                            <a href="{{ href|e }}" class="nav-item{% if id == g.active_page %} is-active{% endif %}">{{ name }}</a>
+                            <a href="{{ href | e }}" class="nav-item{% if id == g.active_page %} is-active{% endif %}">{{ name }}</a>
                             {% endfor %}
                         </div>
                     </div>
@@ -147,13 +147,13 @@
                     {% endwith %}
                 </section>
                 {% if g.pagination is defined %}
-                {{ paginator.render_pagination(g.pagination) }}
+                {{ paginator.render_pagination(g.pagination) | safe }}
                 {% endif %}
                 {% if self.panels() %}
                 {% block panels %}{% endblock %}
                 {% endif %}
                 {% if g.pagination is defined %}
-                {{ paginator.render_pagination(g.pagination) }}
+                {{ paginator.render_pagination(g.pagination) | safe }}
                 {% endif %}
             </div>
         </div>
