@@ -63,6 +63,19 @@ By creating a class that inherits from :py:class:`~.Dashboard` (which we'll call
 
     MyDashboard().main()
 
+
+Running dashboards on a remote host
+-----------------------------------
+
+To use dashboards hosted by a remote computer, open an SSH tunnel to the remote computer and forward the port where the dashboard is hosted. For example, connect to the remote computer with
+
+```bash
+ssh username@remote.server.org -L 8888:localhost:8888
+```
+
+to forward port 8888 on the host to port 8888 on your local computer.
+
+
 Dissecting the Dashboard Structure
 ----------------------------------
 
