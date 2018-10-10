@@ -11,6 +11,8 @@ if __name__ == '__main__':
         project = signac.get_project()
     except LookupError:
         project = signac.init_project('dashboard-test-project')
+
+    if len(project) == 0:
         for a in range(10):
             for b in range(10):
                 project.open_job({'a': a, 'b': b}).init()
