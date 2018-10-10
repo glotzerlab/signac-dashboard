@@ -24,5 +24,6 @@ username: ${PYPI_TEST_USERNAME}
 password: ${PYPI_TEST_PASSWORD}
 EOF
 
+git submodule update --init --recursive
 python setup.py bdist_wheel
 python -m twine upload --skip-existing --repository testpypi dist/*
