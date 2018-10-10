@@ -25,6 +25,7 @@ setup(
         'signac>=0.8',
         'Flask>=0.12',
         'Flask-Assets',
+        'webassets>=0.12.1',
         'Flask-Turbolinks',
         'libsass',
         'cssmin',
