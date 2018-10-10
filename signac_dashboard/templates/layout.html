@@ -86,43 +86,37 @@
                 </div>
             </aside>
             <div class="column is-10">
-                <nav class="nav has-shadow" id="top">
-                    <div class="container">
-                        <div class="nav-left">
-                            <a class="nav-item" href="/">{{ APP_NAME }}</a>
-                            <form action="{{ url_for('search') }}" method="GET" id="searchform">
-                                <div class="field has-addons searchbox is-hidden-mobile">
-                                    <p class="control">
-                                    <input name="q" class="input" type="text" placeholder="Search jobs" value="{{ query }}">
-                                    </p>
-                                    <p class="control">
-                                    <a class="button is-dark" onclick="document.getElementById('searchform').submit()">
-                                        &nbsp; <i class="fas fa-search"></i> &nbsp;
-                                    </a>
-                                    </p>
-                                </div>
-                            </form>
-                        </div>
-                        <span class="nav-toggle">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </span>
-                        <div class="nav-right nav-menu is-hidden-tablet">
-                            <form action="{{ url_for('search') }}" method="GET" id="searchform">
-                                <div class="field has-addons searchbox">
-                                    <p class="control">
-                                    <input name="q" class="input" type="text" placeholder="Search jobs" value="{{ query }}">
-                                    </p>
-                                    <p class="control">
-                                    <a class="button is-dark" onclick="document.getElementById('searchform').submit()">
-                                        &nbsp; <i class="fas fa-search"></i> &nbsp;
-                                    </a>
-                                    </p>
-                                </div>
-                            </form>
+                <nav class="navbar is-light" role="navigation" aria-label="main navigation" id="top">
+                    <div class="navbar-brand">
+                        <a class="navbar-item" href="/">
+                            {{ APP_NAME }}
+                        </a>
+                        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false">
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <div class="navbar-menu" id="dashboard-menu">
+                        <div class="navbar-start">
+                            <div class="navbar-item">
+                                <form action="{{ url_for('search') }}" method="GET" id="searchform">
+                                    <div class="field has-addons searchbox">
+                                        <p class="control">
+                                        <input name="q" class="input" type="text" placeholder="Search jobs" value="{{ query }}">
+                                        </p>
+                                        <p class="control">
+                                        <a class="button is-dark" onclick="document.getElementById('searchform').submit()">
+                                            &nbsp; <i class="fas fa-search"></i> &nbsp;
+                                        </a>
+                                        </p>
+                                    </div>
+                                </form>
+                            </div>
                             {% for href, id, name, icon in menu.content %}
-                            <a href="{{ href | e }}" class="nav-item{% if id == g.active_page %} is-active{% endif %}">{{ name }}</a>
+                            <a href="{{ href | e }}" class="navbar-item is-hidden-tablet{% if id == g.active_page %} is-active{% endif %}">
+                                {{ name }}
+                            </a>
                             {% endfor %}
                         </div>
                     </div>
