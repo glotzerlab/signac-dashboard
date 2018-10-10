@@ -28,7 +28,6 @@ setup(
         'webassets>=0.12.1',
         'Flask-Turbolinks',
         'libsass',
-        'cssmin',
         'jsmin'
     ],
 

@@ -141,10 +141,10 @@ class Dashboard:
         js_all = Bundle('js/js_all/*.js',
                         filters='jsmin',
                         output='gen/app.min.js')
-        # SCSS (Sassy CSS) is compiled to CSS and minified
+        # SCSS (Sassy CSS) is compiled to CSS
         scss_all = Bundle('scss/app.scss',
-                          filters='libsass,cssmin',
-                          output='gen/app.min.css')
+                          filters='libsass',
+                          output='gen/app.css')
         assets.register('jquery', jquery)
         assets.register('js_all', js_all)
         assets.register('scss_all', scss_all)
