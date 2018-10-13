@@ -5,8 +5,14 @@
 from signac_dashboard import Dashboard
 from signac_dashboard.modules import StatepointList, ImageViewer
 
+
+class PlotDashboard(Dashboard):
+    def job_sorter(self, job):
+        return job.sp.get('coherence_time', -1)
+
+
 if __name__ == '__main__':
     modules = []
     modules.append(StatepointList())
     modules.append(ImageViewer())
-    Dashboard(modules=modules).main()
+    PlotDashboard(modules=modules).main()
