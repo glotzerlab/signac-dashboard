@@ -29,14 +29,15 @@ class VideoViewer(Module):
     def get_cards(self, job):
         def make_card(filename):
             jobid = job._id
+            poster = self.poster if self.poster is not None \
+                and job.isfile(self.poster) else None
             if not job.isfile(filename):
                 raise FileNotFoundError('The filename {} could not be found '
                                         'for job {}.'.format(filename, jobid))
             return {'name': self.name + ': ' + filename,
                     'content': render_template(
                         self.template,
-                        poster=self.poster if job.isfile(
-                            self.poster) else None,
+                        poster=poster,
                         preload=self.preload,
                         filename=filename)}
 
