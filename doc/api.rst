@@ -8,9 +8,7 @@ This is the API for the **signac-dashboard** application.
 Dashboard
 ---------
 
-.. currentmodule:: signac_dashboard
-
-.. autoclass:: Dashboard
+.. autoclass:: signac_dashboard.Dashboard
     :members:
     :undoc-members:
     :show-inheritance:
@@ -18,7 +16,7 @@ Dashboard
 Modules
 -------
 
-.. automodule:: modules
+.. automodule:: signac_dashboard.modules
     :members:
     :undoc-members:
     :show-inheritance:
