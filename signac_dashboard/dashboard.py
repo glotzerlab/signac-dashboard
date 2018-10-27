@@ -279,7 +279,7 @@ class Dashboard:
             else:
                 try:
                     f = json.loads(query)
-                except json.JSONDecodeError as error:
+                except json.JSONDecodeError:
                     query = shlex.split(query)
                     f = signac.contrib.filterparse.parse_filter_arg(query)
                     flash("Search string interpreted as '{}'.".format(
@@ -310,13 +310,13 @@ class Dashboard:
         try:
             page = int(request.args.get('page', 1))
             assert page >= 1
-        except Exception as e:
+        except Exception:
             flash('Pagination Error. Defaulting to page 1.', 'danger')
             page = 1
         pagination = Pagination(page, self.config['PER_PAGE'], total_count)
         try:
             assert page <= pagination.pages
-        except Exception as e:
+        except Exception:
             page = pagination.pages
             flash('Pagination Error. Displaying page {}.'.format(page),
                   'danger')
