@@ -5,27 +5,22 @@ Installation
 ============
 
 The recommended installation method for **signac-dashboard** is via conda_ or pip_.
-The software is tested for Python versions 2.7.x and 3.4+.
+The software is tested for Python versions 3.4+. Its primary dependencies are signac_ and flask_.
 
 .. _conda: https://anaconda.org/
+.. _conda-forge: https://conda-forge.org/
 .. _pip: https://pip.pypa.io/en/stable/
+.. _signac: http://www.signac.io/
+.. _flask: http://flask.pocoo.org/
 
 Install with conda
 ==================
 
-To install **signac-dashboard** via conda, you first need to add the conda-forge_ channel with:
-
-.. _conda-forge: https://conda-forge.github.io
+You can install **signac-dashboard** via conda (available on the conda-forge_ channel), with:
 
 .. code:: bash
 
-    $ conda config --add channels conda-forge
-
-Once the **conda-forge** channel has been enabled, **signac-dashboard** can be installed with:
-
-.. code:: bash
-
-    $ conda install signac-dashboard
+    $ conda install -c conda-forge signac-dashboard
 
 All additional dependencies will be installed automatically.
 To upgrade the package, execute:
@@ -63,4 +58,5 @@ Alternatively you can clone the `git repository <https://bitbucket.org/glotzer/s
 
   git clone https://bitbucket.org/glotzer/signac-dashboard.git
   cd signac-dashboard
+  git submodule update --init  # This step is required!
   python setup.py install --user
