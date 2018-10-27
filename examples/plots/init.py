@@ -4,7 +4,10 @@
 # This software is licensed under the BSD 3-Clause License.
 import signac
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib
+# Force matplotlib to not use any Xwindows backend.
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt  # noqa: E402
 
 try:
     project = signac.get_project()
