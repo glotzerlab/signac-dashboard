@@ -4,6 +4,7 @@
 from signac_dashboard.module import Module
 from flask import render_template, request, abort
 from jinja2 import escape
+from jinja2.exceptions import TemplateNotFound
 from collections import OrderedDict
 from ast import literal_eval
 
@@ -33,7 +34,8 @@ class DocumentEditor(Module):
             self.template, document=doc, jobid=job._id)}]
 
     def register_routes(self, dashboard):
-        @dashboard.app.route('/module/document_editor/update', methods=['POST'])
+        @dashboard.app.route('/module/document_editor/update',
+                             methods=['POST'])
         def document_editor_update():
             jobid = request.form.get('jobid')
             job = dashboard.project.open_job(id=jobid)
