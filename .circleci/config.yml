@@ -34,17 +34,11 @@ jobs:
           command: |
             git submodule update --init --recursive
             export PATH=$PATH:$HOME/.local/bin
-            pip install -U virtualenv --user
-            mkdir -p ./venv
-            virtualenv ./venv
-            . venv/bin/activate
-            pip install -r requirements.txt
             pip install -U coverage mock
 
       - run:
           name: run tests
           command: |
-            . venv/bin/activate
             coverage run --source=signac_dashboard/ -m unittest discover tests/
             coverage report -i --include="signac*"
 
