@@ -7,7 +7,7 @@ version: 2
 jobs:
   style-check:
     docker:
-      - image: circleci/python:3.7.2
+      - image: circleci/python:3.7
 
     working_directory: ~/repo
 
@@ -16,13 +16,13 @@ jobs:
       - run:
           name: style-check
           command: |
-            pip install --user -U flake8
+            pip install --user -U flake8==3.7.1
             python -m flake8 --show-source signac_dashboard/
 
 
   test-3.7: &test-template
     docker:
-      - image: circleci/python:3.7.2
+      - image: circleci/python:3.7
 
     working_directory: ~/repo
 
@@ -35,6 +35,7 @@ jobs:
             git submodule update --init --recursive
             export PATH=$PATH:$HOME/.local/bin
             pip install --user -U coverage mock
+            pip install --user .
 
       - run:
           name: run tests
