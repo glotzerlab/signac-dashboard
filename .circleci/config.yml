@@ -46,7 +46,7 @@ jobs:
           command: |
             . venv/bin/activate
             coverage run --source=signac_dashboard/ -m unittest discover tests/
-            coverage report -i --include="signac*"
+            coverage report -i --include="signac_dashboard*"
 
       - store_artifacts:
           path: test-reports
