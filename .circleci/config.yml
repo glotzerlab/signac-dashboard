@@ -39,8 +39,8 @@ jobs:
       - run:
           name: run tests
           command: |
-            coverage run --source=signac_dashboard/ -m unittest discover tests/
-            coverage report -i --include="signac*"
+            python -m coverage run --source=signac_dashboard/ -m unittest discover tests/
+            python -m coverage report -i --include="signac*"
 
       - store_artifacts:
           path: test-reports
