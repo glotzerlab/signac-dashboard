@@ -35,7 +35,8 @@ class VideoViewer(Module):
             return {'name': self.name + ': ' + filename,
                     'content': render_template(
                         self.template,
-                        poster=self.poster if job.isfile(
+                        jobid=jobid,
+                        poster=self.poster if self.poster and job.isfile(
                             self.poster) else None,
                         preload=self.preload,
                         filename=filename)}
