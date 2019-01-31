@@ -38,8 +38,8 @@ jobs:
             mkdir -p ./venv
             virtualenv ./venv
             . venv/bin/activate
-            pip install --user -U coverage mock
-            pip install --user .
+            pip install -U coverage mock
+            pip install .
 
       - run:
           name: run tests
