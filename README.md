@@ -3,7 +3,7 @@
 ## About
 
 Data visualization, analysis, and "dashboard" monitoring tool as part of the [signac framework](http://www.signac.io).
-The signac-dashboard interface allows users to rapidly view data managed in a [signac project](http://signac.readthedocs.io/en/latest/projects.html).
+The `signac-dashboard` interface allows users to rapidly view data managed in a [signac project](http://signac.readthedocs.io/en/latest/projects.html).
 
 *The software is currently in an early development stage.*
 
@@ -16,7 +16,7 @@ The signac-dashboard interface allows users to rapidly view data managed in a [s
 The **signac-dashboard** app requires at least Python version 3.4!
 To install this package, first clone the repository and install its submodules.
 ```bash
-$ git clone https://bitbucket.org/glotzer/signac-dashboard.git
+$ git clone https://github.com/glotzerlab/signac-dashboard.git
 $ cd signac-dashboard
 $ git submodule update --init --recursive
 ```
@@ -68,10 +68,10 @@ if __name__ == '__main__':
 To use dashboards hosted by a remote computer, open an SSH tunnel to the remote computer and forward the port where the dashboard is hosted. For example, connect to the remote computer with
 
 ```bash
-ssh username@remote.server.org -L 8888:localhost:8888
+ssh username@remote.server.org -L 8890:localhost:8888
 ```
 
-to forward port 8888 on the host to port 8888 on your local computer.
+to forward port 8888 on the host to port 8890 on your local computer.
 
 ## Dissecting the Dashboard Structure
 
