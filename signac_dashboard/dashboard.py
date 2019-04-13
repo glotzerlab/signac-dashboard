@@ -408,7 +408,7 @@ class Dashboard:
         self.url('views.search', ['/search'])
         self.url('views.jobs_list', ['/jobs/'])
         self.url('views.show_job', ['/jobs/<jobid>'])
-        self.url('views.get_file', ['/jobs/<jobid>/file/<filename>'])
+        self.url('views.get_file', ['/jobs/<jobid>/file/<path:filename>'])
         self.url('views.change_modules', ['/modules'], methods=['POST'])
 
     def main(self):
