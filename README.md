@@ -2,8 +2,8 @@
 
 ## About
 
-Data visualization, analysis, and "dashboard" monitoring tool as part of the [signac framework](http://www.signac.io).
-The signac-dashboard interface allows users to rapidly view data managed in a [signac project](http://signac.readthedocs.io/en/latest/projects.html).
+Data visualization, analysis, and "dashboard" monitoring tool as part of the [signac framework](https://signac.io).
+The signac-dashboard interface allows users to rapidly view data managed in a [signac project](https://docs.signac.io/en/latest/projects.html).
 
 *The software is currently in an early development stage.*
 
@@ -16,7 +16,7 @@ The signac-dashboard interface allows users to rapidly view data managed in a [s
 The **signac-dashboard** app requires at least Python version 3.4!
 To install this package, first clone the repository and install its submodules.
 ```bash
-$ git clone https://bitbucket.org/glotzer/signac-dashboard.git
+$ git clone https://github.com/glotzerlab/signac-dashboard.git
 $ cd signac-dashboard
 $ git submodule update --init --recursive
 ```
@@ -27,7 +27,7 @@ $ pip install .
 
 ## Documentation
 
-Documentation is hosted on [signac-dashboard.readthedocs.io](https://signac-dashboard.readthedocs.io/en/latest/).
+Documentation is hosted on [docs.signac.io/projects/dashboard](https://docs.signac.io/projects/dashboard/en/latest/).
 
 ## Usage
 

@@ -32,11 +32,12 @@ setup(
     ],
 
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
     ],
 
     author='Bradley Dice',
@@ -45,7 +46,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     keywords='visualization dashboard signac framework',
-    url='https://bitbucket.org/glotzer/signac-dashboard',
+    url='https://github.com/glotzerlab/signac-dashboard',
 
     entry_points={
         'console_scripts': [
