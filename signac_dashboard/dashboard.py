@@ -41,7 +41,7 @@ class Dashboard:
         except AttributeError:
             dash_doc = {}
         self.config = config or dash_doc.get('config', {})
-        self.modules = modules or Dashboard.decode_modules(
+        self.modules = modules or Dashboard._decode_modules(
             dash_doc.get('module_views', {}).get('Default', []))
 
         # Try to update the project cache. Requires signac 0.9.2 or later.
@@ -53,7 +53,7 @@ class Dashboard:
                 pass
 
     @classmethod
-    def encode_modules(cls, modules, target='dict'):
+    def _encode_modules(cls, modules, target='dict'):
         json_modules = json.dumps(modules, cls=ModuleEncoder,
                                   sort_keys=True, indent=4)
         if target == 'json':
@@ -63,10 +63,11 @@ class Dashboard:
 
     @property
     def encoded_modules(self):
-        return Dashboard.encode_modules(self.modules)
+        """A JSON-encodable dictionary of module parameters."""
+        return Dashboard._encode_modules(self.modules)
 
     @classmethod
-    def decode_modules(cls, json_modules, enabled_modules=None):
+    def _decode_modules(cls, json_modules, enabled_modules=None):
         modules = []
         if type(json_modules) == str:
             json_modules = json.loads(json_modules)
@@ -379,7 +380,7 @@ class Dashboard:
                 'APP_VERSION': __version__,
                 'PROJECT_NAME': self.project.config['project'],
                 'PROJECT_DIR': self.project.config['project_dir'],
-                'modules': Dashboard.decode_modules(
+                'modules': Dashboard._decode_modules(
                     session['modules'], session['enabled_modules']),
                 'enabled_modules': session['enabled_modules'],
                 'module_assets': self.module_assets
