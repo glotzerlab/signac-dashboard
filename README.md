@@ -13,7 +13,7 @@ The signac-dashboard interface allows users to rapidly view data managed in a [s
 
 ## Installation
 
-The **signac-dashboard** app requires at least Python version 3.4!
+The **signac-dashboard** app requires at least Python version 3.4.
 To install this package, first clone the repository and install its submodules.
 ```bash
 $ git clone https://github.com/glotzerlab/signac-dashboard.git

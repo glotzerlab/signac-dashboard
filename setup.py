@@ -46,7 +46,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     keywords='visualization dashboard signac framework',
-    url='https://github.com/glotzerlab/signac-dashboard',
+    url='https://signac.io',
 
     entry_points={
         'console_scripts': [
