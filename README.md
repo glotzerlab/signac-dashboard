@@ -2,8 +2,8 @@
 
 ## About
 
-Data visualization, analysis, and "dashboard" monitoring tool as part of the [signac framework](http://www.signac.io).
-The signac-dashboard interface allows users to rapidly view data managed in a [signac project](http://signac.readthedocs.io/en/latest/projects.html).
+Data visualization, analysis, and "dashboard" monitoring tool as part of the [signac framework](https://signac.io).
+The `signac-dashboard` interface allows users to rapidly view data managed in a [signac project](https://docs.signac.io/en/latest/projects.html).
 
 *The software is currently in an early development stage.*
 
@@ -27,7 +27,7 @@ $ pip install .
 
 ## Documentation
 
-Documentation is hosted on [signac-dashboard.readthedocs.io](https://signac-dashboard.readthedocs.io/en/latest/).
+Documentation is hosted on [docs.signac.io/projects/dashboard](https://docs.signac.io/projects/dashboard/en/latest/).
 
 ## Usage
 
@@ -68,10 +68,10 @@ if __name__ == '__main__':
 To use dashboards hosted by a remote computer, open an SSH tunnel to the remote computer and forward the port where the dashboard is hosted. For example, connect to the remote computer with
 
 ```bash
-ssh username@remote.server.org -L 8888:localhost:8888
+ssh username@remote.server.org -L 8890:localhost:8888
 ```
 
-to forward port 8888 on the host to port 8888 on your local computer.
+to forward port 8888 on the remote host to port 8890 on your local computer.
 
 ## Dissecting the Dashboard Structure
 
