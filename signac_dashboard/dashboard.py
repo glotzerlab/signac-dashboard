@@ -159,7 +159,22 @@ class Dashboard:
         return assets
 
     def register_module_asset(self, asset):
-        self.module_assets.append(asset)
+        """Register an asset required by a dashboard module.
+
+        Some modules require special scripts or stylesheets, like the
+        :py:class:`signac_dashboard.modules.Notes` module. It is recommended to
+        use a namespace for each module that matches the example below:
+
+        .. code-block:: python
+            dashboard.register_module_asset({
+                'file': 'templates/my-module/js/my-script.js',
+                'url': '/module/my-module/js/my-script.js'
+            })
+
+        :param asset: A dictionary with keys :code:`'file'` and :code:`'url'`.
+        :type asset: :py:class:`dict`
+        """
+        self._module_assets.append(asset)
 
     def _prepare(self):
         """Prepare this dashboard instance to run."""
@@ -183,10 +198,10 @@ class Dashboard:
 
         # Add assets and routes
         self.assets = self._create_assets()
-        self.register_routes()
+        self._register_routes()
 
         # Add module assets and routes
-        self.module_assets = []
+        self._module_assets = []
         for module in self.modules:
             try:
                 module.register_assets(self)
@@ -242,7 +257,7 @@ class Dashboard:
 
         :param job: The job being titled.
         :type job: :py:class:`signac.contrib.job.Job`
-        :return: Title to be displayed.
+        :returns: Title to be displayed.
         :rtype: :py:class:`str`
         """
         def _format_num(num):
@@ -278,7 +293,7 @@ class Dashboard:
 
         :param job: The job being subtitled.
         :type job: :py:class:`signac.contrib.job.Job`
-        :return: Subtitle to be displayed.
+        :returns: Subtitle to be displayed.
         :rtype: :py:class:`str`
         """
         return str(job)[:max(8, self._project_min_len_unique_id())]
@@ -293,7 +308,7 @@ class Dashboard:
 
         :param job: The job being sorted.
         :type job: :py:class:`signac.contrib.job.Job`
-        :return: Key for sorting.
+        :returns: Key for sorting.
         :rtype: any comparable type
         """
         return self.job_title(job)
@@ -438,7 +453,13 @@ class Dashboard:
                 view_func=LazyView(dashboard=self, import_name=import_name),
                 **options))
 
-    def register_routes(self):
+    def _register_routes(self):
+        """Registers routes with the Flask application.
+
+        This method configures context processors, templates, and sets up
+        routes for a basic Dashboard instance. Additionally, routes declared by
+        modules are registered by this method.
+        """
         dashboard = self
 
         @dashboard.app.after_request
@@ -461,7 +482,7 @@ class Dashboard:
                 'modules': Dashboard._decode_modules(
                     session['modules'], session['enabled_modules']),
                 'enabled_modules': session['enabled_modules'],
-                'module_assets': self.module_assets
+                'module_assets': self._module_assets
             }
 
         # Add pagination support from http://flask.pocoo.org/snippets/44/
@@ -494,7 +515,9 @@ class Dashboard:
             self.app.add_url_rule(**url_rule)
 
     def main(self):
-        """Call this function to use the signac-dashboard command line
+        """Runs the command line interface.
+
+        Call this function to use signac-dashboard from its command line
         interface. For example, save this script as :code:`dashboard.py`:
 
         .. code-block:: python
