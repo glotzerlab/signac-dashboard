@@ -141,10 +141,10 @@ class Dashboard:
         js_all = Bundle('js/js_all/*.js',
                         filters='jsmin',
                         output='gen/app.min.js')
-        # SCSS (Sassy CSS) is compiled to CSS and minified
+        # SCSS (Sassy CSS) is compiled to CSS
         scss_all = Bundle('scss/app.scss',
-                          filters='libsass,cssmin',
-                          output='gen/app.min.css')
+                          filters='libsass',
+                          output='gen/app.css')
         assets.register('jquery', jquery)
         assets.register('js_all', js_all)
         assets.register('scss_all', scss_all)
@@ -279,7 +279,7 @@ class Dashboard:
             else:
                 try:
                     f = json.loads(query)
-                except json.JSONDecodeError as error:
+                except json.JSONDecodeError:
                     query = shlex.split(query)
                     f = signac.contrib.filterparse.parse_filter_arg(query)
                     flash("Search string interpreted as '{}'.".format(
@@ -310,13 +310,13 @@ class Dashboard:
         try:
             page = int(request.args.get('page', 1))
             assert page >= 1
-        except Exception as e:
+        except Exception:
             flash('Pagination Error. Defaulting to page 1.', 'danger')
             page = 1
         pagination = Pagination(page, self.config['PER_PAGE'], total_count)
         try:
             assert page <= pagination.pages
-        except Exception as e:
+        except Exception:
             page = pagination.pages
             flash('Pagination Error. Displaying page {}.'.format(page),
                   'danger')

@@ -14,24 +14,12 @@ body {
 .button.is-success {
   background-color: #2EB398;
 }
-.nav.is-dark {
-  background-color: #232B2D;
-  color: #F6F7F7;
-}
-.nav.is-dark .nav-item a, .nav.is-dark a.nav-item {
-    color: #F6F7F7;
-}
-.nav.is-dark .nav-item a.button.is-default {
-    color: #F6F7F7;
-    background-color: transparent;
-    border-width: 2px;
-}
 .aside {
   background-color: #354052;
-  margin-right: -10px;
+  margin-right: -0.75rem;
 }
 .aside .menu {
-  padding: 20px 20px 20px 30px;
+  padding: 1.5rem 1.5rem 1.5rem 2rem;
   color: #6F7B7E;
 }
 .aside .title {
@@ -59,7 +47,7 @@ body {
 .content {
   display: block;
   background-color: #fff;
-  padding: 40px 20px;
+  padding: 3rem 2rem;
 }
 .sidebar-content {
   padding: 1rem;
@@ -76,7 +64,4 @@ section.section.panel {
 }
 .hero .tabs ul {
     border-bottom: 1px solid #d3d6db;
-}
-.nav-left .searchbox {
-  margin-top: 10px;
 }
