@@ -10,7 +10,14 @@ from ast import literal_eval
 
 
 class DocumentEditor(Module):
+    """Provides an interface to edit the job document.
 
+    This module shows keys in the job document with a form that allows users
+    to edit their contents. When saving, the edited strings are parsed into
+    JSON-compatible Python data structures (i.e., :py:class:`list`s and
+    :py:class:`dict`s). Job document keys beginning with an underscore
+    :code:`_` are treated as private and are not displayed.
+    """
     def __init__(self,
                  name='DocumentEditor',
                  context='JobContext',
