@@ -3,11 +3,15 @@ $(document).on('turbolinks:load', function() {
     // Stop form from submitting normally
     event.preventDefault();
 
-    // Get some values from elements on the page:
+    // Get some values from elements on the page
     var $form = $(this);
+    var $result = $form.find('.document-editor-result');
     var url = $form.attr('action');
 
-    // Get each input of the form.
+    // Clear the current result
+    $form.find('.document-editor-result').html('');
+
+    // Get each input of the form
     var formdata = {};
     $form.find(':input').each(function(index){
       var name = $(this).attr('name');
@@ -15,16 +19,15 @@ $(document).on('turbolinks:load', function() {
       formdata[name] = value;
     });
 
-    console.log(url);
-    console.log(formdata);
 
-    // Send the data using post
-    var posting = $.post(url, formdata);
-
-    // Put the results in a div
-    posting.done(function(data) {
-      console.log(data);
-      $form.find('.document-editor-result').text(data);
+    // Send the data using post, show the result message
+    var posting = $.post(url, formdata, function(data) {
+      $result.html(data);
+    })
+    .fail(function(jqXHR, textStatus, errorThrown) {
+      $errorMessage = $("<span>").addClass('has-text-danger');
+      $errorMessage.html(jqXHR.responseText);
+      $result.html($errorMessage);
     });
   });
 });

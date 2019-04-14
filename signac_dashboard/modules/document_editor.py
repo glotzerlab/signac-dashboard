@@ -19,7 +19,7 @@ class DocumentEditor(Module):
     :code:`_` are treated as private and are not displayed.
     """
     def __init__(self,
-                 name='DocumentEditor',
+                 name='Document Editor',
                  context='JobContext',
                  template='cards/document_editor.html',
                  **kwargs):
@@ -36,7 +36,7 @@ class DocumentEditor(Module):
                 # Don't allow users to edit "private" keys that begin with _
                 del doc[key]
             else:
-                doc[key] = escape(doc[key])
+                doc[key] = escape(repr(doc[key]))
         return [{'name': self.name, 'content': render_template(
             self.template, document=doc, jobid=job._id)}]
 
@@ -51,8 +51,9 @@ class DocumentEditor(Module):
                     key = key[4:]
                     try:
                         job.doc[key] = literal_eval(value)
-                    except SyntaxError as e:
-                        return "Key {} failed: {}".format(key, repr(e))
+                    except (SyntaxError, TypeError, ValueError) as e:
+                        return "Error in key <strong>{}</strong>: {}".format(
+                            key, e), 422
             return "Saved."
 
         @dashboard.app.route('/module/document_editor/<path:filename>')
