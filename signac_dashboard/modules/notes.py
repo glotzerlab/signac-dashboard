@@ -7,7 +7,12 @@ from jinja2.exceptions import TemplateNotFound
 
 
 class Notes(Module):
+    """Displays a text box that is synced to the job document.
 
+    The contents of the text box are saved to :code:`job.document['notes']`.
+    The Notes module can be used to annotate a large data space with tags or
+    human-readable descriptions for post-processing, parsing, or searching.
+    """
     def __init__(self,
                  name='Notes',
                  context='JobContext',

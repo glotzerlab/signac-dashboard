@@ -11,12 +11,13 @@ Dashboard
 .. autoclass:: signac_dashboard.Dashboard
     :members:
     :undoc-members:
-    :show-inheritance:
 
 Modules
 -------
 
-.. automodule:: signac_dashboard.modules
+.. autoclass:: signac_dashboard.Module
     :members:
     :undoc-members:
-    :show-inheritance:
+
+.. automodule:: signac_dashboard.modules
+    :members:

@@ -166,13 +166,14 @@ class Dashboard:
         use a namespace for each module that matches the example below:
 
         .. code-block:: python
+
             dashboard.register_module_asset({
                 'file': 'templates/my-module/js/my-script.js',
                 'url': '/module/my-module/js/my-script.js'
             })
 
         :param asset: A dictionary with keys :code:`'file'` and :code:`'url'`.
-        :type asset: :py:class:`dict`
+        :type asset: dict
         """
         self._module_assets.append(asset)
 
@@ -258,7 +259,7 @@ class Dashboard:
         :param job: The job being titled.
         :type job: :py:class:`signac.contrib.job.Job`
         :returns: Title to be displayed.
-        :rtype: :py:class:`str`
+        :rtype: str
         """
         def _format_num(num):
             if isinstance(num, bool):
@@ -294,7 +295,7 @@ class Dashboard:
         :param job: The job being subtitled.
         :type job: :py:class:`signac.contrib.job.Job`
         :returns: Subtitle to be displayed.
-        :rtype: :py:class:`str`
+        :rtype: str
         """
         return str(job)[:max(8, self._project_min_len_unique_id())]
 
@@ -435,13 +436,13 @@ class Dashboard:
         dashboard functionality.
 
         :param import_name: The view function name to be imported.
-        :type import_name: :py:class:`str`
+        :type import_name: str
         :param url_rules: A list of URL rules, see
             :py:meth:`flask.Flask.add_url_rule`.
-        :type url_rules: :py:class:`list`
+        :type url_rules: list
         :param import_file: The module from which to import (default:
             :code:`'signac_dashboard'`).
-        :type import_file: :py:class:`str`
+        :type import_file: str
         :param \**options: Additional options to pass to
             :py:meth:`flask.Flask.add_url_rule`.
         """

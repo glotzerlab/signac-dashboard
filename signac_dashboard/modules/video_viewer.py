@@ -9,7 +9,18 @@ import itertools
 
 
 class VideoViewer(Module):
+    """Displays videos in the job workspace that match a glob.
 
+    :param video_globs: A list of glob expressions or exact filenames to be
+        displayed, one per card (default: :code:`['*.mp4', '*.m4v']`).
+    :type video_globs: list
+    :param preload: Option for preloading videos, one of :code:`'auto'`,
+        :code:`'metadata'`, or :code:`'none'` (default: :code:`'none'`).
+    :type preload: str
+    :param poster: A path in the job workspace for a poster image to be shown
+        before a video begins playback (default: :code:`None`).
+    :type poster: str
+    """
     def __init__(self,
                  name='Video Viewer',
                  context='JobContext',
