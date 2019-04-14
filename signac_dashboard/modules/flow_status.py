@@ -3,15 +3,26 @@
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard.module import Module
 from flask import render_template
-from collections import OrderedDict
 
 try:
-    from flow import FlowProject
+    from flow import FlowProject  # noqa: F401
 except ImportError:
     raise RuntimeWarning('Need signac-flow installed.\n')
 
-class FlowStatus(Module):
 
+class FlowStatus(Module):
+    """Show job labels using status from a FlowProject.
+
+    This module determines job status from a signac-flow FlowProject and shows
+    the job's current labels.
+
+    :param project_file: The module containing the FlowProject (e.g.,
+        :code:`'project.py'`).
+    :type project_file: str
+    :param project_class: The name of the FlowProject class (e.g.,
+        :code:`'MyProject'`).
+    :type project_class: str
+    """
     def __init__(self,
                  name='Flow Project Status',
                  context='JobContext',
