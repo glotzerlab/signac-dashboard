@@ -12,8 +12,6 @@ The Dashboard
 
 .. currentmodule:: signac_dashboard
 
-.. autoclass:: Dashboard
-
 .. rubric:: Attributes
 
 .. autosummary::
