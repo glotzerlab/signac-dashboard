@@ -40,6 +40,7 @@ release = '0.1.6'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.coverage',
     'sphinx.ext.intersphinx',
     'sphinx.ext.mathjax',
@@ -174,6 +175,7 @@ intersphinx_mapping = {
     'python': ('https://docs.python.org/', None),
     'signac': ('https://docs.signac.io/projects/core/en/latest/', None),
     'flask': ('http://flask.pocoo.org/docs/', None),
+    'werkzeug': ('https://werkzeug.palletsprojects.com/', None),
 }
 
 # -- Options for todo extension ----------------------------------------------

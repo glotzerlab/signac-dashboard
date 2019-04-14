@@ -28,7 +28,30 @@ logger = logging.getLogger(__name__)
 
 
 class Dashboard:
+    """A dashboard application to display a signac :py:class:`signac.Project`.
 
+    The Dashboard class is designed to be used as a base class for a child
+    class such as :code:`MyDashboard` which can be customized and launched via
+    its command line interface (CLI). The CLI is invoked by calling
+    :py:meth:`.main` on an instance of this class.
+
+    **Configuration options:** The :code:`config` dictionary recognizes the
+    following options:
+
+    - **DEBUG**: Enables debug mode if :code:`True` (default: :code:`False`).
+    - **PROFILE**: Enables the profiler
+      :py:class:`werkzeug.middleware.profiler.ProfilerMiddleware` if
+      :code:`True` (default: :code:`False`).
+    - **PER_PAGE**: Maximum number of jobs to show per page
+      (default: 25).
+
+    :param config: Configuration dictionary (default: :code:`{}`).
+    :type config: dict
+    :param project: signac project (default: :code:`None`, autodetected).
+    :type project: :py:class:`signac.Project`
+    :param modules: List of :py:class:`~.Module` instances to display.
+    :type modules: list
+    """
     def __init__(self, config={}, project=None, modules=[]):
         if project is None:
             self.project = signac.get_project()
@@ -443,7 +466,7 @@ class Dashboard:
         :param import_file: The module from which to import (default:
             :code:`'signac_dashboard'`).
         :type import_file: str
-        :param \**options: Additional options to pass to
+        :param \\**options: Additional options to pass to
             :py:meth:`flask.Flask.add_url_rule`.
         """
         if import_file is not None:
