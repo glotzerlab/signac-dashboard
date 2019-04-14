@@ -7,16 +7,16 @@ from importlib import import_module
 
 
 class FlowStatus(Module):
-    """Show job labels using status from a FlowProject.
+    """Show job labels using status from a :py:class`flow.FlowProject`.
 
-    This module determines job status from a signac-flow FlowProject and shows
-    the job's current labels.
+    This module imports a user-specified :py:class:`flow.FlowProject` and uses
+    :py:meth:`flow.FlowProject.labels` to display labels for the provided job.
 
-    :param project_module: The Python module containing the FlowProject
-        (default: :code:`'project'`).
+    :param project_module: The Python module containing the
+        :py:class:`flow.FlowProject` (default: :code:`'project'`).
     :type project_module: str
-    :param project_class: The name of the FlowProject class (default:
-        :code:`'FlowProject'`).
+    :param project_class: The name of the :py:class:`FlowProject` class
+        (default: :code:`'Project'`).
     :type project_class: str
     """
     def __init__(self,
@@ -24,7 +24,7 @@ class FlowStatus(Module):
                  context='JobContext',
                  template='cards/flow_status.html',
                  project_module='project',
-                 project_class='FlowProject',
+                 project_class='Project',
                  **kwargs):
         super().__init__(name=name,
                          context=context,
@@ -32,12 +32,15 @@ class FlowStatus(Module):
                          **kwargs)
         self.project_module = project_module
         self.project_class = project_class
+        self._flowproject = None
+
+    def _get_flowproject(self):
+        if self._flowproject is None:
+            module = import_module(self.project_module)
+            self._flowproject = getattr(module, self.project_class)()
 
     def get_cards(self, job):
-        if self.project_module is None or self.project_class is None:
-            return
-        module = import_module(self.project_module)
-        project = getattr(module, self.project_class)()
-        labels = project.labels(job)
+        self._get_flowproject()
+        labels = self._flowproject.labels(job)
         return [{'name': self.name,
                  'content': render_template(self.template, labels=labels)}]
