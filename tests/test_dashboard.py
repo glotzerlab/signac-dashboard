@@ -29,7 +29,7 @@ class DashboardTestCase(unittest.TestCase):
         self.dashboard = Dashboard(config=self.config,
                                    project=self.project,
                                    modules=self.modules)
-        self.dashboard.prepare()
+        self.dashboard._prepare()
         self.test_client = self.dashboard.app.test_client()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
 

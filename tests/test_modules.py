@@ -17,7 +17,7 @@ class ModuleTestCase(unittest.TestCase):
             modules.append(getattr(signac_dashboard.modules, m).__call__())
         json_modules_before = json.dumps(modules, cls=ModuleEncoder,
                                          sort_keys=True, indent=4)
-        parsed_modules = Dashboard.decode_modules(json_modules_before)
+        parsed_modules = Dashboard._decode_modules(json_modules_before)
         json_modules_after = json.dumps(parsed_modules, cls=ModuleEncoder,
                                         sort_keys=True, indent=4)
         assert json_modules_before == json_modules_after
