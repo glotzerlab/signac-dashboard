@@ -20,8 +20,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'signac-dashboard'
-copyright = '2018, Bradley Dice'
-author = 'Bradley Dice'
+copyright = 'The Regents of the University of Michigan'
+author = 'Bradley D. Dice, Carl S. Adorf, Sharon C. Glotzer'
 
 # The short X.Y version
 version = '0.1.6'
