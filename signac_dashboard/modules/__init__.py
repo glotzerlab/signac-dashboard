@@ -4,6 +4,7 @@ from .statepoint_list import StatepointList
 from .document_list import DocumentList
 from .file_list import FileList
 from .notes import Notes
+from .text_display import TextDisplay
 
 __all__ = [
     'ImageViewer',
@@ -12,4 +13,5 @@ __all__ = [
     'DocumentList',
     'FileList',
     'Notes',
+    'TextDisplay',
 ]
