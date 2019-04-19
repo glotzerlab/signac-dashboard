@@ -21,6 +21,7 @@ The Dashboard
     Dashboard.job_title
     Dashboard.main
     Dashboard.register_module_asset
+    Dashboard.run
 
 .. autoclass:: signac_dashboard.Dashboard
     :members:

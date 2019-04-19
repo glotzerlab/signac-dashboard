@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Regents of the University of Michigan
+# Copyright (c) 2019 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
@@ -36,6 +36,8 @@ class Dashboard:
     **Configuration options:** The :code:`config` dictionary recognizes the
     following options:
 
+    - **HOST**: Sets binding address (default: localhost).
+    - **PORT**: Sets port to listen on (default: 8888).
     - **DEBUG**: Enables debug mode if :code:`True` (default: :code:`False`).
     - **PROFILE**: Enables the profiler
       :py:class:`werkzeug.middleware.profiler.ProfilerMiddleware` if
@@ -58,15 +60,8 @@ class Dashboard:
 
         self.config = config
         self.modules = modules
-        self._url_rules = []
 
-        # Try to update the project cache. Requires signac 0.9.2 or later.
-        with warnings.catch_warnings():
-            warnings.simplefilter(action='ignore', category=FutureWarning)
-            try:
-                self.project.update_cache()
-            except Exception:
-                pass
+        self._prepare()
 
     def _create_app(self, config={}):
         """Creates a Flask application.
@@ -152,15 +147,20 @@ class Dashboard:
     def _prepare(self):
         """Prepare this dashboard instance to run."""
 
+        # Create an empty set of URL rules
+        self._url_rules = []
+
+        # Try to update signac project cache. Requires signac 0.9.2 or later.
+        with warnings.catch_warnings():
+            warnings.simplefilter(action='ignore', category=FutureWarning)
+            try:
+                self.project.update_cache()
+            except Exception:
+                pass
+
         # Set configuration defaults and save to the project document
         self.config.setdefault('PAGINATION', True)
         self.config.setdefault('PER_PAGE', 25)
-
-        self.project.document.setdefault('dashboard', {})
-
-        # This dash_doc is synced to the project document
-        dash_doc = self.project.document.dashboard
-        dash_doc.setdefault('config', self.config)
 
         # Create and configure the Flask application
         self.app = self._create_app(self.config)
@@ -182,8 +182,15 @@ class Dashboard:
                     module.name))
                 self.modules.remove(module)
 
-    def _run(self, host='localhost', port=8888, *args, **kwargs):
+    def run(self, *args, **kwargs):
+        """Runs the dashboard webserver.
 
+        Use :py:meth:`~.main` instead of this method for the command-line
+        interface. Arguments to this function are passed directly to
+        :py:meth:`flask.Flask.run`.
+        """
+        host = self.config.get('HOST', 'localhost')
+        port = self.config.get('PORT', 8888)
         max_retries = 5
         for _ in range(max_retries):
             try:
@@ -506,12 +513,13 @@ class Dashboard:
 
         def _run(args):
             kwargs = vars(args)
-            host = kwargs.pop('host')
-            port = kwargs.pop('port')
+            if kwargs.get('host', None) is not None:
+                self.config['HOST'] = kwargs.pop('host')
+            if kwargs.get('port', None) is not None:
+                self.config['PORT'] = kwargs.pop('port')
             self.config['PROFILE'] = kwargs.pop('profile')
             self.config['DEBUG'] = kwargs.pop('debug')
-            self._prepare()
-            self._run(host=host, port=port)
+            self.run()
 
         parser = argparse.ArgumentParser(
             description="signac-dashboard is a web-based data visualization "
@@ -537,11 +545,9 @@ class Dashboard:
             help='Enable flask debug mode.')
         parser_run.add_argument(
             '--host', type=str,
-            default='localhost',
             help='Host (binding address). Default: localhost')
         parser_run.add_argument(
             '--port', type=int,
-            default=8888,
             help='Port to listen on. Default: 8888')
         parser_run.set_defaults(func=_run)
 
