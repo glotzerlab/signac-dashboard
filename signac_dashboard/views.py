@@ -79,7 +79,7 @@ def get_file(dashboard, jobid, filename):
 
 def change_modules(dashboard):
     enabled_modules = set(session.get('enabled_modules', []))
-    for i, module in enumerate(session.get('modules', [])):
+    for i, module in enumerate(dashboard.modules):
         if request.form.get('modules[{}]'.format(i)) == 'on':
             enabled_modules.add(i)
         else:

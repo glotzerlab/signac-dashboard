@@ -16,7 +16,6 @@ The Dashboard
 
 .. autosummary::
     Dashboard.add_url
-    Dashboard.encoded_modules
     Dashboard.job_sorter
     Dashboard.job_subtitle
     Dashboard.job_title

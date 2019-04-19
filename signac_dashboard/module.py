@@ -2,12 +2,6 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from flask import render_template
-from json import JSONEncoder
-
-
-class ModuleEncoder(JSONEncoder):
-    def default(self, o):
-        return o.__dict__
 
 
 class Module:

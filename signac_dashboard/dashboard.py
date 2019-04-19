@@ -13,14 +13,12 @@ import logging
 import warnings
 import shlex
 import argparse
-from importlib import import_module
 from functools import lru_cache
 from numbers import Real
 import json
 import signac
 
 from .version import __version__
-from .module import ModuleEncoder
 from .pagination import Pagination
 from .util import LazyView
 
@@ -58,14 +56,8 @@ class Dashboard:
         else:
             self.project = project
 
-        try:
-            # This dashboard document is read-only
-            dash_doc = self.project.document.dashboard()
-        except AttributeError:
-            dash_doc = {}
-        self.config = config or dash_doc.get('config', {})
-        self.modules = modules or Dashboard._decode_modules(
-            dash_doc.get('module_views', {}).get('Default', []))
+        self.config = config
+        self.modules = modules
         self._url_rules = []
 
         # Try to update the project cache. Requires signac 0.9.2 or later.
@@ -75,49 +67,6 @@ class Dashboard:
                 self.project.update_cache()
             except Exception:
                 pass
-
-    @classmethod
-    def _encode_modules(cls, modules, target='dict'):
-        json_modules = json.dumps(modules, cls=ModuleEncoder,
-                                  sort_keys=True, indent=4)
-        if target == 'json':
-            return json_modules
-        else:
-            return json.loads(json_modules)
-
-    @property
-    def encoded_modules(self):
-        """A JSON-encodable dictionary of module parameters."""
-        return Dashboard._encode_modules(self.modules)
-
-    @classmethod
-    def _decode_modules(cls, json_modules, enabled_modules=None):
-        modules = []
-        if type(json_modules) == str:
-            json_modules = json.loads(json_modules)
-        logger.info("Loading modules: {}".format(json_modules))
-        if enabled_modules is None:
-            enabled_modules = list(range(len(json_modules)))
-        for i, module in enumerate(json_modules):
-            if type(module) == dict and \
-                    '_module' in module and \
-                    '_moduletype' in module:
-                try:
-                    _module = module['_module']
-                    _moduletype = module['_moduletype']
-                    modulecls = getattr(import_module(_module), _moduletype)
-                    module = modulecls(
-                        **{k: v for k, v in module.items()
-                           if not k.startswith('_')})
-                    if i in enabled_modules:
-                        module.enable()
-                    else:
-                        module.disable()
-                    modules.append(module)
-                except Exception as e:
-                    logger.error(e)
-                    logger.warning('Could not import module:', module)
-        return modules
 
     def _create_app(self, config={}):
         """Creates a Flask application.
@@ -212,10 +161,6 @@ class Dashboard:
         # This dash_doc is synced to the project document
         dash_doc = self.project.document.dashboard
         dash_doc.setdefault('config', self.config)
-        dash_doc.setdefault('module_views', {})
-
-        # Set the Default module view to the modules provided by the user
-        dash_doc['module_views']['Default'] = self.encoded_modules
 
         # Create and configure the Flask application
         self.app = self._create_app(self.config)
@@ -494,7 +439,6 @@ class Dashboard:
 
         @dashboard.app.context_processor
         def injections():
-            session.setdefault('modules', self.encoded_modules)
             session.setdefault('enabled_modules',
                                [i for i in range(len(self.modules))
                                 if self.modules[i].enabled])
@@ -503,8 +447,7 @@ class Dashboard:
                 'APP_VERSION': __version__,
                 'PROJECT_NAME': self.project.config['project'],
                 'PROJECT_DIR': self.project.config['project_dir'],
-                'modules': Dashboard._decode_modules(
-                    session['modules'], session['enabled_modules']),
+                'modules': self.modules,
                 'enabled_modules': session['enabled_modules'],
                 'module_assets': self._module_assets
             }
