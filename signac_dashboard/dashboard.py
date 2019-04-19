@@ -482,7 +482,7 @@ class Dashboard:
         self.add_url('views.search', ['/search'])
         self.add_url('views.jobs_list', ['/jobs/'])
         self.add_url('views.show_job', ['/jobs/<jobid>'])
-        self.add_url('views.get_file', ['/jobs/<jobid>/file/<filename>'])
+        self.add_url('views.get_file', ['/jobs/<jobid>/file/<path:filename>'])
         self.add_url('views.change_modules', ['/modules'], methods=['POST'])
 
         for url_rule in self._url_rules:
