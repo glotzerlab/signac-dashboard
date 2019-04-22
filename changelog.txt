@@ -7,7 +7,29 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 next
 ====
 
-- ...
+Added
++++++
+- New modules: DocumentEditor, FlowStatus, TextDisplay.
+- New examples: cli, document-editor, flow-status, plots.
+
+Changed
++++++++
+- Improved API documentation.
+- Unified module asset/route registration into one ``register`` method.
+- The Notes module can be used with any job document key.
+
+Fixed
++++++
+- Corrected error in VideoViewer when no poster was provided.
+- ImageViewer/VideoViewer match files in job workspace subdirectories.
+- Files can now be retrieved from job workspace subdirectories.
+
+Removed
++++++++
+- The signac project document and user session are no longer used to store
+module settings. The dashboard user script is the single source for
+all configuration besides command line arguments.
+- Job labels have been removed and replaced with the FlowStatus module.
 
 Version 0.1
 ===========
