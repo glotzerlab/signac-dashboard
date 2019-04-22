@@ -16,7 +16,7 @@ class TextDisplay(Module):
     .. code-block:: python
 
         def my_text(job):
-            return "This job id is {}.".format(str(job))
+            return 'This job id is {}.'.format(str(job))
 
         modules = [TextDisplay(message=my_text)]
 

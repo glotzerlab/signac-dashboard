@@ -34,12 +34,15 @@ Modules
 
 .. autosummary::
     Module
-    modules.ImageViewer
-    modules.VideoViewer
-    modules.StatepointList
+    modules.DocumentEditor
     modules.DocumentList
     modules.FileList
+    modules.FlowStatus
+    modules.ImageViewer
     modules.Notes
+    modules.StatepointList
+    modules.TextDisplay
+    modules.VideoViewer
 
 .. autoclass:: signac_dashboard.Module
     :members:
@@ -47,4 +50,4 @@ Modules
 
 .. automodule:: signac_dashboard.modules
     :members:
-    :exclude-members: get_cards
+    :exclude-members: get_cards, register
