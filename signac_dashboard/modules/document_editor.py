@@ -40,7 +40,8 @@ class DocumentEditor(Module):
         return [{'name': self.name, 'content': render_template(
             self.template, document=doc, jobid=job._id)}]
 
-    def register_routes(self, dashboard):
+    def register(self, dashboard):
+        # Register routes
         @dashboard.app.route('/module/document_editor/update',
                              methods=['POST'])
         def document_editor_update():
@@ -64,7 +65,7 @@ class DocumentEditor(Module):
             except TemplateNotFound:
                 abort(404, 'The file requested does not exist.')
 
-    def register_assets(self, dashboard):
+        # Register assets
         assets = ['js/document_editor.js']
         for assetfile in assets:
             dashboard.register_module_asset({
