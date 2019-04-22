@@ -29,9 +29,12 @@ def plot_coherence(job):
     nse1 = np.random.randn(len(t))                 # white noise 1
     nse2 = np.random.randn(len(t))                 # white noise 2
 
-    # Two signals with a coherent part at 10Hz and a random part
+    # Two signals with a coherent part and a random part
     s1 = np.sin(2 * np.pi * job.sp.coherence_time * t) + nse1
     s2 = np.sin(2 * np.pi * job.sp.coherence_time * t) + nse2
+
+    # Save correlation coefficient
+    job.doc['correlation'] = np.corrcoef(s1, s2)[0, 1]
 
     fig, axs = plt.subplots(2, 1)
     plt.title('Coherence time = {}'.format(job.sp.coherence_time))

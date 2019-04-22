@@ -3,7 +3,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard import Dashboard
-from signac_dashboard.modules import StatepointList, ImageViewer
+from signac_dashboard.modules import StatepointList, ImageViewer, TextDisplay
 
 
 class PlotDashboard(Dashboard):
@@ -11,8 +11,14 @@ class PlotDashboard(Dashboard):
         return job.sp.get('coherence_time', -1)
 
 
+def correlation_text(job):
+    return 'Correlation coefficient: {:.5f}'.format(job.doc['correlation'])
+
+
 if __name__ == '__main__':
     modules = []
     modules.append(StatepointList())
     modules.append(ImageViewer())
+    modules.append(TextDisplay(name='Correlation',
+                               message=correlation_text))
     PlotDashboard(modules=modules).main()
