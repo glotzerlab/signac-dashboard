@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 
 class Dashboard:
-    """A dashboard application to display a signac :py:class:`signac.Project`.
+    """A dashboard application to display a :py:class:`signac.Project`.
 
     The Dashboard class is designed to be used as a base class for a child
     class such as :code:`MyDashboard` which can be customized and launched via
@@ -274,7 +274,7 @@ class Dashboard:
         return str(job)[:max(8, self._project_min_len_unique_id())]
 
     def job_sorter(self, job):
-        """Overload this method for custom job sorting.
+        """Override this method for custom job sorting.
 
         This method returns a key that can be compared to sort jobs. By
         default, the sorting key is :py:func:`Dashboard.job_title`. Good

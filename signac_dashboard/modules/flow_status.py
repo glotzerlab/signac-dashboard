@@ -6,13 +6,13 @@ from flask import render_template
 
 
 class FlowStatus(Module):
-    """Show job labels from a :py:class`flow.FlowProject`.
+    """Show job labels from a :py:class:`flow.FlowProject`.
 
     This module displays a card with labels from
     :py:meth:`flow.FlowProject.labels`. The user must provide an instance of
     :py:class:`flow.FlowProject` to the dashboard constructor. Example:
 
-    .. code-block::
+    .. code-block:: python
 
         from project import Project  # FlowProject subclass with labels
         from signac_dashboard import Dashboard
