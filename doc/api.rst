@@ -5,18 +5,46 @@ API Reference
 
 This is the API for the **signac-dashboard** application.
 
-Dashboard
----------
+The Dashboard
+-------------
+
+.. _python-api-dashboard:
+
+.. currentmodule:: signac_dashboard
+
+.. rubric:: Attributes
+
+.. autosummary::
+    Dashboard.add_url
+    Dashboard.job_sorter
+    Dashboard.job_subtitle
+    Dashboard.job_title
+    Dashboard.main
+    Dashboard.register_module_asset
+    Dashboard.run
 
 .. autoclass:: signac_dashboard.Dashboard
     :members:
     :undoc-members:
-    :show-inheritance:
 
 Modules
 -------
 
-.. automodule:: signac_dashboard.modules
+.. _python-api-modules:
+
+.. autosummary::
+    Module
+    modules.ImageViewer
+    modules.VideoViewer
+    modules.StatepointList
+    modules.DocumentList
+    modules.FileList
+    modules.Notes
+
+.. autoclass:: signac_dashboard.Module
     :members:
     :undoc-members:
-    :show-inheritance:
+
+.. automodule:: signac_dashboard.modules
+    :members:
+    :exclude-members: get_cards

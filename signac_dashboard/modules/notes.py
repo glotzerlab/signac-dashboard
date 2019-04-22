@@ -7,7 +7,12 @@ from jinja2.exceptions import TemplateNotFound
 
 
 class Notes(Module):
+    """Displays a text box that is synced to the job document.
 
+    The contents of the text box are saved to :code:`job.document['notes']`.
+    The Notes module can be used to annotate a large data space with tags or
+    human-readable descriptions for post-processing, parsing, or searching.
+    """
     def __init__(self,
                  name='Notes',
                  context='JobContext',
@@ -23,7 +28,8 @@ class Notes(Module):
         return [{'name': self.name, 'content': render_template(
             self.template, note_text=note_text, jobid=job._id)}]
 
-    def register_routes(self, dashboard):
+    def register(self, dashboard):
+        # Register routes
         @dashboard.app.route('/module/notes/update', methods=['POST'])
         def notes_update():
             note_text = request.form.get('note_text')
@@ -40,7 +46,7 @@ class Notes(Module):
             except TemplateNotFound:
                 abort(404, 'The file requested does not exist.')
 
-    def register_assets(self, dashboard):
+        # Register assets
         assets = ['js/notes.js']
         for assetfile in assets:
             dashboard.register_module_asset({

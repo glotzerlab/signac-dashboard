@@ -11,9 +11,6 @@
                 {% for job_details in g.jobs %}
                 <li>
                     <a href="{{ url_for('show_job', jobid=job_details.job._id) }}">{{ job_details.title }} &mdash; {{ job_details.subtitle }}</a>
-                    {% for label in job_details.labels %}
-                    <span class="tag">{{ label }}</span>
-                    {% endfor %}
                 </li>
                 {% endfor %}
             </ul>

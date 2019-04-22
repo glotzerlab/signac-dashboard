@@ -7,7 +7,7 @@ from collections import OrderedDict
 
 
 class StatepointList(Module):
-
+    """Displays the job state point."""
     def __init__(self,
                  name='Statepoint Parameters',
                  context='JobContext',
