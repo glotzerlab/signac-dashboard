@@ -14,8 +14,8 @@ class DocumentEditor(Module):
 
     This module shows keys in the job document with a form that allows users
     to edit their contents. When saving, the edited strings are parsed into
-    JSON-compatible Python data structures (i.e., :py:class:`list`s and
-    :py:class:`dict`s). Job document keys beginning with an underscore
+    JSON-compatible Python data structures (e.g., :py:class:`list` and
+    :py:class:`dict`). Job document keys beginning with an underscore
     :code:`_` are treated as private and are not displayed.
     """
     def __init__(self,
