@@ -12,19 +12,24 @@ class Notes(Module):
     The contents of the text box are saved to :code:`job.document['notes']`.
     The Notes module can be used to annotate a large data space with tags or
     human-readable descriptions for post-processing, parsing, or searching.
+
+    :param key: Document key to display and update (default: :code:`'notes'`).
+    :type key: str
     """
     def __init__(self,
                  name='Notes',
                  context='JobContext',
                  template='cards/notes.html',
+                 key='notes',
                  **kwargs):
         super().__init__(name=name,
                          context=context,
                          template=template,
                          **kwargs)
+        self.key = key
 
     def get_cards(self, job):
-        note_text = job.document.get('notes', '')
+        note_text = job.document.get(self.key, '')
         return [{'name': self.name, 'content': render_template(
             self.template, note_text=note_text, jobid=job._id)}]
 
@@ -35,7 +40,7 @@ class Notes(Module):
             note_text = request.form.get('note_text')
             jobid = request.form.get('jobid')
             job = dashboard.project.open_job(id=jobid)
-            job.document['notes'] = note_text
+            job.document[self.key] = note_text
             return "Saved."
 
         @dashboard.app.route('/module/notes/<path:filename>')
