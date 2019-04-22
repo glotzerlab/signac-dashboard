@@ -20,9 +20,9 @@ class TextDisplay(Module):
 
         modules = [TextDisplay(message=my_text)]
 
-    :param message: Function returning text or Markdown content.
-    :type message: A callable accepting one argument of type
-        :py:class:`signac.contrib.Job`.
+    :param message: A callable accepting one argument of type
+        :py:class:`signac.contrib.Job` and returning text or Markdown content.
+    :type message: callable
     :param markdown: Enables Markdown rendering if True (default: False).
     :type markdown: bool
     """
