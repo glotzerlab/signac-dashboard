@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Regents of the University of Michigan
+# Copyright (c) 2019 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard.module import Module
@@ -7,7 +7,12 @@ import os
 
 
 class FileList(Module):
+    """Lists files in the job workspace.
 
+    :param prefix_jobid: Whether filenames should be prefixed with the job id
+        when being downloaded (default: :code:`True`).
+    :type prefix_jobid: bool
+    """
     def __init__(self,
                  name='File List',
                  context='JobContext',

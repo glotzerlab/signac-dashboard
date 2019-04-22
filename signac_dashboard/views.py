@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Regents of the University of Michigan
+# Copyright (c) 2019 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
@@ -18,7 +18,7 @@ def search(dashboard):
         if request.method != 'GET':
             # Someday we may support search via POST, returning json
             raise NotImplementedError('Unsupported search method.')
-        jobs = dashboard.job_search(query)
+        jobs = dashboard._job_search(query)
         if not jobs:
             flash('No jobs found for the provided query.', 'warning')
     except Exception as error:
@@ -26,7 +26,7 @@ def search(dashboard):
     else:
         g.query = query
         g.pagination = dashboard._setup_pagination(jobs)
-        g.jobs = dashboard.get_job_details(
+        g.jobs = dashboard._get_job_details(
                 g.pagination.paginate(jobs))
         g.title = 'Search: {}'.format(query)
         g.subtitle = g.pagination.item_counts()
@@ -34,11 +34,11 @@ def search(dashboard):
 
 
 def jobs_list(dashboard):
-    jobs = dashboard.get_all_jobs()
+    jobs = dashboard._get_all_jobs()
     g.pagination = dashboard._setup_pagination(jobs)
     if not jobs:
         flash('No jobs found.', 'warning')
-    g.jobs = dashboard.get_job_details(g.pagination.paginate(jobs))
+    g.jobs = dashboard._get_job_details(g.pagination.paginate(jobs))
     project_title = dashboard.project.config.get('project', None)
     g.title = '{}: Jobs'.format(project_title) if project_title else 'Jobs'
     g.subtitle = g.pagination.item_counts()
@@ -51,7 +51,7 @@ def show_job(dashboard, jobid):
     except KeyError:
         abort(404, 'The job id requested could not be found.')
     else:
-        g.jobs = dashboard.get_job_details([job])
+        g.jobs = dashboard._get_job_details([job])
         g.title = g.jobs[0]['title']
         g.subtitle = g.jobs[0]['subtitle']
         return dashboard._render_job_view(default_view='grid')
@@ -79,7 +79,7 @@ def get_file(dashboard, jobid, filename):
 
 def change_modules(dashboard):
     enabled_modules = set(session.get('enabled_modules', []))
-    for i, module in enumerate(session.get('modules', [])):
+    for i, module in enumerate(dashboard.modules):
         if request.form.get('modules[{}]'.format(i)) == 'on':
             enabled_modules.add(i)
         else:

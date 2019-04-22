@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Regents of the University of Michigan
+# Copyright (c) 2019 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 import unittest
@@ -8,6 +8,7 @@ from urllib.parse import quote as urlquote
 import json
 
 from signac_dashboard import Dashboard
+import signac_dashboard.modules
 from signac import init_project
 
 
@@ -29,12 +30,9 @@ class DashboardTestCase(unittest.TestCase):
         self.dashboard = Dashboard(config=self.config,
                                    project=self.project,
                                    modules=self.modules)
-        self.dashboard.prepare()
+        self.dashboard._prepare()
         self.test_client = self.dashboard.app.test_client()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
-
-    def tearDown(self):
-        pass
 
     def test_get_jobs(self):
         rv = self.test_client.get('/jobs', follow_redirects=True)
@@ -63,6 +61,32 @@ class DashboardTestCase(unittest.TestCase):
                                   follow_redirects=True)
         response = str(rv.get_data())
         assert '{} jobs'.format(true_num_jobs) in response
+
+
+class AllModulesTestCase(DashboardTestCase):
+
+    def setUp(self):
+        self._tmp_dir = tempfile.mkdtemp()
+        self.project = init_project('dashboard-test-project',
+                                    root=self._tmp_dir,
+                                    make_dir=False)
+        # Set up some fake jobs
+        for a in range(3):
+            for b in range(2):
+                job = self.project.open_job({'a': a, 'b': b})
+                with job:
+                    job.document['sum'] = a + b
+        self.config = {}
+        modules = []
+        for m in signac_dashboard.modules.__all__:
+            modules.append(getattr(signac_dashboard.modules, m)())
+        self.modules = modules
+        self.dashboard = Dashboard(config=self.config,
+                                   project=self.project,
+                                   modules=self.modules)
+        self.dashboard._prepare()
+        self.test_client = self.dashboard.app.test_client()
+        self.addCleanup(shutil.rmtree, self._tmp_dir)
 
 
 if __name__ == '__main__':
