@@ -3,6 +3,9 @@
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard.module import Module
 from flask import render_template
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class FlowStatus(Module):
@@ -34,8 +37,15 @@ class FlowStatus(Module):
 
     def register(self, dashboard):
         self.project = dashboard.project
+        if not hasattr(self.project, 'labels'):
+            logger.warning('The provided signac Project cannot provide labels.'
+                           ' Try providing a FlowProject to the Dashboard\'s '
+                           'project argument.')
 
     def get_cards(self, job):
-        labels = self.project.labels(job)
+        try:
+            labels = self.project.labels(job)
+        except AttributeError:
+            labels = ('Error: Project cannot provide labels.',)
         return [{'name': self.name,
                  'content': render_template(self.template, labels=labels)}]
