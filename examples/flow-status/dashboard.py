@@ -4,6 +4,7 @@
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard import Dashboard
 from signac_dashboard.modules import StatepointList, FlowStatus
+from project import Project
 
 
 class FlowStatusDashboard(Dashboard):
@@ -13,6 +14,6 @@ class FlowStatusDashboard(Dashboard):
 if __name__ == '__main__':
     modules = [
         StatepointList(),
-        FlowStatus(project_module='project', project_class='Project'),
+        FlowStatus(),
     ]
-    FlowStatusDashboard(modules=modules).main()
+    FlowStatusDashboard(modules=modules, project=Project()).main()
