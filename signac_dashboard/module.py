@@ -14,13 +14,13 @@ class Module:
 
     **Module assets:** If a module requires scripts or stylesheets to be
     included for its content to be rendered, they must be handled by the
-    callback :py:meth:`.register_assets`. For example, a module inheriting from
+    callback :py:meth:`.register`. For example, a module inheriting from
     the base :py:class:`signac_dashboard.Module` class may implement this by
     overriding the default method as follows:
 
     .. code-block:: python
 
-        def register_assets(self, dashboard):
+        def register(self, dashboard):
             assets = ['js/my-script.js', 'css/my-style.css']
             for asset in assets:
                 dashboard.register_module_asset({
@@ -31,7 +31,7 @@ class Module:
     Then, when the module is active, its assets will be included and a
     route will be created that returns the asset file.
 
-    **Module routes:** The callback :py:meth:`.register_routes` allows modules
+    **Module routes:** The callback :py:meth:`.register` allows modules
     to implement custom routes, such as methods that should be triggered by
     :code:`POST` requests or custom APIs. For example, a module inheriting from
     the base :py:class:`signac_dashboard.Module` class may implement this by
@@ -39,7 +39,7 @@ class Module:
 
     .. code-block:: python
 
-        def register_routes(self, dashboard):
+        def register(self, dashboard):
             @dashboard.app.route('/module/my-module/update', methods=['POST'])
             def my_module_update():
                 # Perform update
@@ -87,18 +87,13 @@ class Module:
         """Toggle this module."""
         self.enabled = not self.enabled
 
-    def register_assets(self, dashboard):
-        """Callback to register this module's assets with the dashboard.
+    def register(self, dashboard):
+        """Callback to register this module with the dashboard.
+
+        This callback should register assets and routes, as well as any other
+        initialization that accesses or modifies the dashboard.
 
         :param dashboard: The dashboard invoking this callback method.
         :type dashboard: :py:class:`signac_dashboard.Dashboard`
         """
-        pass
-
-    def register_routes(self, dashboard):
-        """Callback to register this module's routes with the dashboard.
-
-        :param dashboard: The dashboard invoking this callback method.
-        :type dashboard: :py:class:`signac_dashboard.Dashboard`
-        """  # noqa: E501
         pass

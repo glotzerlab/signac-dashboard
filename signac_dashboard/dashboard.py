@@ -173,8 +173,7 @@ class Dashboard:
         self._module_assets = []
         for module in self.modules:
             try:
-                module.register_assets(self)
-                module.register_routes(self)
+                module.register(self)
             except Exception as e:
                 logger.error('Error while registering {} module: {}'.format(
                     module.name, e))
