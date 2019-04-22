@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Regents of the University of Michigan
+# Copyright (c) 2019 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
@@ -13,14 +13,12 @@ import logging
 import warnings
 import shlex
 import argparse
-from importlib import import_module
 from functools import lru_cache
 from numbers import Real
 import json
 import signac
 
 from .version import __version__
-from .module import ModuleEncoder
 from .pagination import Pagination
 from .util import LazyView
 
@@ -28,73 +26,48 @@ logger = logging.getLogger(__name__)
 
 
 class Dashboard:
+    """A dashboard application to display a signac :py:class:`signac.Project`.
 
+    The Dashboard class is designed to be used as a base class for a child
+    class such as :code:`MyDashboard` which can be customized and launched via
+    its command line interface (CLI). The CLI is invoked by calling
+    :py:meth:`.main` on an instance of this class.
+
+    **Configuration options:** The :code:`config` dictionary recognizes the
+    following options:
+
+    - **HOST**: Sets binding address (default: localhost).
+    - **PORT**: Sets port to listen on (default: 8888).
+    - **DEBUG**: Enables debug mode if :code:`True` (default: :code:`False`).
+    - **PROFILE**: Enables the profiler
+      :py:class:`werkzeug.middleware.profiler.ProfilerMiddleware` if
+      :code:`True` (default: :code:`False`).
+    - **PER_PAGE**: Maximum number of jobs to show per page
+      (default: 25).
+
+    :param config: Configuration dictionary (default: :code:`{}`).
+    :type config: dict
+    :param project: signac project (default: :code:`None`, autodetected).
+    :type project: :py:class:`signac.Project`
+    :param modules: List of :py:class:`~.Module` instances to display.
+    :type modules: list
+    """
     def __init__(self, config={}, project=None, modules=[]):
         if project is None:
             self.project = signac.get_project()
         else:
             self.project = project
 
-        try:
-            # This dashboard document is read-only
-            dash_doc = self.project.document.dashboard()
-        except AttributeError:
-            dash_doc = {}
-        self.config = config or dash_doc.get('config', {})
-        self.modules = modules or Dashboard.decode_modules(
-            dash_doc.get('module_views', {}).get('Default', []))
+        self.config = config
+        self.modules = modules
 
-        # Try to update the project cache. Requires signac 0.9.2 or later.
-        with warnings.catch_warnings():
-            warnings.simplefilter(action='ignore', category=FutureWarning)
-            try:
-                self.project.update_cache()
-            except Exception:
-                pass
+        self._prepare()
 
-    @classmethod
-    def encode_modules(cls, modules, target='dict'):
-        json_modules = json.dumps(modules, cls=ModuleEncoder,
-                                  sort_keys=True, indent=4)
-        if target == 'json':
-            return json_modules
-        else:
-            return json.loads(json_modules)
+    def _create_app(self, config={}):
+        """Creates a Flask application.
 
-    @property
-    def encoded_modules(self):
-        return Dashboard.encode_modules(self.modules)
-
-    @classmethod
-    def decode_modules(cls, json_modules, enabled_modules=None):
-        modules = []
-        if type(json_modules) == str:
-            json_modules = json.loads(json_modules)
-        logger.info("Loading modules: {}".format(json_modules))
-        if enabled_modules is None:
-            enabled_modules = list(range(len(json_modules)))
-        for i, module in enumerate(json_modules):
-            if type(module) == dict and \
-                    '_module' in module and \
-                    '_moduletype' in module:
-                try:
-                    _module = module['_module']
-                    _moduletype = module['_moduletype']
-                    modulecls = getattr(import_module(_module), _moduletype)
-                    module = modulecls(
-                        **{k: v for k, v in module.items()
-                           if not k.startswith('_')})
-                    if i in enabled_modules:
-                        module.enable()
-                    else:
-                        module.disable()
-                    modules.append(module)
-                except Exception as e:
-                    logger.error(e)
-                    logger.warning('Could not import module:', module)
-        return modules
-
-    def create_app(self, config={}):
+        :param config: Dictionary of configuration parameters.
+        """
         app = Flask('signac-dashboard')
         app.config.update({
             'SECRET_KEY': os.urandom(24),
@@ -133,7 +106,9 @@ class Dashboard:
 
         return app
 
-    def create_assets(self):
+    def _create_assets(self):
+        """Add assets for inclusion in the dashboard HTML."""
+
         assets = Environment(self.app)
         # jQuery is served as a standalone file
         jquery = Bundle('js/jquery-*.min.js', output='gen/jquery.min.js')
@@ -151,33 +126,54 @@ class Dashboard:
         return assets
 
     def register_module_asset(self, asset):
-        self.module_assets.append(asset)
+        """Register an asset required by a dashboard module.
 
-    def prepare(self):
+        Some modules require special scripts or stylesheets, like the
+        :py:class:`signac_dashboard.modules.Notes` module. It is recommended to
+        use a namespace for each module that matches the example below:
+
+        .. code-block:: python
+
+            dashboard.register_module_asset({
+                'file': 'templates/my-module/js/my-script.js',
+                'url': '/module/my-module/js/my-script.js'
+            })
+
+        :param asset: A dictionary with keys :code:`'file'` and :code:`'url'`.
+        :type asset: dict
+        """
+        self._module_assets.append(asset)
+
+    def _prepare(self):
+        """Prepare this dashboard instance to run."""
+
+        # Create an empty set of URL rules
+        self._url_rules = []
+
+        # Try to update signac project cache. Requires signac 0.9.2 or later.
+        with warnings.catch_warnings():
+            warnings.simplefilter(action='ignore', category=FutureWarning)
+            try:
+                self.project.update_cache()
+            except Exception:
+                pass
+
         # Set configuration defaults and save to the project document
         self.config.setdefault('PAGINATION', True)
         self.config.setdefault('PER_PAGE', 25)
 
-        self.project.document.setdefault('dashboard', {})
+        # Create and configure the Flask application
+        self.app = self._create_app(self.config)
 
-        # This dash_doc is synced to the project document
-        dash_doc = self.project.document.dashboard
-        dash_doc.setdefault('config', self.config)
-        dash_doc.setdefault('module_views', {})
+        # Add assets and routes
+        self.assets = self._create_assets()
+        self._register_routes()
 
-        # Set the Default module view to the modules provided by the user
-        dash_doc['module_views']['Default'] = self.encoded_modules
-
-        self.app = self.create_app(self.config)
-
-        self.assets = self.create_assets()
-        self.register_routes()
-
-        self.module_assets = []
+        # Add module assets and routes
+        self._module_assets = []
         for module in self.modules:
             try:
-                module.register_assets(self)
-                module.register_routes(self)
+                module.register(self)
             except Exception as e:
                 logger.error('Error while registering {} module: {}'.format(
                     module.name, e))
@@ -185,8 +181,15 @@ class Dashboard:
                     module.name))
                 self.modules.remove(module)
 
-    def run(self, host='localhost', port=8888, *args, **kwargs):
+    def run(self, *args, **kwargs):
+        """Runs the dashboard webserver.
 
+        Use :py:meth:`~.main` instead of this method for the command-line
+        interface. Arguments to this function are passed directly to
+        :py:meth:`flask.Flask.run`.
+        """
+        host = self.config.get('HOST', 'localhost')
+        port = self.config.get('PORT', 8888)
         max_retries = 5
         for _ in range(max_retries):
             try:
@@ -217,10 +220,21 @@ class Dashboard:
             schema_variables.append(keys)
         return schema_variables
 
-    def job_title(self, job):
-        # Overload this method with a function that returns
-        # a human-readable form of the job title.
+    @lru_cache()
+    def _project_min_len_unique_id(self):
+        return self.project.min_len_unique_id()
 
+    def job_title(self, job):
+        """Override this method for custom job titles.
+
+        This method generates job titles. By default, the title is a pretty
+        (but verbose) form of the job state point, based on the project schema.
+
+        :param job: The job being titled.
+        :type job: :py:class:`signac.contrib.job.Job`
+        :returns: Title to be displayed.
+        :rtype: str
+        """
         def _format_num(num):
             if isinstance(num, bool):
                 return str(num)
@@ -246,28 +260,42 @@ class Dashboard:
                 "Returning job-id as fallback.".format(error))
             return str(job)
 
-    @lru_cache()
-    def _project_min_len_unique_id(self):
-        return self.project.min_len_unique_id()
-
     def job_subtitle(self, job):
-        # Overload this method with a function that returns
-        # a human-readable form of the job subtitle.
+        """Override this method for custom job subtitles.
+
+        This method generates job subtitles. By default, the subtitle is a
+        minimal unique substring of the job id.
+
+        :param job: The job being subtitled.
+        :type job: :py:class:`signac.contrib.job.Job`
+        :returns: Subtitle to be displayed.
+        :rtype: str
+        """
         return str(job)[:max(8, self._project_min_len_unique_id())]
 
     def job_sorter(self, job):
-        # Overload this method to return a value that
-        # can be used as a sorting index.
+        """Overload this method for custom job sorting.
+
+        This method returns a key that can be compared to sort jobs. By
+        default, the sorting key is :py:func:`Dashboard.job_title`. Good
+        examples of such keys are strings or tuples of properties that should
+        be used to sort.
+
+        :param job: The job being sorted.
+        :type job: :py:class:`signac.contrib.job.Job`
+        :returns: Key for sorting.
+        :rtype: any comparable type
+        """
         return self.job_title(job)
 
     @lru_cache()
-    def get_all_jobs(self):
+    def _get_all_jobs(self):
         all_jobs = sorted(self.project.find_jobs(),
                           key=lambda job: self.job_sorter(job))
         return all_jobs
 
     @lru_cache(maxsize=100)
-    def job_search(self, query):
+    def _job_search(self, query):
         querytype = 'statepoint'
         if query[:4] == 'doc:':
             query = query[4:]
@@ -296,13 +324,11 @@ class Dashboard:
             raise error
 
     @lru_cache(maxsize=65536)
-    def _job_details(self, job, show_labels=False):
+    def _job_details(self, job):
         return {
             'job': job,
             'title': self.job_title(job),
             'subtitle': self.job_subtitle(job),
-            'labels': job.document['stages']
-            if show_labels and 'stages' in job.document else [],
         }
 
     def _setup_pagination(self, jobs):
@@ -346,20 +372,69 @@ class Dashboard:
             flash(error, 'danger')
         return render_template('error.html')
 
-    def get_job_details(self, jobs):
-        show_labels = self.config.get('labels', False)
-        return [self._job_details(job, show_labels) for job in list(jobs)]
+    def _get_job_details(self, jobs):
+        return [self._job_details(job) for job in list(jobs)]
 
-    def url(self, import_name, url_rules=[], import_file='signac_dashboard',
-            **options):
+    def add_url(self, import_name, url_rules=[],
+                import_file='signac_dashboard', **options):
+        """Add a route to the dashboard.
+
+        This method allows custom view functions to be triggered for specified
+        routes. These view functions are imported lazily, when their route
+        is triggered. For example, write a file :code:`my_views.py`:
+
+        .. code-block:: python
+
+            def my_custom_view(dashboard):
+                return 'This is a custom message.'
+
+        Then, in :code:`dashboard.py`:
+
+        .. code-block:: python
+
+            from signac_dashboard import Dashboard
+
+            class MyDashboard(Dashboard):
+                pass
+
+            if __name__ == '__main__':
+                dashboard = MyDashboard()
+                dashboard.add_url('my_custom_view', url_rules=['/custom-url'],
+                                  import_file='my_views')
+                dashboard.main()
+
+        Finally, launching the dashboard with :code:`python dashboard.py run`
+        and navigating to :code:`/custom-url` will show the custom
+        message. This can be used in conjunction with user-provided jinja
+        templates and the method :py:func:`flask.render_template` for extending
+        dashboard functionality.
+
+        :param import_name: The view function name to be imported.
+        :type import_name: str
+        :param url_rules: A list of URL rules, see
+            :py:meth:`flask.Flask.add_url_rule`.
+        :type url_rules: list
+        :param import_file: The module from which to import (default:
+            :code:`'signac_dashboard'`).
+        :type import_file: str
+        :param \\**options: Additional options to pass to
+            :py:meth:`flask.Flask.add_url_rule`.
+        """
         if import_file is not None:
             import_name = import_file + '.' + import_name
-        view = LazyView(dashboard=self,
-                        import_name=import_name)
         for url_rule in url_rules:
-            self.app.add_url_rule(url_rule, view_func=view, **options)
+            self._url_rules.append(dict(
+                rule=url_rule,
+                view_func=LazyView(dashboard=self, import_name=import_name),
+                **options))
 
-    def register_routes(self):
+    def _register_routes(self):
+        """Registers routes with the Flask application.
+
+        This method configures context processors, templates, and sets up
+        routes for a basic Dashboard instance. Additionally, routes declared by
+        modules are registered by this method.
+        """
         dashboard = self
 
         @dashboard.app.after_request
@@ -370,7 +445,6 @@ class Dashboard:
 
         @dashboard.app.context_processor
         def injections():
-            session.setdefault('modules', self.encoded_modules)
             session.setdefault('enabled_modules',
                                [i for i in range(len(self.modules))
                                 if self.modules[i].enabled])
@@ -379,10 +453,9 @@ class Dashboard:
                 'APP_VERSION': __version__,
                 'PROJECT_NAME': self.project.config['project'],
                 'PROJECT_DIR': self.project.config['project_dir'],
-                'modules': Dashboard.decode_modules(
-                    session['modules'], session['enabled_modules']),
+                'modules': self.modules,
                 'enabled_modules': session['enabled_modules'],
-                'module_assets': self.module_assets
+                'module_assets': self._module_assets
             }
 
         # Add pagination support from http://flask.pocoo.org/snippets/44/
@@ -403,25 +476,49 @@ class Dashboard:
         def page_not_found(error):
             return self._render_error(str(error))
 
-        self.url('views.home', ['/'])
-        self.url('views.settings', ['/settings'])
-        self.url('views.search', ['/search'])
-        self.url('views.jobs_list', ['/jobs/'])
-        self.url('views.show_job', ['/jobs/<jobid>'])
-        self.url('views.get_file', ['/jobs/<jobid>/file/<path:filename>'])
-        self.url('views.change_modules', ['/modules'], methods=['POST'])
+        self.add_url('views.home', ['/'])
+        self.add_url('views.settings', ['/settings'])
+        self.add_url('views.search', ['/search'])
+        self.add_url('views.jobs_list', ['/jobs/'])
+        self.add_url('views.show_job', ['/jobs/<jobid>'])
+        self.add_url('views.get_file', ['/jobs/<jobid>/file/<path:filename>'])
+        self.add_url('views.change_modules', ['/modules'], methods=['POST'])
+
+        for url_rule in self._url_rules:
+            self.app.add_url_rule(**url_rule)
 
     def main(self):
-        """Call this function to use the dashboard command line interface."""
+        """Runs the command line interface.
+
+        Call this function to use signac-dashboard from its command line
+        interface. For example, save this script as :code:`dashboard.py`:
+
+        .. code-block:: python
+
+            from signac_dashboard import Dashboard
+
+            class MyDashboard(Dashboard):
+                pass
+
+            if __name__ == '__main__':
+                MyDashboard().main()
+
+        Then the dashboard can be launched with:
+
+        .. code-block:: bash
+
+            python dashboard.py run
+        """
 
         def _run(args):
             kwargs = vars(args)
-            host = kwargs.pop('host')
-            port = kwargs.pop('port')
+            if kwargs.get('host', None) is not None:
+                self.config['HOST'] = kwargs.pop('host')
+            if kwargs.get('port', None) is not None:
+                self.config['PORT'] = kwargs.pop('port')
             self.config['PROFILE'] = kwargs.pop('profile')
             self.config['DEBUG'] = kwargs.pop('debug')
-            self.prepare()
-            self.run(host=host, port=port)
+            self.run()
 
         parser = argparse.ArgumentParser(
             description="signac-dashboard is a web-based data visualization "
@@ -447,11 +544,9 @@ class Dashboard:
             help='Enable flask debug mode.')
         parser_run.add_argument(
             '--host', type=str,
-            default='localhost',
             help='Host (binding address). Default: localhost')
         parser_run.add_argument(
             '--port', type=int,
-            default=8888,
             help='Port to listen on. Default: 8888')
         parser_run.set_defaults(func=_run)
 

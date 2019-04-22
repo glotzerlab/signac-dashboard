@@ -9,7 +9,12 @@ import itertools
 
 
 class ImageViewer(Module):
+    """Displays images in the job workspace that match a glob.
 
+    :param img_globs: A list of glob expressions or exact filenames to be
+        displayed, one per card (default: :code:`['*.png', '*.jpg', '*.gif']`).
+    :type img_globs: list
+    """
     def __init__(self,
                  name='Image Viewer',
                  context='JobContext',
