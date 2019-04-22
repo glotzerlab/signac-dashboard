@@ -20,8 +20,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'signac-dashboard'
-copyright = '2018, Bradley Dice'
-author = 'Bradley Dice'
+copyright = 'The Regents of the University of Michigan'
+author = 'Bradley D. Dice, Carl S. Adorf, Sharon C. Glotzer'
 
 # The short X.Y version
 version = '0.1.6'
@@ -40,6 +40,7 @@ release = '0.1.6'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.coverage',
     'sphinx.ext.intersphinx',
     'sphinx.ext.mathjax',
@@ -170,7 +171,13 @@ texinfo_documents = [
 # -- Options for intersphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/', None),
+    'signac': ('https://docs.signac.io/projects/core/en/latest/', None),
+    'flow': ('https://docs.signac.io/projects/flow/en/latest/', None),
+    'flask': ('http://flask.pocoo.org/docs/', None),
+    'werkzeug': ('https://werkzeug.palletsprojects.com/', None),
+}
 
 # -- Options for todo extension ----------------------------------------------
 

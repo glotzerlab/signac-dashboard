@@ -9,7 +9,12 @@ from collections import OrderedDict
 
 
 class DocumentList(Module):
+    """Displays the job document.
 
+    :param max_chars: Truncation length for document values (default:
+        :code:`None`).
+    :type max_chars: int
+    """
     def __init__(self,
                  name='Job Document',
                  context='JobContext',

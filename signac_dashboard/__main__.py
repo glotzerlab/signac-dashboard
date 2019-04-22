@@ -4,6 +4,7 @@
 import sys
 
 from . import Dashboard
+from .modules import StatepointList, DocumentList, ImageViewer
 import signac
 
 
@@ -15,12 +16,11 @@ def main():
         sys.exit(1)
 
     modules = []
-    if 'dashboard' not in project.document:
-        # Initialize a new Dashboard using essential modules
-        from .modules import StatepointList, DocumentList
-        modules.append(StatepointList())
-        modules.append(DocumentList())
-    Dashboard(modules=modules).main()
+    # Initialize a new Dashboard using essential modules
+    modules.append(StatepointList())
+    modules.append(DocumentList())
+    modules.append(ImageViewer())
+    Dashboard(modules=modules, project=project).main()
 
 
 if __name__ == '__main__':
