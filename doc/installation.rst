@@ -5,7 +5,7 @@ Installation
 ============
 
 The recommended installation method for **signac-dashboard** is via conda_ or pip_.
-The software is tested for Python versions 3.6+. Its primary dependencies are signac_ and flask_.
+The software is tested for Python versions 3.4+. Its primary dependencies are signac_ and flask_.
 
 .. _conda: https://conda.io/
 .. _conda-forge: https://conda-forge.org/
