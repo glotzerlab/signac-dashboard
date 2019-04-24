@@ -9,10 +9,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt  # noqa: E402
 
-try:
-    project = signac.get_project()
-except LookupError:
-    project = signac.init_project('plots')
+project = signac.init_project('plots')
 
 
 def plot_coherence(job):
