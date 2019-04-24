@@ -279,7 +279,7 @@ class Dashboard:
 
         This method returns a key that can be compared to sort jobs. By
         default, the sorting key is based on :py:func:`Dashboard.job_title`,
-        modified for natural sorting of numbers. Good examples of such keys are
+        with natural sorting of numbers. Good examples of such keys are
         strings or tuples of properties that should be used to sort.
 
         :param job: The job being sorted.
@@ -287,13 +287,12 @@ class Dashboard:
         :returns: Key for sorting.
         :rtype: any comparable type
         """
-        return natsort.natsort_keygen(alg=natsort.REAL)(self.job_title(job))
+        key = natsort.natsort_keygen(key=self.job_title, alg=natsort.REAL)
+        return key(job)
 
     @lru_cache()
     def _get_all_jobs(self):
-        all_jobs = sorted(self.project.find_jobs(),
-                          key=lambda job: self.job_sorter(job))
-        return all_jobs
+        return sorted(self.project.find_jobs(), key=self.job_sorter)
 
     @lru_cache(maxsize=100)
     def _job_search(self, query):
