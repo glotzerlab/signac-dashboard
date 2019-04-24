@@ -3,7 +3,11 @@
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard.module import Module
 from flask import render_template, Markup
-import markdown
+try:
+    import markdown
+    MARKDOWN = True
+except ImportError:
+    MARKDOWN = False
 
 
 class TextDisplay(Module):
@@ -40,7 +44,11 @@ class TextDisplay(Module):
     def get_cards(self, job):
         msg = self.message(job)
         if self.markdown:
-            msg = Markup(markdown.markdown(
-                msg, extensions=['markdown.extensions.attr_list']))
+            if MARKDOWN:
+                msg = Markup(markdown.markdown(
+                    msg, extensions=['markdown.extensions.attr_list']))
+            else:
+                msg = ('Error: Must install markdown library to render '
+                       'Markdown.')
         return [{'name': self.name,
                  'content': render_template(self.template, msg=msg)}]
