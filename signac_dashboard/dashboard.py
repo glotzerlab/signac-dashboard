@@ -16,6 +16,7 @@ import argparse
 from functools import lru_cache
 from numbers import Real
 import json
+import natsort
 import signac
 
 from .version import __version__
@@ -277,16 +278,16 @@ class Dashboard:
         """Override this method for custom job sorting.
 
         This method returns a key that can be compared to sort jobs. By
-        default, the sorting key is :py:func:`Dashboard.job_title`. Good
-        examples of such keys are strings or tuples of properties that should
-        be used to sort.
+        default, the sorting key is based on :py:func:`Dashboard.job_title`,
+        modified for natural sorting of numbers. Good examples of such keys are
+        strings or tuples of properties that should be used to sort.
 
         :param job: The job being sorted.
         :type job: :py:class:`signac.contrib.job.Job`
         :returns: Key for sorting.
         :rtype: any comparable type
         """
-        return self.job_title(job)
+        return natsort.natsort_keygen(alg=natsort.REAL)(self.job_title(job))
 
     @lru_cache()
     def _get_all_jobs(self):
