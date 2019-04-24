@@ -4,20 +4,21 @@ Changes
 
 The **signac-dashboard** package follows `semantic versioning <https://semver.org/>`_.
 
-Unreleased
-==========
+Version 0.2
+===========
 
-next
-----
+[0.2.0] -- 2019-04-24
+---------------------
 
 Added
 +++++
 - New modules: DocumentEditor, FlowStatus, TextDisplay.
-- New examples: cli, document-editor, flow-status, plots.
+- New examples: cli, custom-modules, document-editor, flow-status, plots.
+- The default job sorter uses natural sorting for numbers via natsort.
 
 Changed
 +++++++
-- Improved API documentation.
+- Improved API documentation, especially for modules.
 - Unified module asset/route registration into one ``register`` method.
 - The Notes module can be used with any job document key.
 
@@ -26,6 +27,7 @@ Fixed
 - Corrected error in VideoViewer when no poster was provided.
 - ImageViewer/VideoViewer match files in job workspace subdirectories.
 - Files can now be retrieved from job workspace subdirectories.
+- Corrected pagination error.
 
 Removed
 +++++++
