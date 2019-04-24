@@ -8,8 +8,7 @@
 [![PyPI-downloads](https://img.shields.io/pypi/dm/signac-dashboard.svg?style=flat)](https://pypistats.org/packages/signac-dashboard)
 [![Gitter](https://img.shields.io/gitter/room/signac/Lobby.svg?style=flat)](https://gitter.im/signac/Lobby)
 
-The [**signac** framework](https://signac.io) helps users manage and scale file-based workflows, facilitating data reuse, sharing, and reproducibility.
-Built on top of the **signac** framework, **signac-dashboard** allows users to rapidly visualize and analyze data managed in a [signac project](https://docs.signac.io/en/latest/projects.html).
+Built on top of the **signac** framework, **signac-dashboard** allows users to rapidly visualize and analyze data managed in a [**signac** project](https://docs.signac.io/en/latest/projects.html).
 
 ## Resources
 
@@ -75,9 +74,9 @@ to forward port 8888 on the remote host to port 8890 on your local computer.
 
 ## Dissecting the Dashboard Structure
 
-- *Jobs* are how signac manages data. Each job has a statepoint (which contains job metadata) and a document (for persistent storage of key-value pairs). Jobs can be displayed in *list view* or *grid view*. The list view provides quick descriptions and status information from many jobs, while the grid view is intended to show text and media content from one or more jobs.
+- *Jobs* are how **signac** manages data. Each job has a statepoint (which contains job metadata) and a document (for persistent storage of key-value pairs). Jobs can be displayed in *list view* or *grid view*. The list view provides quick descriptions and status information from many jobs, while the grid view is intended to show text and media content from one or more jobs.
 - *Templates* provide the HTML structure of the dashboard's pages, written in Jinja template syntax for rendering content on the server
-- *Modules* are server-side Python code that interface with your signac data to display content. Generally, a module will render content from a specific *job* into a *card template*.
+- *Modules* are server-side Python code that interface with your **signac** data to display content. Generally, a module will render content from a specific *job* into a *card template*.
 - *Cards* are a type of template that is shown in *grid view* and contains content rendered by a *module*.
 
 ## Included Modules
@@ -111,7 +110,7 @@ doc_mod = DocumentList(max_chars=140)  # Output will be truncated to one tweet l
 
 ### File List
 
-The `FileList` module shows a listing of the job's workspace directory with links to each file. This can be very slow since it has to read the disk for every job displayed, use with caution in large signac projects.
+The `FileList` module shows a listing of the job's workspace directory with links to each file. This can be very slow since it has to read the disk for every job displayed, use with caution in large **signac** projects.
 
 ```python
 from signac_dashboard.modules.file_list import FileList
