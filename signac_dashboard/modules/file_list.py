@@ -7,7 +7,7 @@ import os
 
 
 class FileList(Module):
-    """Lists files in the job workspace.
+    """Lists files in the job workspace with download links.
 
     :param prefix_jobid: Whether filenames should be prefixed with the job id
         when being downloaded (default: :code:`True`).

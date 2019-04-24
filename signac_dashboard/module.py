@@ -9,8 +9,14 @@ class Module:
 
     Modules provide *cards* of content, for a specific *context*. Each module
     must have a **name** which appears in its cards' titles, a **context**
-    (such as :code:`'JobContext'`) for which its contents will be displayed,
-    and a **template** filename.
+    (such as :code:`'JobContext'`) in which its contents will be displayed,
+    and a **template** file (written in HTML/Jinja-compatible syntax) for
+    rendering card content. Modules can be disabled by default, by setting
+    :code:`enabled=False` in the constructor.
+
+    **Custom modules:** User-defined module classes should be a subclass of
+    :py:class:`~.Module` and define the function :py:meth:`~.Module.get_cards`.
+    See `this example <https://github.com/glotzerlab/signac-dashboard/tree/master/examples/custom-modules>`_.
 
     **Module assets:** If a module requires scripts or stylesheets to be
     included for its content to be rendered, they must be handled by the
@@ -54,7 +60,7 @@ class Module:
         :code:`cards/my_module.html`, without the template directory prefix
         :code:`templates/`).
     :type template: str
-    """
+    """  # noqa: E501
 
     def __init__(self, name, context, template, enabled=True):
         self._module = self.__module__

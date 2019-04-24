@@ -11,6 +11,8 @@ from collections import OrderedDict
 class DocumentList(Module):
     """Displays the job document.
 
+    Long values can be optionally truncated.
+
     :param max_chars: Truncation length for document values (default:
         :code:`None`).
     :type max_chars: int

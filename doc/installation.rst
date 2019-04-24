@@ -1,4 +1,4 @@
-.. _installation:
+.. _dashboard-installation:
 
 ============
 Installation
