@@ -1,66 +1,66 @@
-# signac-dashboard: visual data management and analysis
+# <img src="https://raw.githubusercontent.com/glotzerlab/signac-dashboard/master/doc/images/logo.png" width="75" height="75"> signac-dashboard: data visualization for signac
 
-## About
+[![PyPI](https://img.shields.io/pypi/v/signac-dashboard.svg)](https://pypi.org/project/signac-dashboard/)
+[![conda-forge](https://img.shields.io/conda/vn/conda-forge/signac-dashboard.svg?style=flat)](https://anaconda.org/conda-forge/signac-dashboard)
+![CircleCI](https://img.shields.io/circleci/project/github/glotzerlab/signac-dashboard/master.svg)
+[![RTD](https://img.shields.io/readthedocs/signac-dashboard.svg?style=flat)](https://docs.signac.io)
+[![License](https://img.shields.io/github/license/glotzerlab/signac-dashboard.svg)](https://github.com/glotzerlab/signac-dashboard/blob/master/LICENSE.txt)
+[![PyPI-downloads](https://img.shields.io/pypi/dm/signac-dashboard.svg?style=flat)](https://pypistats.org/packages/signac-dashboard)
+[![Gitter](https://img.shields.io/gitter/room/signac/Lobby.svg?style=flat)](https://gitter.im/signac/Lobby)
 
-Data visualization, analysis, and "dashboard" monitoring tool as part of the [signac framework](https://signac.io).
-The `signac-dashboard` interface allows users to rapidly view data managed in a [signac project](https://docs.signac.io/en/latest/projects.html).
+The [**signac** framework](https://signac.io) helps users manage and scale file-based workflows, facilitating data reuse, sharing, and reproducibility.
+Built on top of the **signac** framework, **signac-dashboard** allows users to rapidly visualize and analyze data managed in a [signac project](https://docs.signac.io/en/latest/projects.html).
 
-*The software is currently in an early development stage.*
+## Resources
 
-## Maintainers
-
-  * Bradley Dice (bdice@umich.edu)
+- [Dashboard documentation](https://docs.signac.io/projects/dashboard/):
+  Package reference and APIs.
+- [Dashboard examples](examples/):
+  Example dashboards demonstrating a variety of use cases.
+- [Framework documentation](https://docs.signac.io/):
+  Examples, tutorials, topic guides, and package Python APIs.
+- [Chat Support](https://gitter.im/signac/Lobby):
+  Get help and ask questions on the **signac** gitter channel.
+- [**signac** website](https://signac.io/):
+  Framework overview and news.
 
 ## Installation
 
-The **signac-dashboard** app requires at least Python version 3.4.
-To install this package, first clone the repository and install its submodules.
+The recommended installation method for **signac-dashboard** is through **conda** or **pip**.
+The software is tested for Python 3.4+ and is built for all major platforms.
+
+To install **signac-dashboard** *via* the [conda-forge](https://conda-forge.github.io/) channel, execute:
+
 ```bash
-$ git clone https://github.com/glotzerlab/signac-dashboard.git
-$ cd signac-dashboard
-$ git submodule update --init --recursive
-```
-and then install using pip:
-```bash
-$ pip install .
+conda install -c conda-forge signac-dashboard
 ```
 
-## Documentation
+To install **signac-dashboard** *via* **pip**, execute:
 
-Documentation is hosted on [docs.signac.io/projects/dashboard](https://docs.signac.io/projects/dashboard/en/latest/).
+```bash
+pip install signac-dashboard
+```
 
-## Usage
+**Detailed information about alternative installation methods can be found in the [documentation](https://docs.signac.io/projects/dashboard/en/latest/installation.html).**
 
-You can start a dashboard to visualize *signac* project data in the browser, by importing the `Dashboard` class and calling its `main` function.
 
-### Start a Dashboard
+## Quickstart
 
-The code below will open a dashboard for an newly-initialized (empty) project, with no jobs and one module loaded. Write the file `dashboard.py` with these contents:
+In an existing **signac** project directory, create a file `dashboard.py`:
 
 ```python
-#!/usr/bin/env python3
 from signac_dashboard import Dashboard
-from signac_dashboard.modules import ImageViewer
+from signac_dashboard.modules import StatepointList, DocumentList, ImageViewer
 
 if __name__ == '__main__':
-    dashboard = Dashboard(modules=[ImageViewer()])
-    dashboard.main()
+    modules = [StatepointList(), DocumentList(), ImageViewer()]
+    Dashboard(modules=modules).main()
 ```
 
-Then launch the dashboard with `python dashboard.py run`.
+Then launch the dashboard:
 
-### Specifying a custom job title
-
-By creating a class that inherits from `Dashboard` (which we'll call `MyDashboard`), we can begin to customize some of the functions that make up the dashboard, like `job_title(job)`, which gives a human-readable title to each job.
-
-```python
-class MyDashboard(Dashboard):
-
-    def job_title(self, job):
-        return 'Concentration(A) = {}'.format(job.sp['conc_A'])
-
-if __name__ == '__main__':
-    MyDashboard().main()
+```bash
+$ python dashboard.py run
 ```
 
 ## Running dashboards on a remote host
@@ -153,6 +153,20 @@ notes_mod = Notes()
 ## Searching jobs
 
 The search bar accepts JSON-formatted queries in the same way as the `signac find` command-line tool. For example, using the query `{"key": "value"}` will return all jobs where the job statepoint `key` is set to `value`. To search jobs by their document key-value pairs, use `doc:` before the JSON-formatted query, like `doc:{"key": "value"}`.
+
+## Specifying a custom job title
+
+By creating a class that inherits from `Dashboard` (which we'll call `MyDashboard`), we can begin to customize some of the functions that make up the dashboard, like `job_title(job)`, which gives a human-readable title to each job.
+
+```python
+class MyDashboard(Dashboard):
+
+    def job_title(self, job):
+        return 'Concentration(A) = {}'.format(job.sp['conc_A'])
+
+if __name__ == '__main__':
+    MyDashboard().main()
+```
 
 ## Tips for Developers
 
