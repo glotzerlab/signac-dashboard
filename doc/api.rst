@@ -29,8 +29,8 @@ The Dashboard
 
 .. _python-api-dashboard-modules:
 
-Modules
--------
+Dashboard Modules
+-----------------
 
 .. autosummary::
     Module
