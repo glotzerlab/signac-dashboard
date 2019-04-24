@@ -26,8 +26,7 @@ def search(dashboard):
     else:
         g.query = query
         g.pagination = dashboard._setup_pagination(jobs)
-        g.jobs = dashboard._get_job_details(
-                g.pagination.paginate(jobs))
+        g.jobs = dashboard._get_job_details(g.pagination.paginate(jobs))
         g.title = 'Search: {}'.format(query)
         g.subtitle = g.pagination.item_counts()
         return dashboard._render_job_view(default_view='list')

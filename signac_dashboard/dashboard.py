@@ -333,21 +333,19 @@ class Dashboard:
 
     def _setup_pagination(self, jobs):
         total_count = len(jobs) if isinstance(jobs, list) else 0
+        page = request.args.get('page', 1)
         try:
-            page = int(request.args.get('page', 1))
-            assert page >= 1
-        except Exception:
-            flash('Pagination Error. Defaulting to page 1.', 'danger')
+            page = int(page)
+        except (ValueError, TypeError):
             page = 1
-        pagination = Pagination(page, self.config['PER_PAGE'], total_count)
-        try:
-            assert page <= pagination.pages
-        except Exception:
-            page = pagination.pages
             flash('Pagination Error. Displaying page {}.'.format(page),
                   'danger')
-            pagination = Pagination(
-                    page, self.config['PER_PAGE'], total_count)
+        pagination = Pagination(page, self.config['PER_PAGE'], total_count)
+        if pagination.page < 1 or pagination.page > pagination.pages:
+            pagination.page = max(1, min(pagination.page, pagination.pages))
+            if pagination.pages > 0:
+                flash('Pagination Error. Displaying page {}.'.format(
+                    pagination.page), 'danger')
         return pagination
 
     def _render_job_view(self, *args, **kwargs):
