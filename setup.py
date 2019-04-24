@@ -28,7 +28,8 @@ setup(
         'webassets>=0.12.1',
         'Flask-Turbolinks',
         'libsass',
-        'jsmin'
+        'jsmin',
+        'natsort',
     ],
 
     classifiers=[
