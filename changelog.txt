@@ -7,6 +7,13 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.2
 ===========
 
+[0.2.1] -- 2019-04-24
+---------------------
+
+Fixed
++++++
+- Corrected PyPI deployment.
+
 [0.2.0] -- 2019-04-24
 ---------------------
 

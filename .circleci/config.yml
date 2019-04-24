@@ -88,7 +88,7 @@ jobs:
       - run:
           name: deploy-pypi
           command: |
-            pip install --user -U -r twine wheel setuptools
+            pip install --user -U twine wheel setuptools
             bash .deploy.bash
 
 
