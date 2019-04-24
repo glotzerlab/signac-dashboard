@@ -7,10 +7,7 @@ import signac_dashboard.modules
 import signac
 
 if __name__ == '__main__':
-    try:
-        project = signac.get_project()
-    except LookupError:
-        project = signac.init_project('dashboard-test-project')
+    project = signac.init_project('dashboard-test-project')
 
     if len(project) == 0:
         for a in range(10):
