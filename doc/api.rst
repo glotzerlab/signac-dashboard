@@ -5,10 +5,10 @@ API Reference
 
 This is the API for the **signac-dashboard** application.
 
+.. _python-api-dashboard:
+
 The Dashboard
 -------------
-
-.. _python-api-dashboard:
 
 .. currentmodule:: signac_dashboard
 
@@ -27,10 +27,10 @@ The Dashboard
     :members:
     :undoc-members:
 
+.. _python-api-dashboard-modules:
+
 Modules
 -------
-
-.. _python-api-dashboard-modules:
 
 .. autosummary::
     Module
