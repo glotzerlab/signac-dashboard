@@ -353,6 +353,9 @@ class Dashboard:
         view_mode = request.args.get('view', kwargs.get(
             'default_view', 'list'))
         if view_mode == 'grid':
+            if 'enabled_modules' in session and \
+                    len(session.get('enabled_modules', [])) == 0:
+                flash('No modules are enabled.', 'info')
             return render_template('jobs_grid.html', *args, **kwargs)
         elif view_mode == 'list':
             return render_template('jobs_list.html', *args, **kwargs)

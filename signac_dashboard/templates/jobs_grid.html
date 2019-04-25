@@ -21,7 +21,7 @@
     <div class="columns is-mobile is-multiline">
     {% endif %}
     {% for module in modules %} {# begin modules #}
-    {% if module.enabled and module.context == 'JobContext' %} {# if module should render #}
+    {% if loop.index0 in enabled_modules and module.context == 'JobContext' %} {# if module should render #}
     {% for card in module.get_cards(job_details.job) %} {# begin cards #}
         {# jinja variables go out of scope after the loop unless this "list" hack is used #}
         {% if card_count.append(1) %}{% endif %}
