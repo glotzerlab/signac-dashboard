@@ -149,12 +149,6 @@ class Dashboard:
     def _prepare(self):
         """Prepare this dashboard instance to run."""
 
-        # Create an empty set of URL rules
-        self._url_rules = []
-
-        # Clear dashboard and project caches.
-        self.update_cache()
-
         # Set configuration defaults and save to the project document
         self.config.setdefault('PAGINATION', True)
         self.config.setdefault('PER_PAGE', 25)
@@ -178,6 +172,9 @@ class Dashboard:
                     module.name))
                 self.modules.remove(module)
 
+        # Clear dashboard and project caches.
+        self.update_cache()
+
     def run(self, *args, **kwargs):
         """Runs the dashboard webserver.
 
@@ -188,10 +185,6 @@ class Dashboard:
         host = self.config.get('HOST', 'localhost')
         port = self.config.get('PORT', 8888)
         max_retries = 5
-
-        # Add URL rules late so that custom URLs are registered
-        for url_rule in self._url_rules:
-            self.app.add_url_rule(**url_rule)
 
         for _ in range(max_retries):
             try:
@@ -425,10 +418,10 @@ class Dashboard:
         if import_file is not None:
             import_name = import_file + '.' + import_name
         for url_rule in url_rules:
-            self._url_rules.append(dict(
+            self.app.add_url_rule(
                 rule=url_rule,
                 view_func=LazyView(dashboard=self, import_name=import_name),
-                **options))
+                **options)
 
     def _register_routes(self):
         """Registers routes with the Flask application.
