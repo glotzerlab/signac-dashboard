@@ -188,6 +188,11 @@ class Dashboard:
         host = self.config.get('HOST', 'localhost')
         port = self.config.get('PORT', 8888)
         max_retries = 5
+
+        # Add URL rules late so that custom URLs are registered
+        for url_rule in self._url_rules:
+            self.app.add_url_rule(**url_rule)
+
         for _ in range(max_retries):
             try:
                 self.app.run(host, port, *args, **kwargs)
@@ -480,9 +485,6 @@ class Dashboard:
         self.add_url('views.show_job', ['/jobs/<jobid>'])
         self.add_url('views.get_file', ['/jobs/<jobid>/file/<path:filename>'])
         self.add_url('views.change_modules', ['/modules'], methods=['POST'])
-
-        for url_rule in self._url_rules:
-            self.app.add_url_rule(**url_rule)
 
     def update_cache(self):
         """Clear project and dashboard server caches.
