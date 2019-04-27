@@ -13,6 +13,7 @@ import logging
 import warnings
 import shlex
 import argparse
+import inspect
 from functools import lru_cache
 from numbers import Real
 import json
@@ -151,13 +152,8 @@ class Dashboard:
         # Create an empty set of URL rules
         self._url_rules = []
 
-        # Try to update signac project cache. Requires signac 0.9.2 or later.
-        with warnings.catch_warnings():
-            warnings.simplefilter(action='ignore', category=FutureWarning)
-            try:
-                self.project.update_cache()
-            except Exception:
-                pass
+        # Clear dashboard and project caches.
+        self.update_cache()
 
         # Set configuration defaults and save to the project document
         self.config.setdefault('PAGINATION', True)
@@ -487,6 +483,28 @@ class Dashboard:
 
         for url_rule in self._url_rules:
             self.app.add_url_rule(**url_rule)
+
+    def update_cache(self):
+        """Clear project and dashboard server caches.
+
+        The dashboard relies on caching for performance. If the data space is
+        altered, this method may need to be called before the dashboard
+        reflects those changes.
+        """
+
+        # Try to update signac project cache. Requires signac 0.9.2 or later.
+        with warnings.catch_warnings():
+            warnings.simplefilter(action='ignore', category=FutureWarning)
+            try:
+                self.project.update_cache()
+            except Exception:
+                pass
+
+        # Clear caches of all dashboard methods
+        members = inspect.getmembers(self, predicate=inspect.ismethod)
+        for func in filter(lambda f: hasattr(f, 'cache_clear'),
+                           map(lambda x: x[1], members)):
+            func.cache_clear()
 
     def main(self):
         """Runs the command line interface.
