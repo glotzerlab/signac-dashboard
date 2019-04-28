@@ -46,6 +46,10 @@ class Dashboard:
       :code:`True` (default: :code:`False`).
     - **PER_PAGE**: Maximum number of jobs to show per page
       (default: 25).
+    - **SECRET_KEY**: This must be specified to run via WSGI with multiple
+      workers, so that sessions remain intact. See the
+      `Flask docs <http://flask.pocoo.org/docs/1.0/config/#SECRET_KEY>`_
+      for more information.
 
     :param config: Configuration dictionary (default: :code:`{}`).
     :type config: dict
@@ -500,6 +504,10 @@ class Dashboard:
         for func in filter(lambda f: hasattr(f, 'cache_clear'),
                            map(lambda x: x[1], members)):
             func.cache_clear()
+
+    def __call__(self, environ, start_response):
+        """Call the dashboard as a WSGI application."""
+        return self.app(environ, start_response)
 
     def main(self):
         """Runs the command line interface.
