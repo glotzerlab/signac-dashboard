@@ -13,6 +13,7 @@ import logging
 import warnings
 import shlex
 import argparse
+import inspect
 from functools import lru_cache
 from numbers import Real
 import json
@@ -148,17 +149,6 @@ class Dashboard:
     def _prepare(self):
         """Prepare this dashboard instance to run."""
 
-        # Create an empty set of URL rules
-        self._url_rules = []
-
-        # Try to update signac project cache. Requires signac 0.9.2 or later.
-        with warnings.catch_warnings():
-            warnings.simplefilter(action='ignore', category=FutureWarning)
-            try:
-                self.project.update_cache()
-            except Exception:
-                pass
-
         # Set configuration defaults and save to the project document
         self.config.setdefault('PAGINATION', True)
         self.config.setdefault('PER_PAGE', 25)
@@ -182,6 +172,9 @@ class Dashboard:
                     module.name))
                 self.modules.remove(module)
 
+        # Clear dashboard and project caches.
+        self.update_cache()
+
     def run(self, *args, **kwargs):
         """Runs the dashboard webserver.
 
@@ -192,6 +185,7 @@ class Dashboard:
         host = self.config.get('HOST', 'localhost')
         port = self.config.get('PORT', 8888)
         max_retries = 5
+
         for _ in range(max_retries):
             try:
                 self.app.run(host, port, *args, **kwargs)
@@ -424,10 +418,10 @@ class Dashboard:
         if import_file is not None:
             import_name = import_file + '.' + import_name
         for url_rule in url_rules:
-            self._url_rules.append(dict(
+            self.app.add_url_rule(
                 rule=url_rule,
                 view_func=LazyView(dashboard=self, import_name=import_name),
-                **options))
+                **options)
 
     def _register_routes(self):
         """Registers routes with the Flask application.
@@ -485,8 +479,27 @@ class Dashboard:
         self.add_url('views.get_file', ['/jobs/<jobid>/file/<path:filename>'])
         self.add_url('views.change_modules', ['/modules'], methods=['POST'])
 
-        for url_rule in self._url_rules:
-            self.app.add_url_rule(**url_rule)
+    def update_cache(self):
+        """Clear project and dashboard server caches.
+
+        The dashboard relies on caching for performance. If the data space is
+        altered, this method may need to be called before the dashboard
+        reflects those changes.
+        """
+
+        # Try to update signac project cache. Requires signac 0.9.2 or later.
+        with warnings.catch_warnings():
+            warnings.simplefilter(action='ignore', category=FutureWarning)
+            try:
+                self.project.update_cache()
+            except Exception:
+                pass
+
+        # Clear caches of all dashboard methods
+        members = inspect.getmembers(self, predicate=inspect.ismethod)
+        for func in filter(lambda f: hasattr(f, 'cache_clear'),
+                           map(lambda x: x[1], members)):
+            func.cache_clear()
 
     def main(self):
         """Runs the command line interface.

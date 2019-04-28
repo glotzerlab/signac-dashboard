@@ -4,6 +4,16 @@ Changes
 
 The **signac-dashboard** package follows `semantic versioning <https://semver.org/>`_.
 
+Unreleased
+==========
+
+next
+----
+
+Added
++++++
+- Method for clearing dashboard and project caches.
+
 Version 0.2
 ===========
 
