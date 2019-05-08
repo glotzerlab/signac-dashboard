@@ -50,6 +50,10 @@ class Dashboard:
       workers, so that sessions remain intact. See the
       `Flask docs <http://flask.pocoo.org/docs/1.0/config/#SECRET_KEY>`_
       for more information.
+    - **ALLOW_WHERE**: If True, search queries can include :code:`$where`
+      statements, which potentially allows arbitrary code execution from user
+      input. *Caution:* This should only be enabled in trusted environments,
+      never on a publicly-accessible server (default: False).
 
     :param config: Configuration dictionary (default: :code:`{}`).
     :type config: dict
@@ -294,6 +298,12 @@ class Dashboard:
 
     @lru_cache(maxsize=100)
     def _job_search(self, query):
+        if '$where' in query and not self.config.get('ALLOW_WHERE', False):
+            flash('Searches using $where allow arbitrary code execution and '
+                  'are only allowed when the configuration option '
+                  '\'ALLOW_WHERE\' is enabled.', 'warning')
+            raise RuntimeError('ALLOW_WHERE must be enabled for this query.')
+
         querytype = 'statepoint'
         if query[:4] == 'doc:':
             query = query[4:]
