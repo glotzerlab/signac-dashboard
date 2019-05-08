@@ -16,7 +16,7 @@ Added
 
 Changed
 +++++++
-- Disabled $where operations in search queries by default for security.
+- Disabled $where operations in search queries by default, see :ref:`dashboard-security`.
 
 Version 0.2
 ===========

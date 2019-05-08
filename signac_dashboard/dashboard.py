@@ -301,7 +301,8 @@ class Dashboard:
         if '$where' in query and not self.config.get('ALLOW_WHERE', False):
             flash('Searches using $where allow arbitrary code execution and '
                   'are only allowed when the configuration option '
-                  '\'ALLOW_WHERE\' is enabled.', 'warning')
+                  '\'ALLOW_WHERE\' is enabled. See also: <a href="https://docs.signac.io/projects/dashboard/en/latest/security.html">Security Guidelines</a>',  # noqa:E501
+                  'warning')
             raise RuntimeError('ALLOW_WHERE must be enabled for this query.')
 
         querytype = 'statepoint'
