@@ -1,4 +1,4 @@
-.. _support:
+.. _dashboard-support:
 
 Support and Development
 -----------------------

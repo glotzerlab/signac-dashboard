@@ -1,4 +1,4 @@
-.. _api:
+.. _dashboard-api:
 
 API Reference
 =============
