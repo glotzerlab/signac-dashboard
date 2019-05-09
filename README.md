@@ -28,7 +28,7 @@ Built on top of the **signac** framework, **signac-dashboard** allows users to r
 ## Installation
 
 The recommended installation method for **signac-dashboard** is through **conda** or **pip**.
-The software is tested for Python 3.4+ and is built for all major platforms.
+The software is tested for Python 3.5+ and is built for all major platforms.
 
 To install **signac-dashboard** *via* the [conda-forge](https://conda-forge.github.io/) channel, execute:
 

@@ -14,6 +14,10 @@ Added
 +++++
 - Method for clearing dashboard and project caches.
 
+Changed
++++++++
+- Disabled $where operations in search queries by default, see :ref:`dashboard-security`.
+
 Version 0.2
 ===========
 

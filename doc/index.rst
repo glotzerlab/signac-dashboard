@@ -22,6 +22,7 @@ Contents
 
    installation
    api
+   security
    changes
    support
 

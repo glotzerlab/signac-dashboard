@@ -62,6 +62,23 @@ class DashboardTestCase(unittest.TestCase):
         response = str(rv.get_data())
         assert '{} jobs'.format(true_num_jobs) in response
 
+    def test_allow_where_search(self):
+        dictquery = {'sum': 1}
+        true_num_jobs = len(list(self.project.find_jobs(doc_filter=dictquery)))
+        query = urlquote('doc:sum.$where "lambda x: x == 1"')
+
+        self.dashboard.config['ALLOW_WHERE'] = False
+        rv = self.test_client.get('/search?q={}'.format(query),
+                                  follow_redirects=True)
+        response = str(rv.get_data())
+        assert 'ALLOW_WHERE must be enabled for this query.' in response
+
+        self.dashboard.config['ALLOW_WHERE'] = True
+        rv = self.test_client.get('/search?q={}'.format(query),
+                                  follow_redirects=True)
+        response = str(rv.get_data())
+        assert '{} jobs'.format(true_num_jobs) in response
+
 
 class AllModulesTestCase(DashboardTestCase):
 
