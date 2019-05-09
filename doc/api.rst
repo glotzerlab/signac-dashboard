@@ -22,6 +22,7 @@ The Dashboard
     Dashboard.main
     Dashboard.register_module_asset
     Dashboard.run
+    Dashboard.update_cache
 
 .. autoclass:: signac_dashboard.Dashboard
     :members:
