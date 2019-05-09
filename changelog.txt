@@ -4,11 +4,11 @@ Changes
 
 The **signac-dashboard** package follows `semantic versioning <https://semver.org/>`_.
 
-Unreleased
-==========
+Version 0.2
+===========
 
-next
-----
+[0.2.3] -- 2019-05-08
+---------------------
 
 Added
 +++++
@@ -17,9 +17,6 @@ Added
 Changed
 +++++++
 - Disabled $where operations in search queries by default, see :ref:`dashboard-security`.
-
-Version 0.2
-===========
 
 [0.2.2] -- 2019-04-25
 ---------------------
