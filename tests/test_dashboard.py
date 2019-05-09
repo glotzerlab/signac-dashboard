@@ -79,6 +79,24 @@ class DashboardTestCase(unittest.TestCase):
         response = str(rv.get_data())
         assert '{} jobs'.format(true_num_jobs) in response
 
+    def test_update_cache(self):
+        rv = self.test_client.get('/jobs', follow_redirects=True)
+        response = str(rv.get_data())
+        assert '{} jobs'.format(self.project.num_jobs()) in response
+
+        # Create a new job. Because the project has been cached, the response
+        # will be wrong until the cache is cleared.
+        self.project.open_job({'a': 'test-cache'}).init()
+        rv = self.test_client.get('/jobs', follow_redirects=True)
+        response = str(rv.get_data())
+        assert '{} jobs'.format(self.project.num_jobs()) not in response
+
+        # Clear cache and try again.
+        self.dashboard.update_cache()
+        rv = self.test_client.get('/jobs', follow_redirects=True)
+        response = str(rv.get_data())
+        assert '{} jobs'.format(self.project.num_jobs()) in response
+
 
 class AllModulesTestCase(DashboardTestCase):
 
