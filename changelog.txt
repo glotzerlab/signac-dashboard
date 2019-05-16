@@ -7,6 +7,11 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.2
 ===========
 
+next
+----
+
+- Fix: Make streamed video files seekable.
+
 [0.2.3] -- 2019-05-08
 ---------------------
 
