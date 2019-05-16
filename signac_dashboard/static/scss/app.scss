@@ -59,11 +59,14 @@ section.section.panel {
   padding: 1rem 1.5rem;
 }
 .card {
-  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 .card-header-title.card-header-dashboard {
   display: block;
   background-color: whitesmoke;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 .hero .tabs ul {
   border-bottom: 1px solid #d3d6db;
