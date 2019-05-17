@@ -71,7 +71,8 @@ def get_file(dashboard, jobid, filename):
                 if re.match(regex, filename) is not None:
                     mimetype = 'text/plain'
             return send_file(job.fn(filename), mimetype=mimetype,
-                             cache_timeout=cache_timeout)
+                             cache_timeout=cache_timeout,
+                             conditional=True)
         else:
             abort(404, 'The file requested does not exist.')
 
