@@ -305,11 +305,6 @@ class Dashboard:
                   'warning')
             raise RuntimeError('ALLOW_WHERE must be enabled for this query.')
 
-        querytype = 'statepoint'
-        if query[:4] == 'doc:':
-            query = query[4:]
-            querytype = 'document'
-
         try:
             if query is None:
                 f = None
@@ -318,13 +313,10 @@ class Dashboard:
                     f = json.loads(query)
                 except json.JSONDecodeError:
                     query = shlex.split(query)
-                    f = signac.contrib.filterparse.parse_filter_arg(query)
+                    f = dict(signac.contrib.filterparse.parse_simple(query))
                     flash("Search string interpreted as '{}'.".format(
                         json.dumps(f)))
-            if querytype == 'document':
-                jobs = self.project.find_jobs(doc_filter=f)
-            else:
-                jobs = self.project.find_jobs(filter=f)
+            jobs = self.project.find_jobs(filter=f)
             return sorted(jobs, key=lambda job: self.job_sorter(job))
         except json.JSONDecodeError as error:
             flash('Failed to parse query argument. '
