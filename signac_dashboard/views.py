@@ -12,22 +12,21 @@ def home(dashboard):
 
 
 def search(dashboard):
-    query = request.args.get('q', None)
+    g.query = request.args.get('q', None)
     jobs = []
     try:
         if request.method != 'GET':
             # Someday we may support search via POST, returning json
             raise NotImplementedError('Unsupported search method.')
-        jobs = dashboard._job_search(query)
+        jobs = dashboard._job_search(g.query)
         if not jobs:
             flash('No jobs found for the provided query.', 'warning')
     except Exception as error:
         return dashboard._render_error(error)
     else:
-        g.query = query
         g.pagination = dashboard._setup_pagination(jobs)
         g.jobs = dashboard._get_job_details(g.pagination.paginate(jobs))
-        g.title = 'Search: {}'.format(query)
+        g.title = 'Search: {}'.format(g.query)
         g.subtitle = g.pagination.item_counts()
         return dashboard._render_job_view(default_view='list')
 
