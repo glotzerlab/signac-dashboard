@@ -103,7 +103,7 @@
                                 <form action="{{ url_for('search') }}" method="GET" id="searchform">
                                     <div class="field has-addons searchbox">
                                         <p class="control">
-                                            <input name="q" class="input" type="text" placeholder="Search jobs" value="{{ query }}" size="60">
+                                            <input name="q" class="input" type="text" placeholder="Search jobs" value="{{ g.query }}" size="60">
                                         </p>
                                         <p class="control">
                                             <a class="button is-dark" onclick="document.getElementById('searchform').submit()">

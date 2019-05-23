@@ -370,16 +370,15 @@ class Dashboard:
             return render_template('jobs_list.html', *args, **kwargs)
         else:
             return self._render_error(
-                    ValueError('Invalid view mode: {}'.format(view_mode)))
+                ValueError('Invalid view mode: {}'.format(view_mode)))
 
     def _render_error(self, error):
         if isinstance(error, Exception):
             error_string = "{}: {}".format(type(error).__name__, error)
-            logger.error(error_string)
-            flash(error_string, 'danger')
         else:
-            logger.error(error)
-            flash(error, 'danger')
+            error_string = error
+        logger.error(error_string)
+        flash(error_string, 'danger')
         return render_template('error.html')
 
     def _get_job_details(self, jobs):
