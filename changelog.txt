@@ -7,10 +7,15 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.2
 ===========
 
-next
-----
+[0.2.4] -- 2019-05-23
+---------------------
 
-- Fix: Make streamed video files seekable.
+Fixed
++++++
+- Made streamed video files seekable.
+- Long words in card titles will now wrap.
+- Increased size of search bar.
+- Submitted search queries populate the search bar even after errors.
 
 [0.2.3] -- 2019-05-08
 ---------------------
