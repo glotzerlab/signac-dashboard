@@ -37,11 +37,7 @@ class _FileSystemEventHandler(FileSystemEventHandler):
     def on_modified(self, event):
         if os.path.realpath(event.src_path) == \
                 os.path.realpath(self.dashboard.project.workspace()):
-            self.dashboard._project_basic_index.cache_clear()
-            self.dashboard._schema_variables.cache_clear()
-            self.dashboard._project_min_len_unique_id.cache_clear()
-            self.dashboard._get_all_jobs.cache_clear()
-            self.dashboard._job_search.cache_clear()
+            self.dashboard.update_cache()
 
 
 class Dashboard:
@@ -521,7 +517,6 @@ class Dashboard:
         altered, this method may need to be called before the dashboard
         reflects those changes.
         """
-
         # Try to update signac project cache. Requires signac 0.9.2 or later.
         with warnings.catch_warnings():
             warnings.simplefilter(action='ignore', category=FutureWarning)
