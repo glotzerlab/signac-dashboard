@@ -19,12 +19,29 @@ from numbers import Real
 import json
 import natsort
 import signac
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 from .version import __version__
 from .pagination import Pagination
 from .util import LazyView
 
 logger = logging.getLogger(__name__)
+
+
+class _FileSystemEventHandler(FileSystemEventHandler):
+
+    def __init__(self, dashboard):
+        self.dashboard = dashboard
+
+    def on_modified(self, event):
+        if os.path.realpath(event.src_path) == \
+                os.path.realpath(self.dashboard.project.workspace()):
+            self.dashboard._project_basic_index.cache_clear()
+            self.dashboard._schema_variables.cache_clear()
+            self.dashboard._project_min_len_unique_id.cache_clear()
+            self.dashboard._get_all_jobs.cache_clear()
+            self.dashboard._job_search.cache_clear()
 
 
 class Dashboard:
@@ -70,6 +87,10 @@ class Dashboard:
 
         self.config = config
         self.modules = modules
+
+        self.event_handler = _FileSystemEventHandler(self)
+        self.observer = Observer()
+        self.observer.schedule(self.event_handler, self.project.workspace())
 
         self._prepare()
 
@@ -598,6 +619,7 @@ class Dashboard:
             parser.print_usage()
             sys.exit(2)
         try:
+            self.observer.start()
             args.func(args)
         except KeyboardInterrupt:
             logger.error("Interrupted.")
@@ -616,3 +638,6 @@ class Dashboard:
             sys.exit(1)
         else:
             sys.exit(0)
+        finally:
+            self.observer.stop()
+            self.observer.join()
