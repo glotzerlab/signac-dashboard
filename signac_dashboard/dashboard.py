@@ -631,8 +631,6 @@ class Dashboard:
             if args.debug:
                 raise
             sys.exit(1)
-        else:
-            sys.exit(0)
         finally:
             self.observer.stop()
             self.observer.join()
