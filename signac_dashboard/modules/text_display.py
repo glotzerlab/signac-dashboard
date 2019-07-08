@@ -49,7 +49,7 @@ class TextDisplay(Module):
                 msg = Markup(markdown.markdown(
                     msg, extensions=['markdown.extensions.attr_list']))
             else:
-                msg = ('Error: Must install markdown library to render '
-                       'Markdown.')
+                msg = ("Error: Install the 'markdown' library to render "
+                       "Markdown.")
         return [{'name': self.name,
                  'content': render_template(self.template, msg=msg)}]
