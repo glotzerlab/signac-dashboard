@@ -616,11 +616,6 @@ class Dashboard:
         try:
             self.observer.start()
             args.func(args)
-        except KeyboardInterrupt:
-            logger.error("Interrupted.")
-            if args.debug:
-                raise
-            sys.exit(1)
         except RuntimeWarning as warning:
             logger.warning("Warning: {}".format(warning))
             if args.debug:
