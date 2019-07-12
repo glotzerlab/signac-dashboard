@@ -8,3 +8,4 @@ build/
 dist/
 .signac_sp_cache.json.gz
 doc/_*
+.signac_shell_history
