@@ -275,7 +275,7 @@ class Dashboard:
                     s.append('{}={}'.format('.'.join(keys), _format_num(v)))
             return ' '.join(s)
         except Exception as error:
-            logger.warning(
+            logger.debug(
                 "Error while generating job title: '{}'. "
                 "Returning job-id as fallback.".format(error))
             return str(job)
