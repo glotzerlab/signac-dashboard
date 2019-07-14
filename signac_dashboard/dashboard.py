@@ -19,12 +19,25 @@ from numbers import Real
 import json
 import natsort
 import signac
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 from .version import __version__
 from .pagination import Pagination
 from .util import LazyView
 
 logger = logging.getLogger(__name__)
+
+
+class _FileSystemEventHandler(FileSystemEventHandler):
+
+    def __init__(self, dashboard):
+        self.dashboard = dashboard
+
+    def on_modified(self, event):
+        if os.path.realpath(event.src_path) == \
+                os.path.realpath(self.dashboard.project.workspace()):
+            self.dashboard.update_cache()
 
 
 class Dashboard:
@@ -70,6 +83,10 @@ class Dashboard:
 
         self.config = config
         self.modules = modules
+
+        self.event_handler = _FileSystemEventHandler(self)
+        self.observer = Observer()
+        self.observer.schedule(self.event_handler, self.project.workspace())
 
         self._prepare()
 
@@ -258,7 +275,7 @@ class Dashboard:
                     s.append('{}={}'.format('.'.join(keys), _format_num(v)))
             return ' '.join(s)
         except Exception as error:
-            logger.warning(
+            logger.debug(
                 "Error while generating job title: '{}'. "
                 "Returning job-id as fallback.".format(error))
             return str(job)
@@ -500,7 +517,6 @@ class Dashboard:
         altered, this method may need to be called before the dashboard
         reflects those changes.
         """
-
         # Try to update signac project cache. Requires signac 0.9.2 or later.
         with warnings.catch_warnings():
             warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -598,12 +614,8 @@ class Dashboard:
             parser.print_usage()
             sys.exit(2)
         try:
+            self.observer.start()
             args.func(args)
-        except KeyboardInterrupt:
-            logger.error("Interrupted.")
-            if args.debug:
-                raise
-            sys.exit(1)
         except RuntimeWarning as warning:
             logger.warning("Warning: {}".format(warning))
             if args.debug:
@@ -614,5 +626,6 @@ class Dashboard:
             if args.debug:
                 raise
             sys.exit(1)
-        else:
-            sys.exit(0)
+        finally:
+            self.observer.stop()
+            self.observer.join()

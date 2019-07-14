@@ -30,6 +30,7 @@ setup(
         'libsass',
         'jsmin',
         'natsort',
+        'watchdog',
     ],
 
     classifiers=[
