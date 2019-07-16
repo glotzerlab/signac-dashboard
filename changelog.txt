@@ -7,9 +7,11 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.2
 ===========
 
-next
-----
+[0.2.5] -- 2019-07-16
+---------------------
 
+Added
++++++
 - Automatically clear caches upon changes of the project's workspace, e.g. initialization, migration, or removal of jobs.
 
 [0.2.4] -- 2019-05-23
