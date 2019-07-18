@@ -1,5 +1,6 @@
 // The following code is based on bulma-modal-fx, released under the MIT license
-// source: https://github.com/postare/bulma-modal-fx
+// See signac_dashboard/static/scss/bulma-modal-fx for the LICENSE and README
+// Source: https://github.com/postare/bulma-modal-fx
 
 $(document).on('turbolinks:load', function() {
   // Trigger modals
