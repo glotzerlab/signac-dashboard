@@ -1,3 +1,14 @@
 <div class="image">
-  <img src="{{ url_for('get_file', jobid=jobid, filename=filename) }}" alt="{{ filename }}" title="{{ filename }}" />
+  <span class="modal-button" data-target="modal-{{ jobid }}-{{ filename }}">
+    <img src="{{ url_for('get_file', jobid=jobid, filename=filename) }}" alt="{{ filename }}" title="{{ filename }}" />
+  </span>
+</div>
+<div id="modal-{{ jobid }}-{{ filename }}" class="modal modal-fx-fadeInScale">
+  <div class="modal-background"></div>
+  <div class="modal-content is-image">
+    <p>
+      <img src="{{ url_for('get_file', jobid=jobid, filename=filename) }}" alt="{{ filename }}" title="{{ filename }}" />
+    </p>
+  </div>
+  <button class="modal-close is-large" aria-label="close"></button>
 </div>
