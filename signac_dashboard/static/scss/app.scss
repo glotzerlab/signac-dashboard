@@ -72,3 +72,6 @@ section.section.panel {
 .hero .tabs ul {
   border-bottom: 1px solid #d3d6db;
 }
+.modal, .modal-close {
+  position: fixed; // Fixes bug where this is overwritten
+}

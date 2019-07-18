@@ -1,5 +1,3 @@
-
-
 .modal {
     display: flex;
     visibility: hidden;
@@ -40,14 +38,14 @@
     // Fx modal content
     // .modal-fx-fadeInScale
     &.modal-fx {
-        
+
         &-fadeInScale {
             .modal-content {
                 transform: scale(0.7);
                 opacity: 0;
                 transition: all $transition-duration;
             }
-        
+
             &.is-active {
                 .modal-content {
                     transform: scale(1);
@@ -62,7 +60,7 @@
                 opacity: 0;
                 transition: all $transition-duration cubic-bezier(0.25, 0.5, 0.5, 0.9);
             }
-            
+
             &.is-active .modal-content {
                 transform: translateX(0);
                 opacity: 1;
@@ -75,7 +73,7 @@
                 opacity: 0;
                 transition: all $transition-duration cubic-bezier(0.25, 0.5, 0.5, 0.9);
             }
-            
+
             &.is-active .modal-content {
                 transform: translateX(0);
                 opacity: 1;
@@ -88,7 +86,7 @@
                 opacity: 0;
                 transition: all $transition-duration;
             }
-            
+
             &.is-active .modal-content {
                 transform: translateY(0);
                 opacity: 1;
@@ -101,7 +99,7 @@
                 opacity: 0;
                 transition: all $transition-duration;
             }
-            
+
             &.is-active .modal-content {
                 transform: translateY(0);
                 opacity: 1;
@@ -112,28 +110,28 @@
             &.modal {
                 perspective: $modal-perspective;
             }
-            
+
             .modal-content {
                 transform-style: preserve-3d;
-                transform: translateZ(600px) rotateX(20deg); 
+                transform: translateZ(600px) rotateX(20deg);
                 opacity: 0;
             }
-            
+
             &.is-active .modal-content {
                 transition: all $transition-duration ease-in;
-                transform: translateZ(0px) rotateX(0deg); 
+                transform: translateZ(0px) rotateX(0deg);
                 opacity: 1;
-            } 
+            }
         }
 
         &-slideFall {
             &.modal {
                 perspective: $modal-perspective;
             }
-            
+
             .modal-content {
                 transform-style: preserve-3d;
-                transform: translate(30%) translateZ(600px) rotate(10deg); 
+                transform: translate(30%) translateZ(600px) rotate(10deg);
                 opacity: 0;
             }
 
@@ -149,12 +147,12 @@
                 transform: scale(0) rotate(720deg);
                 opacity: 0;
             }
-            
+
             .modal-background,
             .modal-content {
                 transition: all $transition-duration-newsPaper;
             }
-            
+
             &.is-active .modal-content {
                 transform: scale(1) rotate(0deg);
                 opacity: 1;
@@ -165,14 +163,14 @@
             &.modal {
                 perspective: $modal-perspective;
             }
-        
+
             .modal-content {
                 transform-style: preserve-3d;
                 transform: rotateX(-70deg);
                 transition: all $transition-duration;
                 opacity: 0;
             }
-        
+
             &.is-active .modal-content {
                 transform: rotateX(0deg);
                 opacity: 1;
@@ -183,14 +181,14 @@
             &.modal {
                 perspective: $modal-perspective;
             }
-            
+
             .modal-content {
                 transform-style: preserve-3d;
                 transform: rotateY(-70deg);
                 transition: all $transition-duration;
                 opacity: 0;
             }
-            
+
             &.is-active .modal-content {
                 transform: rotateY(0deg);
                 opacity: 1;
@@ -201,7 +199,7 @@
             &.modal {
                 perspective: $modal-perspective;
             }
-            
+
             .modal-content {
                 position: relative;
                 transform-style: preserve-3d;
@@ -210,7 +208,7 @@
                 opacity: 0;
                 transition: all $transition-duration;
             }
-            
+
             &.is-active .modal-content {
                 transform: rotateX(0deg);
                 opacity: 1;
@@ -221,7 +219,7 @@
             &.modal {
                 perspective: $modal-perspective;
             }
-            
+
             .modal-content {
                 position: relative;
                 transform-style: preserve-3d;
@@ -230,7 +228,7 @@
                 opacity: 0;
                 transition: all $transition-duration;
             }
-            
+
             &.is-active .modal-content {
                 transform: rotateX(0deg);
                 opacity: 1;
@@ -243,7 +241,7 @@
                 opacity: 0;
                 transition: all $transition-duration;
             }
-            
+
             &.is-active .modal-content {
                 transform: scale(1);
                 opacity: 1;
@@ -254,17 +252,17 @@
             &.modal {
                 perspective: $modal-perspective;
             }
-            
+
             .modal-content {
                 transform-style: preserve-3d;
                 transform: translateZ(-3000px) rotateY(90deg);
                 opacity: 0;
             }
-            
+
             &.is-active .modal-content {
                 animation: slit $transition-duration-3dslit forwards ease-out;
             }
-            
+
             @keyframes slit {
                 50% { transform: translateZ(-250px) rotateY(89deg); opacity: 1; animation-timing-function: ease-in;}
                 100% { transform: translateZ(0) rotateY(0deg); opacity: 1; }
@@ -275,7 +273,7 @@
             &.modal {
                 perspective: $modal-perspective;
             }
-            
+
             .modal-content{
                 transform-style: preserve-3d;
                 transform: translateY(100%) rotateX(90deg);
@@ -283,7 +281,7 @@
                 opacity: 0;
                 transition: all $transition-duration ease-out;
             }
-            
+
             &.is-active .modal-content{
                 transform: translateY(0%) rotateX(0deg);
                 opacity: 1;
@@ -294,7 +292,7 @@
             &.modal {
                 perspective: $modal-perspective;
             }
-            
+
             .modal-content {
                 transform-style: preserve-3d;
                 transform: translateZ(100px) translateX(-30%) rotateY(90deg);
@@ -302,7 +300,7 @@
                 opacity: 0;
                 transition: all $transition-duration;
             }
-            
+
             &.is-active .modal-content {
                 transform: translateZ(0px) translateX(0%) rotateY(0deg);
                 opacity: 1;
@@ -336,12 +334,12 @@
             &.is-huge {
                 width:auto;
             }
-      
+
             img {
                 max-height: calc(100vh - 50px);
             }
         }
-    }  
+    }
 
     // Positioning, center is default
     // .modal-pos-top

@@ -3,12 +3,11 @@
     <img src="{{ url_for('get_file', jobid=jobid, filename=filename) }}" alt="{{ filename }}" title="{{ filename }}" />
   </span>
 </div>
+<!-- Modal is moved to body tag on page load, see JS -->
 <div id="modal-{{ jobid }}-{{ filename }}" class="modal modal-fx-fadeInScale">
   <div class="modal-background"></div>
-  <div class="modal-content is-image">
-    <p>
-      <img src="{{ url_for('get_file', jobid=jobid, filename=filename) }}" alt="{{ filename }}" title="{{ filename }}" />
-    </p>
+  <div class="modal-content is-image is-huge">
+    <img src="{{ url_for('get_file', jobid=jobid, filename=filename) }}" alt="{{ filename }}" title="{{ filename }}" />
   </div>
   <button class="modal-close is-large" aria-label="close"></button>
 </div>
