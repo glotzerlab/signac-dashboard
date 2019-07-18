@@ -13,6 +13,7 @@ Version 0.2
 Added
 +++++
 - Automatically clear caches upon changes of the project's workspace, e.g. initialization, migration, or removal of jobs.
+- Image Viewer enlarges images in a modal window when clicked.
 
 [0.2.4] -- 2019-05-23
 ---------------------
