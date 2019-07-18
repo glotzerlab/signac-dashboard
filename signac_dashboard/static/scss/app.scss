@@ -75,3 +75,6 @@ section.section.panel {
 .modal, .modal-close {
   position: fixed; // Fixes bug where this is overwritten
 }
+.modal-button {
+  cursor: pointer;
+}
