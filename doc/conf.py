@@ -24,9 +24,9 @@ copyright = 'The Regents of the University of Michigan'
 author = 'Bradley D. Dice, Carl S. Adorf, Sharon C. Glotzer'
 
 # The short X.Y version
-version = '0.2.4'
+version = '0.2.5'
 # The full version, including alpha/beta/rc tags
-release = '0.2.4'
+release = '0.2.5'
 
 
 # -- General configuration ---------------------------------------------------
