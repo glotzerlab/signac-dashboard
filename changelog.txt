@@ -7,7 +7,7 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.2
 ===========
 
-[0.2.5] -- 2019-07-16
+[0.2.5] -- 2019-07-19
 ---------------------
 
 Added
