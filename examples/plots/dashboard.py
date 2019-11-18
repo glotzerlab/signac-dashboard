@@ -10,6 +10,9 @@ class PlotDashboard(Dashboard):
     def job_sorter(self, job):
         return job.sp.get('coherence_time', -1)
 
+    def job_title(self, job):
+        return 'Coherence time: {}'.format(job.sp.coherence_time)
+
 
 def correlation_text(job):
     return 'Correlation coefficient: {:.5f}'.format(job.doc['correlation'])
