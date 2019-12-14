@@ -1,4 +1,4 @@
-# <img src="https://raw.githubusercontent.com/glotzerlab/signac-dashboard/master/doc/images/logo.png" width="75" height="75"> signac-dashboard: data visualization for signac
+# <img src="https://raw.githubusercontent.com/glotzerlab/signac-dashboard/master/doc/images/palette-header.png" width="75" height="58"> signac-dashboard: data visualization for signac
 
 [![PyPI](https://img.shields.io/pypi/v/signac-dashboard.svg)](https://pypi.org/project/signac-dashboard/)
 [![conda-forge](https://img.shields.io/conda/vn/conda-forge/signac-dashboard.svg?style=flat)](https://anaconda.org/conda-forge/signac-dashboard)
