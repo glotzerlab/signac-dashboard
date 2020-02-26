@@ -3,7 +3,7 @@
 # This software is licensed under the BSD 3-Clause License.
 
 from flask import Flask, session, request, url_for, render_template, flash, g
-from werkzeug import url_encode
+from werkzeug.urls import url_encode
 import jinja2
 from flask_assets import Environment, Bundle
 from flask_turbolinks import turbolinks
