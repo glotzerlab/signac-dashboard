@@ -9,6 +9,9 @@ jobs:
     docker:
       - image: circleci/python:3.8
 
+    environment:
+      PYTHON: python3
+
     working_directory: ~/repo
 
     steps:
