@@ -16,13 +16,16 @@ jobs:
       - run:
           name: style-check
           command: |
-            pip install --user -U flake8==3.7.9
-            python -m flake8 --show-source .
+            ${PYTHON} -m pip install --user -U flake8==3.7.9
+            ${PYTHON} -m flake8 --show-source .
 
 
   test-3.8: &test-template
     docker:
       - image: circleci/python:3.8
+
+    environment:
+      PYTHON: python3
 
     working_directory: ~/repo
 
@@ -33,19 +36,19 @@ jobs:
           name: install dependencies
           command: |
             git submodule update --init --recursive
-            pip install -U virtualenv --user
+            ${PYTHON} -m pip install --progress-bar off -U virtualenv --user
             mkdir -p ./venv
-            python -m virtualenv ./venv
+            ${PYTHON} -m virtualenv ./venv
             . venv/bin/activate
-            pip install -U coverage mock
-            pip install .
+            ${PYTHON} -m pip install --progress-bar off -U coverage mock
+            ${PYTHON} -m pip install --progress-bar off -U .
 
       - run:
           name: run tests
           command: |
             . venv/bin/activate
-            coverage run --source=signac_dashboard/ -m unittest discover tests/
-            coverage report -i --include="signac_dashboard*"
+            ${PYTHON} -m coverage run --source=signac_dashboard/ -m unittest discover tests/
+            ${PYTHON} -m coverage report -i --include="signac_dashboard*"
 
       - store_artifacts:
           path: test-reports
@@ -60,6 +63,8 @@ jobs:
     <<: *test-template
     docker:
       - image: pypy:3
+    environment:
+      PYTHON: pypy3
 
   test-deploy-pypi:
     docker:
