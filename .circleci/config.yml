@@ -36,9 +36,14 @@ jobs:
       - checkout
 
       - run:
-          name: install dependencies
+          name: Fetch submodules
           command: |
+            git submodule sync
             git submodule update --init --recursive
+
+      - run:
+          name: Install dependencies
+          command: |
             ${PYTHON} -m pip install --progress-bar off -U virtualenv --user
             mkdir -p ./venv
             ${PYTHON} -m virtualenv ./venv
@@ -47,7 +52,7 @@ jobs:
             ${PYTHON} -m pip install --progress-bar off -U .
 
       - run:
-          name: run tests
+          name: Run tests
           command: |
             . venv/bin/activate
             ${PYTHON} -m coverage run --source=signac_dashboard/ -m unittest discover tests/
@@ -76,6 +81,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Fetch submodules
+          command: |
+            git submodule sync
+            git submodule update --init --recursive
+      - run:
           name: test-deploy-pypi
           command: |
             bash .circleci/deploy.bash testpypi
@@ -86,6 +96,11 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
+      - run:
+          name: Fetch submodules
+          command: |
+            git submodule sync
+            git submodule update --init --recursive
       - run:
           name: deploy-pypi
           command: |
