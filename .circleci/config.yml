@@ -55,7 +55,7 @@ jobs:
           name: Run tests
           command: |
             . venv/bin/activate
-            ${PYTHON} -m coverage run --source=signac_dashboard/ -m unittest discover tests/
+            ${PYTHON} -m coverage run --source=signac_dashboard/ -m unittest discover tests/ -v
             ${PYTHON} -m coverage report -i --include="signac_dashboard*"
 
       - store_artifacts:

@@ -24,7 +24,15 @@ username: ${PYPI_TEST_USERNAME}
 password: ${PYPI_TEST_PASSWORD}
 EOF
 
+# Create wheels and source distribution
 python setup.py bdist_wheel
+python setup.py sdist
+
+# Test generated wheel
+python -m pip install signac_dashboard -U --force-reinstall -f dist/
+python -m unittest discover tests/ -v
+
+# Upload wheels
 if [[ "$1" == "testpypi" || "$1" == "pypi" ]]; then
     python -m twine upload --skip-existing --repository $1 dist/*
 else
