@@ -3,7 +3,7 @@
 set -e
 set -u
 
-python -m pip install --user -U twine wheel setuptools
+python -m pip install --progress-bar off --user -U twine wheel setuptools
 
 # PYPI_USERNAME - (Required) Username for the publisher's account on PyPI
 # PYPI_PASSWORD - (Required, Secret) Password for the publisher's account on PyPI
@@ -29,7 +29,7 @@ python setup.py bdist_wheel
 python setup.py sdist
 
 # Test generated wheel
-python -m pip install signac_dashboard -U --force-reinstall -f dist/
+python -m pip install signac_dashboard --progress-bar off -U --force-reinstall -f dist/
 python -m unittest discover tests/ -v
 
 # Upload wheels
