@@ -222,23 +222,9 @@ class Dashboard:
                 pass
 
     @lru_cache()
-    def _project_basic_index(self, include_job_document=False):
-        index = []
-        for item in self.project.index(
-            include_job_document=include_job_document
-        ):
-            index.append(item)
-        return index
-
-    @lru_cache()
     def _schema_variables(self):
-        _index = self._project_basic_index()
-        sp_index = self.project.build_job_statepoint_index(
-            exclude_const=True, index=_index)
-        schema_variables = []
-        for keys, _ in sp_index:
-            schema_variables.append(keys)
-        return schema_variables
+        schema = self.project.detect_schema(exclude_const=True)
+        return [key for key in schema]
 
     @lru_cache()
     def _project_min_len_unique_id(self):
