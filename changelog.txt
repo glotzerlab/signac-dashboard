@@ -7,13 +7,19 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.2
 ===========
 
+[0.2.7] -- 2020-02-27
+---------------------
+
+Fixed
++++++
+- Added submodules in CI deployment to fix broken bulma.
+
 [0.2.6] -- 2020-02-25
 ---------------------
 
 Fixed
 +++++
 - Updated dependencies to prevent errors with Werkzeug.
-
 
 [0.2.5] -- 2019-07-19
 ---------------------
