@@ -2,4 +2,4 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
-__version__ = '0.2.6'
+__version__ = '0.2.7'

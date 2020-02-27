@@ -17,7 +17,7 @@ except (IOError, OSError):
 
 setup(
     name='signac-dashboard',
-    version='0.2.6',
+    version='0.2.7',
     packages=find_packages(),
     include_package_data=True,
     python_requires='>=3.5',
