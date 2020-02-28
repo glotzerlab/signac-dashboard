@@ -22,16 +22,16 @@ setup(
     include_package_data=True,
     python_requires='>=3.5',
     install_requires=[
-        'signac>=1.0',
-        'Flask>=1.0',
-        'Flask-Assets>=2.0',
-        'webassets>=2.0',
-        'Flask-Turbolinks',
-        'libsass',
+        'flask>=1.0',
+        'flask-assets>=2.0',
+        'flask-turbolinks',
         'jsmin',
+        'libsass',
         'natsort',
+        'signac>=1.0',
         'watchdog',
-        'Werkzeug>=1.0',
+        'webassets>=2.0',
+        'werkzeug>=1.0',
     ],
 
     classifiers=[
