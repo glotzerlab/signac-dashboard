@@ -1,3 +1,4 @@
+include LICENSE.txt
 graft signac_dashboard/templates
 graft signac_dashboard/static
 prune signac_dashboard/static/.webassets-cache
