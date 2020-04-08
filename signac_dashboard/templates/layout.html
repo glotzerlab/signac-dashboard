@@ -42,7 +42,7 @@
                         {% for href, id, name, icon in menu.content %}
                         <a href="{{ href | e }}" class="item{% if id == g.active_page %} active{% endif %}">
                             <span class="icon"><i class="{{ icon }}"></i></span>
-                            <span class="name">{{ name }}</span>
+                            <span class="name">{{ name | safe }}</span>
                         </a>
                         {% endfor %}
                     </div>

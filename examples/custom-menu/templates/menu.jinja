@@ -1,0 +1,7 @@
+{# The menu items are a tuple of (href, id, name, icon) #}
+{% set content = [
+('/jobs', 'jobs', 'Jobs', 'far fa-folder'),
+('/search?q=coherence_time.%24lt+10', 'times-lt-10', 'Coherence <em>t</em> &lt; 10', 'fas fa-clock'),
+('/search?q=coherence_time.%24gte+10+coherence_time.%24lt+20', 'times-10-to-20', 'Coherence 10 &le; <em>t</em> < 20', 'fas fa-clock'),
+('/search?q=coherence_time.%24gte+20', 'times-gte-20', 'Coherence <em>t</em> &ge; 20', 'fas fa-clock'),
+] -%}
