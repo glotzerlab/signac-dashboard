@@ -29,7 +29,7 @@ class Plotter(Module):
                     jobid=job._id
                     )}]
 
-    def register_routes(self, dashboard):
+    def register(self, dashboard):
         @dashboard.app.route('/module/plotter/<jobid>/')
         def plot(jobid):
             fig = self.create_figure(job=dashboard.project.open_job(id=jobid))
