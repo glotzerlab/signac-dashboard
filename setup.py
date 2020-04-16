@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Regents of the University of Michigan
+# Copyright (c) 2019 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 import os
@@ -17,26 +17,30 @@ except (IOError, OSError):
 
 setup(
     name='signac-dashboard',
-    version='0.1.6',
+    version='0.2.7',
     packages=find_packages(),
     include_package_data=True,
-    python_requires='>=3.4',
+    python_requires='>=3.5',
     install_requires=[
-        'signac>=0.8',
-        'Flask>=0.12',
-        'Flask-Assets',
-        'webassets>=0.12.1',
-        'Flask-Turbolinks',
+        'flask>=1.0',
+        'flask-assets>=2.0',
+        'flask-turbolinks',
+        'jsmin',
         'libsass',
-        'jsmin'
+        'natsort',
+        'signac>=1.0',
+        'watchdog',
+        'webassets>=2.0',
+        'werkzeug>=1.0',
     ],
 
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: BSD License',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
 
     author='Bradley Dice',
@@ -45,7 +49,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     keywords='visualization dashboard signac framework',
-    url='https://bitbucket.org/glotzer/signac-dashboard',
+    url='https://signac.io',
 
     entry_points={
         'console_scripts': [

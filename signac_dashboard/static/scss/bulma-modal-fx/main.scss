@@ -1,0 +1,16 @@
+// Bulma essential variables, functions and mixins
+@import "../bulma/sass/utilities/initial-variables";
+@import "../bulma/sass/utilities/functions";
+@import "../bulma/sass/utilities/derived-variables";
+@import "../bulma/sass/utilities/mixins.sass";
+
+// Modal minimal setup
+$transition-duration: .3s;
+$transition-duration-newsPaper: .7s;
+$transition-duration-3dslit: .5s;
+
+$modal-perspective: 1300px;
+$modal-bg-color: rgba($black,.86);
+
+// import modal-fx component
+@import "components/modal-fx";

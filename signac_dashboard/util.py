@@ -1,8 +1,8 @@
-# Copyright (c) 2018 The Regents of the University of Michigan
+# Copyright (c) 2019 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
-from werkzeug import import_string, cached_property
+from werkzeug.utils import import_string, cached_property
 
 
 def simplified_keys(project):

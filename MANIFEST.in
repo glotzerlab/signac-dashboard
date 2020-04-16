@@ -1,5 +1,7 @@
+include LICENSE.txt
 graft signac_dashboard/templates
 graft signac_dashboard/static
 prune signac_dashboard/static/.webassets-cache
+prune signac_dashboard/static/gen
 prune signac_dashboard/static/scss/bulma/docs
 prune signac_dashboard/static/scss/bulma/.git

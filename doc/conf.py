@@ -20,13 +20,13 @@
 # -- Project information -----------------------------------------------------
 
 project = 'signac-dashboard'
-copyright = '2018, Bradley Dice'
-author = 'Bradley Dice'
+copyright = 'The Regents of the University of Michigan'
+author = 'Bradley D. Dice, Carl S. Adorf, Sharon C. Glotzer'
 
 # The short X.Y version
-version = '0.1.6'
+version = '0.2.7'
 # The full version, including alpha/beta/rc tags
-release = '0.1.6'
+release = '0.2.7'
 
 
 # -- General configuration ---------------------------------------------------
@@ -40,6 +40,7 @@ release = '0.1.6'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.coverage',
     'sphinx.ext.intersphinx',
     'sphinx.ext.mathjax',
@@ -92,10 +93,21 @@ html_theme = 'sphinx_rtd_theme'
 # of the sidebar.
 html_logo = "images/logo.png"
 
+# The name of an image file (within the static path) to use as favicon of the
+# docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
+# pixels large.
+html_favicon = "images/favicon.ico"
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = ['_static']
+html_static_path = ['_static']
+
+# These paths are either relative to html_static_path
+# or fully qualified paths (eg. https://...)
+html_css_files = [
+    'css/signac-theme.css',
+]
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -170,7 +182,14 @@ texinfo_documents = [
 # -- Options for intersphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/', None),
+    'signac-docs': ('https://docs.signac.io/en/latest/', None),
+    'signac': ('https://docs.signac.io/projects/core/en/latest/', None),
+    'flow': ('https://docs.signac.io/projects/flow/en/latest/', None),
+    'flask': ('http://flask.pocoo.org/docs/', None),
+    'werkzeug': ('https://werkzeug.palletsprojects.com/', None),
+}
 
 # -- Options for todo extension ----------------------------------------------
 

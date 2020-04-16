@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2018 The Regents of the University of Michigan
+# Copyright (c) 2019 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard import Dashboard
@@ -7,10 +7,7 @@ import signac_dashboard.modules
 import signac
 
 if __name__ == '__main__':
-    try:
-        project = signac.get_project()
-    except LookupError:
-        project = signac.init_project('dashboard-test-project')
+    project = signac.init_project('dashboard-test-project')
 
     if len(project) == 0:
         for a in range(10):

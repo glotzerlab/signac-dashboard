@@ -9,7 +9,7 @@
         {%- assets "scss_all" %}
         <link rel="stylesheet" href="{{ ASSET_URL }}">
         {%- endassets %}
-        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
         <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
         <meta name="apple-mobile-web-app-title" content="{{ APP_NAME }}">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -71,7 +71,7 @@
                                     <div class="field">
                                         <div class="control">
                                             <label class="checkbox">
-                                                <input type="checkbox" name="modules[{{ loop.index0 }}]"{% if module.enabled %} checked{% endif %}>{{ module.name }}
+                                                <input type="checkbox" name="modules[{{ loop.index0 }}]"{% if loop.index0 in enabled_modules %} checked{% endif %}>{{ module.name }}
                                             </label>
                                         </div>
                                     </div>
@@ -103,12 +103,12 @@
                                 <form action="{{ url_for('search') }}" method="GET" id="searchform">
                                     <div class="field has-addons searchbox">
                                         <p class="control">
-                                        <input name="q" class="input" type="text" placeholder="Search jobs" value="{{ query }}">
+                                            <input name="q" class="input" type="text" placeholder="Search jobs" value="{{ g.query }}" size="60">
                                         </p>
                                         <p class="control">
-                                        <a class="button is-dark" onclick="document.getElementById('searchform').submit()">
-                                            &nbsp; <i class="fas fa-search"></i> &nbsp;
-                                        </a>
+                                            <a class="button is-dark" onclick="document.getElementById('searchform').submit()">
+                                                &nbsp; <i class="fas fa-search"></i> &nbsp;
+                                            </a>
                                         </p>
                                     </div>
                                 </form>
@@ -135,7 +135,7 @@
                     {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                     {% for category, message in messages %}
-                    <div class="notification is-{{ category }}">{{ message }}</div>
+                    <div class="notification is-{{ category }}">{{ message | safe }}</div>
                     {% endfor %}
                     {% endif %}
                     {% endwith %}
@@ -156,11 +156,11 @@
             <div class="container">
                 <div class="has-text-centered">
                     <p><strong>{{ APP_NAME }} {{ APP_VERSION }}</strong> by <a href="https://glotzerlab.engin.umich.edu">the Glotzer Group</a></p>
-                    <p>part of the <a href="http://signac.io/">signac</a> data management framework</p>
+                    <p>part of the <a href="https://signac.io/"><strong>signac</strong></a> data management framework</p>
                     <p>
-                        <a href="https://signac-dashboard.readthedocs.io/en/latest/">documentation</a> |
-                        <a href="https://bitbucket.org/glotzer/signac-dashboard/">source</a> |
-                        <a href="https://bitbucket.org/glotzer/signac-dashboard/src/master/LICENSE.txt">license</a>
+                        <a href="https://docs.signac.io/projects/dashboard/en/latest/">documentation</a> |
+                        <a href="https://github.com/glotzerlab/signac-dashboard/">source</a> |
+                        <a href="https://github.com/glotzerlab/signac-dashboard/blob/master/LICENSE.txt">license</a>
                     </p>
                 </div>
             </div>

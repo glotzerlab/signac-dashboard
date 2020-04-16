@@ -1,0 +1,139 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2
+
+jobs:
+  style-check:
+    docker:
+      - image: circleci/python:3.8
+
+    environment:
+      PYTHON: python3
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - run:
+          name: style-check
+          command: |
+            ${PYTHON} -m pip install --user -U flake8==3.7.9
+            ${PYTHON} -m flake8 --show-source .
+
+
+  test-3.8: &test-template
+    docker:
+      - image: circleci/python:3.8
+
+    environment:
+      PYTHON: python3
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run:
+          name: Fetch submodules
+          command: |
+            git submodule sync
+            git submodule update --init --recursive
+
+      - run:
+          name: Install dependencies
+          command: |
+            ${PYTHON} -m pip install --progress-bar off -U virtualenv --user
+            mkdir -p ./venv
+            ${PYTHON} -m virtualenv ./venv
+            . venv/bin/activate
+            ${PYTHON} -m pip install --progress-bar off -U coverage mock
+            ${PYTHON} -m pip install --progress-bar off -U .
+
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            ${PYTHON} -m coverage run --source=signac_dashboard/ -m unittest discover tests/ -v
+            ${PYTHON} -m coverage report -i --include="signac_dashboard*"
+
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports
+
+  test-3.5:
+    <<: *test-template
+    docker:
+      - image: circleci/python:3.5
+
+  test-pypy-3:
+    <<: *test-template
+    docker:
+      - image: pypy:3
+    environment:
+      PYTHON: pypy3
+
+  test-deploy-pypi:
+    docker:
+      - image: circleci/python:3.8
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Fetch submodules
+          command: |
+            git submodule sync
+            git submodule update --init --recursive
+      - run:
+          name: test-deploy-pypi
+          command: |
+            bash .circleci/deploy.bash testpypi
+
+  deploy-pypi:
+    docker:
+      - image: circleci/python:3.8
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Fetch submodules
+          command: |
+            git submodule sync
+            git submodule update --init --recursive
+      - run:
+          name: deploy-pypi
+          command: |
+            bash .circleci/deploy.bash pypi
+
+
+workflows:
+  version: 2
+  style-check-and-tests:
+    jobs:
+      - style-check
+      - test-3.5:
+          requires:
+            - style-check
+      - test-3.8:
+          requires:
+            - style-check
+      - test-pypy-3:
+          requires:
+            - test-3.8
+      - test-deploy-pypi:
+          filters:
+            branches:
+              only: /release\/.*/
+          requires:
+            - test-3.5
+            - test-3.8
+            - test-pypy-3
+  deploy:
+    jobs:
+      - deploy-pypi:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v.*/

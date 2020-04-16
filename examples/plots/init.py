@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2018 The Regents of the University of Michigan
+# Copyright (c) 2019 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 import signac
@@ -9,10 +9,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt  # noqa: E402
 
-try:
-    project = signac.get_project()
-except LookupError:
-    project = signac.init_project('plots')
+project = signac.init_project('plots')
 
 
 def plot_coherence(job):
@@ -29,9 +26,12 @@ def plot_coherence(job):
     nse1 = np.random.randn(len(t))                 # white noise 1
     nse2 = np.random.randn(len(t))                 # white noise 2
 
-    # Two signals with a coherent part at 10Hz and a random part
+    # Two signals with a coherent part and a random part
     s1 = np.sin(2 * np.pi * job.sp.coherence_time * t) + nse1
     s2 = np.sin(2 * np.pi * job.sp.coherence_time * t) + nse2
+
+    # Save correlation coefficient
+    job.doc['correlation'] = np.corrcoef(s1, s2)[0, 1]
 
     fig, axs = plt.subplots(2, 1)
     plt.title('Coherence time = {}'.format(job.sp.coherence_time))

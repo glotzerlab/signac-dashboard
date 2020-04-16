@@ -1,0 +1,22 @@
+<form class="document-editor-form" method="POST" action="{{ url_for('document_editor_update') }}">
+  <input type="hidden" name="redirect" value="{{ request.url }}">
+  <input type="hidden" name="jobid" value="{{ jobid }}">
+  <ul>
+    {% for key in document %}
+    <li>
+      <div class="field">
+        <div class="control">
+          <label><strong>{{ key }}</strong></label>
+          <input class="input" type="text" name="doc:{{ key }}" value="{{ document[key] }}">
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  <div class="field is-grouped">
+    <div class="control">
+      <button class="button is-primary">Save</button>
+    </div>
+    <label class="document-editor-result"></label>
+  </div>
+</form>

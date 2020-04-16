@@ -1,0 +1,195 @@
+=======
+Changes
+=======
+
+The **signac-dashboard** package follows `semantic versioning <https://semver.org/>`_.
+
+Version 0.2
+===========
+
+[0.2.7] -- 2020-02-27
+---------------------
+
+Fixed
++++++
+- Added submodules in CI deployment to fix broken bulma.
+
+[0.2.6] -- 2020-02-25
+---------------------
+
+Fixed
++++++
+- Updated dependencies to prevent errors with Werkzeug.
+
+[0.2.5] -- 2019-07-19
+---------------------
+
+Added
++++++
+- Automatically clear caches upon changes of the project's workspace, e.g. initialization, migration, or removal of jobs.
+- Image Viewer enlarges images in a modal window when clicked.
+
+[0.2.4] -- 2019-05-23
+---------------------
+
+Fixed
++++++
+- Made streamed video files seekable.
+- Long words in card titles will now wrap.
+- Increased size of search bar.
+- Submitted search queries populate the search bar even after errors.
+
+[0.2.3] -- 2019-05-08
+---------------------
+
+Added
++++++
+- Method for clearing dashboard and project caches.
+
+Changed
++++++++
+- Disabled $where operations in search queries by default, see :ref:`dashboard-security`.
+
+[0.2.2] -- 2019-04-25
+---------------------
+
+Fixed
++++++
+- Resolved issue with enabling/disabling modules.
+- Long words in card content will now wrap.
+
+[0.2.1] -- 2019-04-24
+---------------------
+
+Fixed
++++++
+- Corrected PyPI deployment.
+
+[0.2.0] -- 2019-04-24
+---------------------
+
+Added
++++++
+- New modules: DocumentEditor, FlowStatus, TextDisplay.
+- New examples: cli, custom-modules, document-editor, flow-status, plots.
+- The default job sorter uses natural sorting for numbers via natsort.
+
+Changed
++++++++
+- Improved API documentation, especially for modules.
+- Unified module asset/route registration into one ``register`` method.
+- The Notes module can be used with any job document key.
+
+Fixed
++++++
+- Corrected error in VideoViewer when no poster was provided.
+- ImageViewer/VideoViewer match files in job workspace subdirectories.
+- Files can now be retrieved from job workspace subdirectories.
+- Corrected pagination error.
+
+Removed
++++++++
+- The signac project document and user session are no longer used to store
+  module settings. The dashboard user script is the single source for
+  all configuration besides command line arguments.
+- Job labels have been removed and replaced with the FlowStatus module.
+
+Version 0.1
+===========
+
+[0.1.6] -- 2018-10-09
+---------------------
+
+Changed
++++++++
+- Updated layouts for bulma 0.7.1.
+
+Fixed
++++++
+- PyPI upload was missing bulma and couldn't run.
+
+Removed
++++++++
+- ``cssmin`` is no longer a dependency.
+
+[0.1.5] -- 2018-10-09
+---------------------
+
+Added
++++++
+- Example dashboards are in the ``examples`` folder.
+- Console entry point, ``signac-dashboard run`` will launch a simple dashboard. This will be extended in a future release.
+- Better support for custom module assets.
+
+Changed
++++++++
+- Modules are now part of the user session and are saved to the project document. This requires all module arguments to be JSON-encodable.
+- Restructured module design and how modules provide assets.
+- Documentation has been updated, with instructions for port forwarding.
+- Split views into a separate file.
+
+Fixed
++++++
+- Browsers will no longer cache dynamic content.
+- Pagination rendering bug squashed.
+
+[0.1.4] -- 2018-07-23
+---------------------
+
+Fixed
++++++
+- Removed ``flask_cache`` and replaced with ``lru_cache`` to fix compatibility with Flask 1.0.
+
+[0.1.3] -- 2018-04-02
+---------------------
+
+Added
++++++
+- README documentation on searching.
+- Added support for signac cache.
+- Added LRU cache for job details.
+- Added pagination support for much faster loading.
+- Added VideoViewer module.
+
+Changed
++++++++
+- Error handling is cleaner.
+- Refactored job views.
+- Job titles show statepoint booleans as True/False.
+- Added job id prefix to downloaded filenames so they can be distinguished.
+
+Fixed
++++++
+- Heterogeneous schemas can generate job titles.
+
+[0.1.2] -- 2018-02-08
+---------------------
+
+Added
++++++
+- Search jobs with a document filter with `doc:{"key":"value"}`.
+- Unit tests for job search.
+- README documentation is much more complete.
+- flake8 checked in CI.
+- Added CHANGELOG.
+
+[0.1.1] -- 2017-09-25
+---------------------
+
+Added
++++++
+- Continuous integration support.
+- Added first unit test.
+- Mobile support is significantly improved.
+
+Fixed
++++++
+- Flask package was incorrectly configured in the previous release.
+- Corrected menu activation script to trigger on ``turbolinks:load`` event.
+
+[0.1.0] -- 2017-09-17
+---------------------
+
+Added
++++++
+- First release.
