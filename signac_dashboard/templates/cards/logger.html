@@ -1,4 +1,7 @@
-<input type="checkbox" id="follow-{{jobid}}" onchange="logger_{{jobid}}.setFollow()">
+<div>
+    <input type="checkbox" name="follow" id="follow-{{jobid}}" onchange="logger_{{jobid}}.setFollow()">
+    <label for="follow">follow</label>
+</div>
 <div id="scroll-{{jobid}}" style="max-height:{{num_lines}}em;overflow:auto">
 <pre id="output-{{jobid}}"></pre>
 </div>
