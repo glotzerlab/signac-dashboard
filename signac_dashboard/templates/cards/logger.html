@@ -1,0 +1,47 @@
+<input type="checkbox" id="follow-{{jobid}}" onchange="logger_{{jobid}}.setFollow()">
+<div id="scroll-{{jobid}}" style="max-height:{{num_lines}}em;overflow:auto">
+<pre id="output-{{jobid}}"></pre>
+</div>
+<script>
+
+// namespace
+var logger_{{jobid}} = (function() {
+    var self = {};
+
+    var updateTextBox = function () {
+        var output = document.getElementById('output-{{jobid}}');
+        output.textContent = self.xhr.responseText;
+
+        // jump to end
+        var objDiv = document.getElementById('scroll-{{jobid}}');
+        objDiv.scrollTop = objDiv.scrollHeight;
+    };
+
+    self.setFollow = function () {
+        var checkBox = document.getElementById('follow-{{jobid}}');
+        var stream = checkBox.checked;
+        if (typeof self.xhr != 'undefined')
+            self.xhr.abort();
+        if (typeof myInterval !== 'undefined')
+            clearInterval(myInterval);
+
+        self.xhr = new XMLHttpRequest();
+
+        if (stream) {
+            self.xhr.open('GET', "{{ url_for('get_log',jobid=jobid,filename=filename,stream=1) }}");
+            myInterval = setInterval(updateTextBox, 1000);
+        } else {
+            self.xhr.onload = updateTextBox;
+            self.xhr.open('GET', "{{ url_for('get_log',jobid=jobid,filename=filename,stream=0) }}");
+        }
+
+        self.xhr.send();
+    };
+
+    return self;
+}());
+
+logger_{{jobid}}.setFollow();
+</script>
+
+

@@ -3,6 +3,7 @@ from .document_list import DocumentList
 from .file_list import FileList
 from .flow_status import FlowStatus
 from .image_viewer import ImageViewer
+from .logger import Logger
 from .notes import Notes
 from .plotter import Plotter
 from .statepoint_list import StatepointList
@@ -15,6 +16,7 @@ __all__ = [
     'FileList',
     'FlowStatus',
     'ImageViewer',
+    'Logger',
     'Notes',
     'Plotter',
     'StatepointList',
