@@ -10,6 +10,7 @@ import io
 
 from flask import Response,render_template
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import matplotlib.pyplot as plt
 
 class Plotter(Module):
     def __init__(self,
@@ -35,6 +36,7 @@ class Plotter(Module):
             fig = self.create_figure(job=dashboard.project.open_job(id=jobid))
             output = io.BytesIO()
             FigureCanvas(fig).print_png(output)
+            plt.close(fig)
             return Response(output.getvalue(), mimetype='image/png')
 
     def create_figure(self,job):
