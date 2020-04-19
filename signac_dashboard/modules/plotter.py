@@ -8,9 +8,6 @@ import io
 
 from multiprocessing import Process, Queue, cpu_count, Manager
 
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-import matplotlib.pyplot as plt
-
 
 class Plotter(Module):
     """Renders a matplotlib figure
@@ -53,6 +50,9 @@ class Plotter(Module):
                     )}]
 
     def worker(self, in_queue, result, lock, project, plotfn):
+        from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+        import matplotlib.pyplot as plt
+
         for jobid in iter(in_queue.get, 'STOP'):
             res = None
             try:
