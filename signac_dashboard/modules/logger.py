@@ -7,6 +7,16 @@ from time import sleep
 
 
 class Logger(Module):
+    """Follows a text file
+
+    Serves a textfile in the workspace to the user, with the option to periodically refresh its contents.
+    Similar to `tail -f`.
+
+    :param filename: The name of the text file to follow
+    :type filename: str
+    :param num_lines: How many lines of text should be displayed in the window (from the end of the file)
+    :type num_lines: int
+    """
     def __init__(self,
                  filename,
                  num_lines=25,
