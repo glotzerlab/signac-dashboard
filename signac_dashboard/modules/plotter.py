@@ -3,13 +3,14 @@
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard.module import Module
 from flask import render_template
+
 import io
 
-from flask import Response,render_template
 from multiprocessing import Process, Queue, cpu_count, Lock, Manager
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import matplotlib.pyplot as plt
+
 
 class Plotter(Module):
     def __init__(self,
@@ -33,7 +34,7 @@ class Plotter(Module):
         self.plotfn = plotfn
 
     def get_cards(self, job):
-        return [{'name': self.name ,
+        return [{'name': self.name,
                 'content': render_template(
                     self.template,
                     jobid=job._id
@@ -68,11 +69,10 @@ class Plotter(Module):
                         del self.result[jobid]
                         break
 
-            return dashboard.app.response_class(res,
-                mimetype='image/png')
+            return dashboard.app.response_class(res, mimetype='image/png')
 
         # Start worker processes
         for i in range(self.n_processes):
             Process(target=self.worker,
-                args=(self.in_queue, self.result, self.lock,
-                      dashboard.project, self.plotfn)).start()
+                    args=(self.in_queue, self.result, self.lock,
+                          dashboard.project, self.plotfn)).start()

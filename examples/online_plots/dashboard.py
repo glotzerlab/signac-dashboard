@@ -5,19 +5,17 @@
 from signac_dashboard import Dashboard
 from signac_dashboard.modules import StatepointList, Plotter
 
-import signac
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def create_figure(job):
     with job:
-        import numpy
         fig, ax = plt.subplots()
         x = np.arange(10)
         y = np.random.random(10)
-        ax.plot(x,y)
+        ax.plot(x, y)
         return fig
-
 
 if __name__ == '__main__':
     modules = []

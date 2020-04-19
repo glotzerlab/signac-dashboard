@@ -5,6 +5,7 @@ from signac_dashboard.module import Module
 from flask import render_template
 from time import sleep
 
+
 class Logger(Module):
     def __init__(self,
                  filename,
@@ -30,9 +31,11 @@ class Logger(Module):
                     )}]
 
     def register(self, dashboard):
-        @dashboard.app.route('/module/logger/<jobid>/<path:filename>/<int:stream>')
-        def get_log(jobid,filename,stream):
+        @dashboard.app.route('/module/logger/<jobid>/<path:filename>/'+
+                             '<int:stream>')
+        def get_log(jobid, filename, stream):
             job = dashboard.project.open_job(id=jobid)
+
             def generate():
                 with open(job.fn(filename)) as f:
                     while True:
@@ -41,5 +44,5 @@ class Logger(Module):
                             break
                         sleep(1)
 
-            return dashboard.app.response_class(generate(), mimetype='text/plain')
-
+            return dashboard.app.response_class(generate(),
+                                                mimetype='text/plain')
