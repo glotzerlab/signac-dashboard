@@ -6,10 +6,10 @@ from flask import render_template
 import io
 
 from flask import Response,render_template
+from multiprocessing import Process, Queue, cpu_count, Lock, Manager
+
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import matplotlib.pyplot as plt
-
-from multiprocessing import Process, Queue, cpu_count, Lock, Manager
 
 class Plotter(Module):
     def __init__(self,
@@ -25,7 +25,7 @@ class Plotter(Module):
         self.in_queue = Queue()
         manager = Manager()
         self.result = manager.dict()
-        self.lock = Lock()
+        self.lock = manager.Lock()
         if n_processes is None:
             n_processes = cpu_count()
         self.n_processes = n_processes
@@ -58,7 +58,7 @@ class Plotter(Module):
                 with self.lock:
                     if jobid in self.result:
                         res = self.result[jobid]
-                        self.result[jobid] = None
+                        del self.result[jobid]
                         break
 
             return dashboard.app.response_class(res,
