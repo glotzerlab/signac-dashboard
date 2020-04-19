@@ -39,15 +39,20 @@ class Plotter(Module):
 
     def worker(self, in_queue, result, lock, project):
         for jobid in iter(in_queue.get, 'STOP'):
-            job = project.open_job(id=jobid)
-            fig = self.create_figure(job)
-            output = io.BytesIO()
-            FigureCanvas(fig).print_png(output)
-            plt.close(fig)
+            res = None
+            try:
+                job = project.open_job(id=jobid)
+                fig = self.create_figure(job)
+                output = io.BytesIO()
+                FigureCanvas(fig).print_png(output)
+                plt.close(fig)
+                res = output.getvalue()
+            except Exception as e:
+                print(repr(e))
 
             # store result in shared variable
             with lock:
-                result[jobid] = output.getvalue()
+                result[jobid] = res
 
     def register(self, dashboard):
         @dashboard.app.route('/module/plotter/<jobid>')
