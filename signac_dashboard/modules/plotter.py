@@ -15,13 +15,14 @@ import matplotlib.pyplot as plt
 class Plotter(Module):
     """Renders a matplotlib figure
 
-    The content of the figure is rendered on the fly inside a use-provided function. To work around
-    the lack of thread safety in matplotlib, these functions are evavluated in subprocesses rather
-    than webserver threads.
+    The content of the figure is rendered on the fly inside a use-provided
+    function. To work around the lack of thread safety in matplotlib, these
+    functions are evavluated in subprocesses rather than webserver threads.
 
     :param plotfn: A function that returns a matplotlib `Figure` object
     :type plotfn: callable
-    :param n_processes: Number of sever proceses used for creating figures (default: number of CPU cores)
+    :param n_processes: Number of sever proceses used for creating figures
+                        (default: number of CPU cores)
     :type n_processes: int
     """
     def __init__(self,
