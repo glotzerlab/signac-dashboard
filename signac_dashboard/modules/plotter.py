@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 
 class Plotter(Module):
     def __init__(self,
+                 plotfn,
                  n_processes=None,
                  name='Plotter',
                  context='JobContext',
@@ -29,6 +30,7 @@ class Plotter(Module):
         if n_processes is None:
             n_processes = cpu_count()
         self.n_processes = n_processes
+        self.plotfn = plotfn
 
     def get_cards(self, job):
         return [{'name': self.name ,
@@ -37,12 +39,12 @@ class Plotter(Module):
                     jobid=job._id
                     )}]
 
-    def worker(self, in_queue, result, lock, project):
+    def worker(self, in_queue, result, lock, project, plotfn):
         for jobid in iter(in_queue.get, 'STOP'):
             res = None
             try:
                 job = project.open_job(id=jobid)
-                fig = self.create_figure(job)
+                fig = plotfn(job)
                 output = io.BytesIO()
                 FigureCanvas(fig).print_png(output)
                 plt.close(fig)
@@ -73,8 +75,4 @@ class Plotter(Module):
         for i in range(self.n_processes):
             Process(target=self.worker,
                 args=(self.in_queue, self.result, self.lock,
-                      dashboard.project)).start()
-
-    def create_figure(self,job):
-        return None
-
+                      dashboard.project, self.plotfn)).start()

@@ -9,19 +9,18 @@ import signac
 import numpy as np
 import matplotlib.pyplot as plt
 
-class PlotExample(Plotter):
-    def create_figure(self,job):
-        with job:
-            import numpy
-            fig, ax = plt.subplots()
-            x = np.arange(10)
-            y = np.random.random(10)
-            ax.plot(x,y)
-            return fig
+def create_figure(job):
+    with job:
+        import numpy
+        fig, ax = plt.subplots()
+        x = np.arange(10)
+        y = np.random.random(10)
+        ax.plot(x,y)
+        return fig
 
 
 if __name__ == '__main__':
     modules = []
     modules.append(StatepointList())
-    modules.append(PlotExample())
+    modules.append(Plotter(create_figure))
     Dashboard(modules=modules).main()
