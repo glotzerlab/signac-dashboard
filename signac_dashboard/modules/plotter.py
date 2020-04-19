@@ -50,7 +50,8 @@ class Plotter(Module):
                     )}]
 
     def worker(self, in_queue, result, lock, project, plotfn):
-        from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+        from matplotlib.backends.backend_agg import FigureCanvasAgg \
+            as FigureCanvas
         import matplotlib.pyplot as plt
 
         for jobid in iter(in_queue.get, 'STOP'):
