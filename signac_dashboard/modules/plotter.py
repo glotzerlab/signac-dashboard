@@ -6,7 +6,7 @@ from flask import render_template
 
 import io
 
-from multiprocessing import Process, Queue, cpu_count, Lock, Manager
+from multiprocessing import Process, Queue, cpu_count, Manager
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import matplotlib.pyplot as plt

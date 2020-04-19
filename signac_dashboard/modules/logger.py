@@ -31,7 +31,7 @@ class Logger(Module):
                     )}]
 
     def register(self, dashboard):
-        @dashboard.app.route('/module/logger/<jobid>/<path:filename>/'+
+        @dashboard.app.route('/module/logger/<jobid>/<path:filename>/' +
                              '<int:stream>')
         def get_log(jobid, filename, stream):
             job = dashboard.project.open_job(id=jobid)

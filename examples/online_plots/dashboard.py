@@ -17,6 +17,7 @@ def create_figure(job):
         ax.plot(x, y)
         return fig
 
+
 if __name__ == '__main__':
     modules = []
     modules.append(StatepointList())
