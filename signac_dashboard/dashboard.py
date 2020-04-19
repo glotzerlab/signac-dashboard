@@ -552,7 +552,7 @@ class Dashboard:
                 self.config['PORT'] = kwargs.pop('port')
             self.config['PROFILE'] = kwargs.pop('profile')
             self.config['DEBUG'] = kwargs.pop('debug')
-            self.run(threaded=False)
+            self.run()
 
         parser = argparse.ArgumentParser(
             description="signac-dashboard is a web-based data visualization "
