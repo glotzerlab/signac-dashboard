@@ -69,7 +69,8 @@ class Plotter(Module):
 
         for i in range(n_processes):
             p = Process(target=self.worker,
-                    args=(self.in_queue, self.result, self.lock, self.plotfn))
+                    args=(self.in_queue, self.result, self.lock,
+                          self.plotfn))
             p.start()
 
             self.processes.append(p)
@@ -89,7 +90,7 @@ class Plotter(Module):
             as FigureCanvas
         import matplotlib.pyplot as plt
 
-        for (project,jobid) in iter(in_queue.get, 'STOP'):
+        for (project, jobid) in iter(in_queue.get, 'STOP'):
             res = None
             try:
                 job = project.open_job(id=jobid)
@@ -113,7 +114,7 @@ class Plotter(Module):
             if self.in_queue is None:
                 raise RuntimeError('Plotter module not initialized. ' +
                                    'Use as context manager')
-            self.in_queue.put((dashboard.project,jobid))
+            self.in_queue.put((dashboard.project, jobid))
 
             while True:
                 with self.lock:
@@ -126,7 +127,6 @@ class Plotter(Module):
 
     def terminate_processes(self):
         if os.getpid() == self.parent_pid:
-            print('there',os.getpid())
             # send stop signal to workers
             for p in self.processes:
                 self.in_queue.put('STOP')
@@ -137,5 +137,5 @@ class Plotter(Module):
 
             self.processes = []
 
-    def __exit__(self,*args):
+    def __exit__(self, *args):
         self.terminate_processes()
