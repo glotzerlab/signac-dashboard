@@ -69,8 +69,8 @@ class Plotter(Module):
 
         for i in range(n_processes):
             p = Process(target=self.worker,
-                    args=(self.in_queue, self.result, self.lock,
-                          self.plotfn))
+                        args=(self.in_queue, self.result, self.lock,
+                              self.plotfn))
             p.start()
 
             self.processes.append(p)
