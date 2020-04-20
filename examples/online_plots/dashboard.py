@@ -21,5 +21,6 @@ def create_figure(job):
 if __name__ == '__main__':
     modules = []
     modules.append(StatepointList())
-    modules.append(Plotter(create_figure))
+    with Plotter(create_figure) as p:
+        modules.append(p)
     Dashboard(modules=modules).main()

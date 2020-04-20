@@ -5,8 +5,7 @@ from signac_dashboard.module import Module
 from flask import render_template
 
 import io
-
-from multiprocessing import Process, Queue, cpu_count, Manager
+import os
 
 
 class Plotter(Module):
@@ -16,6 +15,22 @@ class Plotter(Module):
     function. To work around the lack of thread safety in matplotlib, these
     functions are evavluated in subprocesses rather than webserver threads.
 
+    `Plotter` manages processes and therefore noeds to be used as a
+    context manager.
+
+    Examples:
+
+    .. code-block:: python
+
+        def create_figure(job):
+            fig, ax = plt.subplots()
+            ax.plot([1,2],[3,4])
+            return fig
+
+        with Plotter(create_figure) as p:
+            Dashboard(modules=[p]).main()
+
+
     :param plotfn: A function that returns a matplotlib `Figure` object
     :type plotfn: callable
     :param n_processes: Number of sever proceses used for creating figures
@@ -23,7 +38,7 @@ class Plotter(Module):
     :type n_processes: int
     """
     def __init__(self,
-                 plotfn,
+                 plotfn=None,
                  n_processes=None,
                  name='Plotter',
                  context='JobContext',
@@ -33,14 +48,34 @@ class Plotter(Module):
                          context=context,
                          template=template,
                          **kwargs)
-        self.in_queue = Queue()
+
+        self.processes = []
+        self.n_processes = n_processes
+        self.plotfn = plotfn
+        self.parent_pid = None
+        self.in_queue = None
+
+    def __enter__(self):
+        # Start worker processes
+        from multiprocessing import Process, Manager, cpu_count, Queue
+        n_processes = self.n_processes
+        if n_processes is None:
+            n_processes = cpu_count()
+
         manager = Manager()
         self.result = manager.dict()
         self.lock = manager.Lock()
-        if n_processes is None:
-            n_processes = cpu_count()
-        self.n_processes = n_processes
-        self.plotfn = plotfn
+        self.in_queue = Queue()
+
+        for i in range(n_processes):
+            p = Process(target=self.worker,
+                    args=(self.in_queue, self.result, self.lock, self.plotfn))
+            p.start()
+
+            self.processes.append(p)
+
+        self.parent_pid = os.getpid()
+        return self
 
     def get_cards(self, job):
         return [{'name': self.name,
@@ -49,15 +84,17 @@ class Plotter(Module):
                     jobid=job._id
                     )}]
 
-    def worker(self, in_queue, result, lock, project, plotfn):
+    def worker(self, in_queue, result, lock, plotfn):
         from matplotlib.backends.backend_agg import FigureCanvasAgg \
             as FigureCanvas
         import matplotlib.pyplot as plt
 
-        for jobid in iter(in_queue.get, 'STOP'):
+        for (project,jobid) in iter(in_queue.get, 'STOP'):
             res = None
             try:
                 job = project.open_job(id=jobid)
+                if plotfn is None:
+                    raise ValueError("plotfn argument not provided.\n")
                 fig = plotfn(job)
                 output = io.BytesIO()
                 FigureCanvas(fig).print_png(output)
@@ -73,7 +110,10 @@ class Plotter(Module):
     def register(self, dashboard):
         @dashboard.app.route('/module/plotter/<jobid>')
         def plot(jobid):
-            self.in_queue.put(jobid)
+            if self.in_queue is None:
+                raise RuntimeError('Plotter module not initialized. ' +
+                                   'Use as context manager')
+            self.in_queue.put((dashboard.project,jobid))
 
             while True:
                 with self.lock:
@@ -84,8 +124,18 @@ class Plotter(Module):
 
             return dashboard.app.response_class(res, mimetype='image/png')
 
-        # Start worker processes
-        for i in range(self.n_processes):
-            Process(target=self.worker,
-                    args=(self.in_queue, self.result, self.lock,
-                          dashboard.project, self.plotfn)).start()
+    def terminate_processes(self):
+        if os.getpid() == self.parent_pid:
+            print('there',os.getpid())
+            # send stop signal to workers
+            for p in self.processes:
+                self.in_queue.put('STOP')
+
+            # wait for processes to finish
+            for p in self.processes:
+                p.join()
+
+            self.processes = []
+
+    def __exit__(self,*args):
+        self.terminate_processes()

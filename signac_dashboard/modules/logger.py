@@ -19,7 +19,7 @@ class Logger(Module):
     :type num_lines: int
     """
     def __init__(self,
-                 filename,
+                 filename=None,
                  num_lines=25,
                  name='Logger',
                  context='JobContext',
@@ -48,6 +48,8 @@ class Logger(Module):
             job = dashboard.project.open_job(id=jobid)
 
             def generate():
+                if filename is None:
+                    raise ValueError("filename argument not provided.\n")
                 with open(job.fn(filename)) as f:
                     while True:
                         yield f.read()
