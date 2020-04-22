@@ -23,4 +23,4 @@ if __name__ == '__main__':
     modules.append(StatepointList())
     with Plotter(create_figure) as p:
         modules.append(p)
-    Dashboard(modules=modules).main()
+        Dashboard(modules=modules).main()
