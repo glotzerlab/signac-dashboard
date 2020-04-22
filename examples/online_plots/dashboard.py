@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2018 The Regents of the University of Michigan
+# Copyright (c) 2020 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard import Dashboard
@@ -10,12 +10,11 @@ import matplotlib.pyplot as plt
 
 
 def create_figure(job):
-    with job:
-        fig, ax = plt.subplots()
-        x = np.arange(10)
-        y = np.random.random(10)
-        ax.plot(x, y)
-        return fig
+    fig, ax = plt.subplots()
+    x = np.arange(10)
+    y = np.random.random(10)
+    ax.plot(x, y)
+    return fig
 
 
 if __name__ == '__main__':

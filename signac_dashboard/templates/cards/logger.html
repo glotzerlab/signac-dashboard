@@ -31,11 +31,11 @@ var logger_{{jobid}} = (function() {
         self.xhr = new XMLHttpRequest();
 
         if (stream) {
-            self.xhr.open('GET', "{{ url_for('get_log',jobid=jobid,filename=filename,stream=1) }}");
+            self.xhr.open('GET', "{{ url_for('get_log', jobid=jobid, filename=filename, stream=1) }}");
             myInterval = setInterval(updateTextBox, 1000);
         } else {
             self.xhr.onload = updateTextBox;
-            self.xhr.open('GET', "{{ url_for('get_log',jobid=jobid,filename=filename,stream=0) }}");
+            self.xhr.open('GET', "{{ url_for('get_log', jobid=jobid, filename=filename, stream=0) }}");
         }
 
         self.xhr.send();
