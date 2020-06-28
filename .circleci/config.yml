@@ -1,4 +1,4 @@
-# Python CircleCI 2.0 configuration file
+# CircleCI configuration file
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
@@ -8,7 +8,7 @@ orbs:
   win: circleci/windows@2.2.0  # Enables Windows executors
 
 jobs:
-  style-check:
+  pre-checks:
     docker:
       - image: circleci/python:3.8
 
@@ -141,7 +141,7 @@ jobs:
 
 workflows:
   version: 2
-  style-check-and-tests:
+  test:
     jobs:
       - pre-checks
       - linux-python-36:
