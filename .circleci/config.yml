@@ -104,11 +104,13 @@ jobs:
           command: |
             python --version
             python -m pip install --progress-bar off certifi
+            python -m pip install --progress-bar off -U coverage mock
             python -m pip install --progress-bar off -U -e .
       - run:
           name: Run tests
           command: |
-            python -m pytest tests/ -v
+            python -m coverage run --source=signac_dashboard/ -m unittest discover tests/ -v
+            python -m coverage report -i --include="signac_dashboard*"
 
 
   test-deploy-pypi:
