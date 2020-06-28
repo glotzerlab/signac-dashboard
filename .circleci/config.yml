@@ -30,7 +30,7 @@ jobs:
             ${PYTHON} -m flake8 --show-source .
 
 
-  linux-python-38: &test-template
+  linux-python-38: &linux-template
     docker:
       - image: circleci/python:3.8
 
