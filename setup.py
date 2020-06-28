@@ -20,7 +20,7 @@ setup(
     version='0.2.7',
     packages=find_packages(),
     include_package_data=True,
-    python_requires='>=3.5',
+    python_requires='>=3.6,<4',
     install_requires=[
         'flask>=1.0',
         'flask-assets>=2.0',
@@ -37,7 +37,6 @@ setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: BSD License',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
