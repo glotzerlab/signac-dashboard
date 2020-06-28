@@ -91,17 +91,22 @@ jobs:
     steps:
       - checkout
       - run:
-          name: install python
+          name: Fetch submodules
+          command: |
+            git submodule sync
+            git submodule update --init --recursive
+      - run:
+          name: Install Python
           command: |
             choco install python --version 3.8.1 --limit-output --no-progress
       - run:
-          name: install dependencies
+          name: Install dependencies
           command: |
             python --version
             python -m pip install --progress-bar off certifi
             python -m pip install --progress-bar off -U -e .
       - run:
-          name: run tests
+          name: Run tests
           command: |
             python -m pytest tests/ -v
 
