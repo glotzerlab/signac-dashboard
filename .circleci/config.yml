@@ -2,7 +2,10 @@
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
-version: 2
+version: 2.1
+
+orbs:
+  win: circleci/windows@2.2.0  # Enables Windows executors
 
 jobs:
   style-check:
@@ -17,13 +20,17 @@ jobs:
     steps:
       - checkout
       - run:
-          name: style-check
+          name: install-dependencies
           command: |
             ${PYTHON} -m pip install --user -U flake8==3.7.9
+
+      - run:
+          name: check-style
+          command: |
             ${PYTHON} -m flake8 --show-source .
 
 
-  test-3.8: &test-template
+  linux-python-38: &test-template
     docker:
       - image: circleci/python:3.8
 
@@ -55,24 +62,49 @@ jobs:
           name: Run tests
           command: |
             . venv/bin/activate
-            ${PYTHON} -m coverage run --source=signac_dashboard/ -m unittest discover tests/ -v
+            ${PYTHON} -m coverage run --source=signac_dashboard/ -m unit discover tests/ -v
             ${PYTHON} -m coverage report -i --include="signac_dashboard*"
 
       - store_artifacts:
-          path: test-reports
-          destination: test-reports
+          path: -reports
+          destination: -reports
 
-  test-3.5:
-    <<: *test-template
+  linux-python-36:
+    <<: *linux-template
     docker:
-      - image: circleci/python:3.5
+      - image: circleci/python:3.6
 
-  test-pypy-3:
-    <<: *test-template
+  linux-python-37:
+    <<: *linux-template
+    docker:
+      - image: circleci/python:3.7
+
+  linux-pypy-3:
+    <<: *linux-template
     docker:
       - image: pypy:3
     environment:
       PYTHON: pypy3
+
+  windows-python-38:
+    executor: win/default
+    steps:
+      - checkout
+      - run:
+          name: install python
+          command: |
+            choco install python --version 3.8.1 --limit-output --no-progress
+      - run:
+          name: install dependencies
+          command: |
+            python --version
+            python -m pip install --progress-bar off certifi
+            python -m pip install --progress-bar off -U -e .
+      - run:
+          name: run tests
+          command: |
+            python -m pytest tests/ -v
+
 
   test-deploy-pypi:
     docker:
@@ -86,7 +118,7 @@ jobs:
             git submodule sync
             git submodule update --init --recursive
       - run:
-          name: test-deploy-pypi
+          name: -deploy-pypi
           command: |
             bash .circleci/deploy.bash testpypi
 
@@ -111,24 +143,32 @@ workflows:
   version: 2
   style-check-and-tests:
     jobs:
-      - style-check
-      - test-3.5:
+      - pre-checks
+      - linux-python-36:
           requires:
             - style-check
-      - test-3.8:
+      - linux-python-37:
           requires:
             - style-check
-      - test-pypy-3:
+      - linux-python-38:
           requires:
-            - test-3.8
+            - style-check
+      - linux-pypy-3:
+          requires:
+            - linux-python-36
+      - windows-python-38:
+          requires:
+            - linux-python-38
       - test-deploy-pypi:
           filters:
             branches:
               only: /release\/.*/
           requires:
-            - test-3.5
-            - test-3.8
-            - test-pypy-3
+            - linux-python-36
+            - linux-python-37
+            - linux-python-38
+            - linux-pypy-3
+            - windows-python-38
   deploy:
     jobs:
       - deploy-pypi:
