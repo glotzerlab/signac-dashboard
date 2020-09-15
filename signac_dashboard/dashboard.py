@@ -488,6 +488,10 @@ class Dashboard:
         def page_not_found(error):
             return self._render_error(str(error))
 
+        @dashboard.app.route('/favicon.ico')
+        def favicon():
+            return url_for('static', filename='favicon.ico')
+
         self.add_url('views.home', ['/'])
         self.add_url('views.settings', ['/settings'])
         self.add_url('views.search', ['/search'])
