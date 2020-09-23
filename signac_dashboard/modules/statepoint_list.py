@@ -7,7 +7,13 @@ from collections import OrderedDict
 
 
 class StatepointList(Module):
-    """Displays the job state point."""
+    """Displays the job state point.
+
+    :param exclude_const: Only show statepoint parameters that change values
+        if True (default: :code:`False`)
+    :type exclude_const: bool
+    """
+
     def __init__(self,
                  name='Statepoint Parameters',
                  context='JobContext',
