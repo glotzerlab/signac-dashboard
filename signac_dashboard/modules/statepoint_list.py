@@ -22,7 +22,7 @@ class StatepointList(Module):
 
     def get_cards(self, job):
         sp = [(k, v) for k, v in sorted(job.statepoint().items(),
-            key=lambda t: t[0]) if k in self.sp_keys_to_show]
+              key=lambda t: t[0]) if k in self.sp_keys_to_show]
         sp = OrderedDict(sp)
         return [{'name': self.name,
                  'content': render_template(self.template, statepoint=sp)}]
