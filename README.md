@@ -7,6 +7,8 @@
 [![License](https://img.shields.io/github/license/glotzerlab/signac-dashboard.svg)](https://github.com/glotzerlab/signac-dashboard/blob/master/LICENSE.txt)
 [![PyPI-downloads](https://img.shields.io/pypi/dm/signac-dashboard.svg?style=flat)](https://pypistats.org/packages/signac-dashboard)
 [![Gitter](https://img.shields.io/gitter/room/signac/Lobby.svg?style=flat)](https://gitter.im/signac/Lobby)
+[![Twitter](https://img.shields.io/twitter/follow/signacdata?style=social)](https://twitter.com/signacdata)
+[![GitHub Stars](https://img.shields.io/github/stars/glotzerlab/signac-dashboard?style=social)](https://github.com/glotzerlab/signac-dashboard/)
 
 Built on top of the **signac** framework, **signac-dashboard** allows users to rapidly visualize and analyze data managed in a [**signac** project](https://docs.signac.io/en/latest/projects.html).
 
