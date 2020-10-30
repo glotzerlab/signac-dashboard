@@ -4,6 +4,13 @@ Changes
 
 The **signac-dashboard** package follows `semantic versioning <https://semver.org/>`_.
 
+next
+====
+
+Added
++++++
+- Added option to StatepointList module to hide constant sp params
+
 Version 0.2
 ===========
 
