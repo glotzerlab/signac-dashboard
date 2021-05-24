@@ -3,8 +3,12 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard import Dashboard
+from flow import FlowProject
 import signac_dashboard.modules
 import signac
+
+class Project(FlowProject):
+    pass
 
 if __name__ == '__main__':
     project = signac.init_project('dashboard-test-project')
@@ -19,4 +23,4 @@ if __name__ == '__main__':
         # Initialize a new Dashboard using all modules with default settings
         for m in signac_dashboard.modules.__all__:
             modules.append(getattr(signac_dashboard.modules, m).__call__())
-    Dashboard(modules=modules).main()
+    Dashboard(modules=modules, project=Project.get_project()).main()
