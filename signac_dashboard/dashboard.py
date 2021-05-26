@@ -352,7 +352,14 @@ class Dashboard:
             page = 1
             flash('Pagination Error. Displaying page {}.'.format(page),
                   'danger')
-        pagination = Pagination(page, self.config['PER_PAGE'], total_count)
+        try:
+            per_page = int(request.args.get('per_page', self.config["PER_PAGE"]))
+            if per_page < 1:
+                raise ValueError("At least one job is required per page.")
+        except ValueError:
+            flash('Pagination Error. Displaying {} jobs per page.'.format(
+                per_page), 'danger')
+        pagination = Pagination(page, per_page, total_count)
         if pagination.page < 1 or pagination.page > pagination.pages:
             pagination.page = max(1, min(pagination.page, pagination.pages))
             if pagination.pages > 0:
