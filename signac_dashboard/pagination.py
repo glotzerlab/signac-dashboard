@@ -4,7 +4,7 @@
 from math import ceil
 
 
-class Pagination(object):
+class Pagination:
     """Pagination adapted from http://flask.pocoo.org/snippets/44/
 
     :param int page: Current page number.
@@ -33,12 +33,14 @@ class Pagination(object):
     def has_next(self):
         return self.page < self.pages
 
+    @property
     def first_item(self):
         if self.per_page is None:
             return 0
         else:
             return max((self.page - 1) * self.per_page, 0)
 
+    @property
     def last_item(self):
         if self.per_page is None:
             return self.total_count
@@ -49,24 +51,27 @@ class Pagination(object):
         if items is None:
             return []
         else:
-            return items[self.first_item():self.last_item()]
+            return items[self.first_item : self.last_item]
 
-    def item_counts(self, tag='jobs'):
+    def item_counts(self, tag="jobs"):
         if self.total_count > 0:
-            return '{} to {} of {} {}'.format(
-                    self.first_item() + 1, self.last_item(),
-                    self.total_count, tag)
+            return "{} to {} of {} {}".format(
+                self.first_item + 1, self.last_item, self.total_count, tag
+            )
         else:
-            return '{} {}'.format(self.total_count, tag)
+            return f"{self.total_count} {tag}"
 
-    def iter_pages(self, left_edge=2, left_current=3,
-                   right_current=5, right_edge=2):
+    def iter_pages(self, left_edge=2, left_current=3, right_current=5, right_edge=2):
         last = 0
         for num in range(1, self.pages + 1):
-            if num <= left_edge or \
-               (num > self.page - left_current - 1 and
-                num < self.page + right_current) or \
-               num > self.pages - right_edge:
+            if (
+                num <= left_edge
+                or (
+                    num > self.page - left_current - 1
+                    and num < self.page + right_current
+                )
+                or num > self.pages - right_edge
+            ):
                 if last + 1 != num:
                     yield None
                 yield num

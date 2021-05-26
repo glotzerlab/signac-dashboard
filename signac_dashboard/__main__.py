@@ -3,16 +3,17 @@
 # This software is licensed under the BSD 3-Clause License.
 import sys
 
-from . import Dashboard
-from .modules import StatepointList, DocumentList, ImageViewer
 import signac
+
+from . import Dashboard
+from .modules import DocumentList, ImageViewer, StatepointList
 
 
 def main():
     try:
         project = signac.get_project()
     except LookupError:
-        print('No signac project could be found in the current directory.')
+        print("No signac project could be found in the current directory.")
         sys.exit(1)
 
     modules = []
@@ -23,5 +24,5 @@ def main():
     Dashboard(modules=modules, project=project).main()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

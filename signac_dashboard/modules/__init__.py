@@ -9,13 +9,13 @@ from .text_display import TextDisplay
 from .video_viewer import VideoViewer
 
 __all__ = [
-    'DocumentEditor',
-    'DocumentList',
-    'FileList',
-    'FlowStatus',
-    'ImageViewer',
-    'Notes',
-    'StatepointList',
-    'TextDisplay',
-    'VideoViewer',
+    "DocumentEditor",
+    "DocumentList",
+    "FileList",
+    "FlowStatus",
+    "ImageViewer",
+    "Notes",
+    "StatepointList",
+    "TextDisplay",
+    "VideoViewer",
 ]

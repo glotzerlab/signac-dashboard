@@ -1,10 +1,13 @@
 # Copyright (c) 2019 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
+from flask import Markup, render_template
+
 from signac_dashboard.module import Module
-from flask import render_template, Markup
+
 try:
     import markdown
+
     MARKDOWN = True
 except ImportError:
     MARKDOWN = False
@@ -32,13 +35,19 @@ class TextDisplay(Module):
     :type markdown: bool
     """
 
-    def __init__(self, name='Text Display',
-                 message=lambda job: 'No message provided.',
-                 markdown=False, **kwargs):
-        super().__init__(name=name,
-                         context='JobContext',
-                         template='cards/text_display.html',
-                         **kwargs)
+    def __init__(
+        self,
+        name="Text Display",
+        message=lambda job: "No message provided.",
+        markdown=False,
+        **kwargs,
+    ):
+        super().__init__(
+            name=name,
+            context="JobContext",
+            template="cards/text_display.html",
+            **kwargs,
+        )
         self.message = message
         self.markdown = markdown
 
@@ -46,10 +55,9 @@ class TextDisplay(Module):
         msg = self.message(job)
         if self.markdown:
             if MARKDOWN:
-                msg = Markup(markdown.markdown(
-                    msg, extensions=['markdown.extensions.attr_list']))
+                msg = Markup(
+                    markdown.markdown(msg, extensions=["markdown.extensions.attr_list"])
+                )
             else:
-                msg = ("Error: Install the 'markdown' library to render "
-                       "Markdown.")
-        return [{'name': self.name,
-                 'content': render_template(self.template, msg=msg)}]
+                msg = "Error: Install the 'markdown' library to render " "Markdown."
+        return [{"name": self.name, "content": render_template(self.template, msg=msg)}]

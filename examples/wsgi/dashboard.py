@@ -9,9 +9,7 @@ from signac_dashboard.modules import StatepointList
 # secret key is randomly generated at runtime by each worker. Using a provided
 # shared key allows sessions to be shared across workers. This key was
 # generated with os.urandom(16)
-config = {
-    'SECRET_KEY': b"\x99o\x90'/\rK\xf5\x10\xed\x8bC\xaa\x03\x9d\x99"
-}
+config = {"SECRET_KEY": b"\x99o\x90'/\rK\xf5\x10\xed\x8bC\xaa\x03\x9d\x99"}
 
 modules = [
     StatepointList(),
