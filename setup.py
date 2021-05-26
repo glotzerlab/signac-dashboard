@@ -18,7 +18,7 @@ requirements = [
     "werkzeug>=1.0",
 ]
 
-description = "Visualize data spaces managed with signac in a web browser."
+description = "Visualize data spaces in a web browser."
 
 try:
     this_path = os.path.dirname(os.path.abspath(__file__))

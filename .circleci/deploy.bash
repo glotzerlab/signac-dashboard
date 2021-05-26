@@ -3,10 +3,11 @@
 set -e
 set -u
 
+python -m pip install --progress-bar off --user -U -r requirements-test.txt
 python -m pip install --progress-bar off --user -U twine wheel setuptools
 
-# PYPI_USERNAME - (Required) Username for the publisher's account on PyPI
-# PYPI_PASSWORD - (Required, Secret) Password for the publisher's account on PyPI
+# PYPI_API_TOKEN - (Required, Secret) Token for the publisher's account on PyPI
+# TEST_PYPI_API_TOKEN - (Required, Secret) Token for the publisher's account on TestPyPI
 
 cat << EOF > ~/.pypirc
 [distutils]
@@ -15,13 +16,13 @@ index-servers=
     testpypi
 
 [pypi]
-username: ${PYPI_USERNAME}
-password: ${PYPI_PASSWORD}
+username: __token__
+password: ${PYPI_API_TOKEN}
 
 [testpypi]
 repository: https://test.pypi.org/legacy/
-username: ${PYPI_TEST_USERNAME}
-password: ${PYPI_TEST_PASSWORD}
+username: __token__
+password: ${TEST_PYPI_API_TOKEN}
 EOF
 
 # Create wheels and source distribution
@@ -29,8 +30,8 @@ python setup.py bdist_wheel
 python setup.py sdist
 
 # Test generated wheel
-python -m pip install signac_dashboard --progress-bar off -U --force-reinstall -f dist/
-python -m unittest discover tests/ -v
+python -m pip install signac-dashboard --progress-bar off -U --force-reinstall -f dist/
+python -m pytest tests/ -v
 
 # Upload wheels
 if [[ "$1" == "testpypi" || "$1" == "pypi" ]]; then
