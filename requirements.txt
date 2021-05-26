@@ -1,0 +1,10 @@
+flask>=1.0
+flask-assets>=2.0
+flask-turbolinks
+jsmin
+libsass
+natsort
+signac>=1.0
+watchdog
+webassets>=2.0
+werkzeug>=1.0
