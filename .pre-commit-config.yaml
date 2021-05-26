@@ -1,0 +1,38 @@
+exclude: (?:signac_dashboard/static/.*)
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: 'v4.0.1'
+    hooks:
+      - id: end-of-file-fixer
+        exclude: 'setup.cfg'
+      - id: trailing-whitespace
+        exclude: 'setup.cfg'
+      - id: debug-statements
+  - repo: https://github.com/asottile/pyupgrade
+    rev: 'v2.18.3'
+    hooks:
+      - id: pyupgrade
+        args:
+          - --py36-plus
+  - repo: https://github.com/pycqa/isort
+    rev: '5.8.0'
+    hooks:
+      - id: isort
+  - repo: https://github.com/psf/black
+    rev: '21.5b1'
+    hooks:
+      - id: black
+  - repo: https://github.com/PyCQA/flake8
+    rev: '3.9.2'
+    hooks:
+      - id: flake8
+#  - repo: https://github.com/pycqa/pydocstyle
+#    rev: '6.1.1'
+#    hooks:
+#      - id: pydocstyle
+#        exclude: |
+#          (?x)(
+#            ^doc/|
+#            ^tests/
+#          )
