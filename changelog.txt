@@ -7,7 +7,7 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.2
 ===========
 
-[0.2.8] -- 2021-05-25
+[0.2.8] -- 2021-05-26
 ---------------------
 
 Added
@@ -16,10 +16,15 @@ Added
 - Code is formatted with pre-commit hooks (#95).
 - ``per_page`` argument added to pagination query options (#94).
 
+Changed
++++++++
+
+- Tests now use pytest (#96).
+
 Fixed
 +++++
 
-- Kitchen sink example uses FlowProject (#94).
+- Kitchen sink example uses FlowProject to ensure all features are used (#94).
 
 [0.2.7] -- 2020-02-27
 ---------------------
