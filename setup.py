@@ -5,7 +5,20 @@ import os
 
 from setuptools import find_packages, setup
 
-description = "Data visualization based on signac."
+requirements = [
+    "flask>=1.0",
+    "flask-assets>=2.0",
+    "flask-turbolinks",
+    "jsmin",
+    "libsass",
+    "natsort",
+    "signac>=1.0",
+    "watchdog",
+    "webassets>=2.0",
+    "werkzeug>=1.0",
+]
+
+description = "Visualize data spaces managed with signac in a web browser."
 
 try:
     this_path = os.path.dirname(os.path.abspath(__file__))
@@ -22,24 +35,14 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     python_requires=">=3.6,<4",
-    install_requires=[
-        "flask>=1.0",
-        "flask-assets>=2.0",
-        "flask-turbolinks",
-        "jsmin",
-        "libsass",
-        "natsort",
-        "signac>=1.0",
-        "watchdog",
-        "webassets>=2.0",
-        "werkzeug>=1.0",
-    ],
+    install_requires=requirements,
     classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: BSD License",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
     author="Bradley Dice",
     author_email="bdice@bradleydice.com",
