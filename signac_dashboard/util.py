@@ -2,7 +2,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
-from werkzeug.utils import import_string, cached_property
+from werkzeug.utils import cached_property, import_string
 
 
 def simplified_keys(project):
@@ -28,10 +28,9 @@ def ellipsis_string(string, length=60):
         return string[:half] + "..." + string[-half:]
 
 
-class LazyView(object):
-
+class LazyView:
     def __init__(self, dashboard, import_name):
-        self.__module__, self.__name__ = import_name.rsplit('.', 1)
+        self.__module__, self.__name__ = import_name.rsplit(".", 1)
         self.import_name = import_name
         self.dashboard = dashboard
 
@@ -40,5 +39,5 @@ class LazyView(object):
         return import_string(self.import_name)
 
     def __call__(self, *args, **kwargs):
-        kwargs.update({'dashboard': self.dashboard})
+        kwargs.update({"dashboard": self.dashboard})
         return self.view(*args, **kwargs)

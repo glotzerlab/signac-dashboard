@@ -79,7 +79,7 @@ class Module:
         :returns: List of module cards.
         :rtype: list
         """
-        return [{'name': self.name, 'content': render_template(self.template)}]
+        return [{"name": self.name, "content": render_template(self.template)}]
 
     def enable(self):
         """Enable this module."""

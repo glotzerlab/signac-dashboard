@@ -8,31 +8,9 @@ orbs:
   win: circleci/windows@2.2.0  # Enables Windows executors
 
 jobs:
-  pre-checks:
+  linux-python-39: &linux-template
     docker:
-      - image: circleci/python:3.8
-
-    environment:
-      PYTHON: python3
-
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-      - run:
-          name: install-dependencies
-          command: |
-            ${PYTHON} -m pip install --user -U flake8==3.7.9
-
-      - run:
-          name: check-style
-          command: |
-            ${PYTHON} -m flake8 --show-source .
-
-
-  linux-python-38: &linux-template
-    docker:
-      - image: circleci/python:3.8
+      - image: circleci/python:3.9
 
     environment:
       PYTHON: python3
@@ -69,15 +47,20 @@ jobs:
           path: test-reports
           destination: test-reports
 
-  linux-python-36:
+  linux-python-38:
     <<: *linux-template
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:3.8
 
   linux-python-37:
     <<: *linux-template
     docker:
       - image: circleci/python:3.7
+
+  linux-python-36:
+    <<: *linux-template
+    docker:
+      - image: circleci/python:3.6
 
   linux-pypy-3:
     <<: *linux-template
@@ -115,7 +98,7 @@ jobs:
 
   test-deploy-pypi:
     docker:
-      - image: circleci/python:3.8
+      - image: circleci/python:3.9
     working_directory: ~/repo
     steps:
       - checkout
@@ -131,7 +114,7 @@ jobs:
 
   deploy-pypi:
     docker:
-      - image: circleci/python:3.8
+      - image: circleci/python:3.9
     working_directory: ~/repo
     steps:
       - checkout
@@ -150,30 +133,21 @@ workflows:
   version: 2
   test:
     jobs:
-      - pre-checks
-      - linux-python-36:
-          requires:
-            - pre-checks
-      - linux-python-37:
-          requires:
-            - pre-checks
-      - linux-python-38:
-          requires:
-            - pre-checks
-      - linux-pypy-3:
-          requires:
-            - linux-python-36
-      - windows-python-38:
-          requires:
-            - linux-python-38
+      - linux-python-39
+      - linux-python-38
+      - linux-python-37
+      - linux-python-36
+      - linux-pypy-3
+      - windows-python-38
       - test-deploy-pypi:
           filters:
             branches:
               only: /release\/.*/
           requires:
-            - linux-python-36
-            - linux-python-37
+            - linux-python-39
             - linux-python-38
+            - linux-python-37
+            - linux-python-36
             - linux-pypy-3
             - windows-python-38
   deploy:

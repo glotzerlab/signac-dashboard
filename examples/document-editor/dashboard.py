@@ -3,12 +3,9 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from signac_dashboard import Dashboard
-from signac_dashboard.modules import StatepointList
-from signac_dashboard.modules import DocumentEditor
-from signac_dashboard.modules import DocumentList
+from signac_dashboard.modules import DocumentEditor, DocumentList, StatepointList
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     modules = [
         StatepointList(),
         DocumentEditor(),
