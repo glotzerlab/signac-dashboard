@@ -1,16 +1,19 @@
-# <img src="https://raw.githubusercontent.com/glotzerlab/signac-dashboard/master/doc/images/palette-header.png" width="75" height="58"> signac-dashboard: data visualization for signac
+# <img src="https://raw.githubusercontent.com/glotzerlab/signac-dashboard/master/doc/images/palette-header.png" width="75" height="58"> signac-dashboard - data visualization for signac
 
+[![Affiliated with NumFOCUS](https://img.shields.io/badge/NumFOCUS-affiliated%20project-orange.svg?style=flat&colorA=E1523D&colorB=007D8A)](https://numfocus.org/sponsored-projects/affiliated-projects)
 [![PyPI](https://img.shields.io/pypi/v/signac-dashboard.svg)](https://pypi.org/project/signac-dashboard/)
 [![conda-forge](https://img.shields.io/conda/vn/conda-forge/signac-dashboard.svg?style=flat)](https://anaconda.org/conda-forge/signac-dashboard)
 ![CircleCI](https://img.shields.io/circleci/project/github/glotzerlab/signac-dashboard/master.svg)
 [![RTD](https://img.shields.io/readthedocs/signac-dashboard.svg?style=flat)](https://docs.signac.io)
 [![License](https://img.shields.io/github/license/glotzerlab/signac-dashboard.svg)](https://github.com/glotzerlab/signac-dashboard/blob/master/LICENSE.txt)
 [![PyPI-downloads](https://img.shields.io/pypi/dm/signac-dashboard.svg?style=flat)](https://pypistats.org/packages/signac-dashboard)
-[![Gitter](https://img.shields.io/gitter/room/signac/Lobby.svg?style=flat)](https://gitter.im/signac/Lobby)
+[![Slack](https://img.shields.io/badge/Slack-chat%20support-brightgreen.svg?style=flat&logo=slack)](https://signac.io/slack-invite/)
 [![Twitter](https://img.shields.io/twitter/follow/signacdata?style=social)](https://twitter.com/signacdata)
 [![GitHub Stars](https://img.shields.io/github/stars/glotzerlab/signac-dashboard?style=social)](https://github.com/glotzerlab/signac-dashboard/)
 
-Built on top of the **signac** framework, **signac-dashboard** allows users to rapidly visualize and analyze data managed in a [**signac** project](https://docs.signac.io/en/latest/projects.html).
+The [**signac** framework](https://signac.io) helps users manage and scale file-based workflows, facilitating data reuse, sharing, and reproducibility.
+
+The **signac-dashboard** package allows users to rapidly visualize and analyze data from a **signac** project in a web browser.
 
 ## Resources
 
@@ -22,8 +25,8 @@ Built on top of the **signac** framework, **signac-dashboard** allows users to r
   Example dashboards demonstrating a variety of use cases.
 - [Framework documentation](https://docs.signac.io/):
   Examples, tutorials, topic guides, and package Python APIs.
-- [Chat Support](https://gitter.im/signac/Lobby):
-  Get help and ask questions on the **signac** gitter channel.
+- [Slack Chat Support](https://signac.io/slack-invite/):
+  Get help and ask questions on the **signac** Slack workspace.
 - [**signac** website](https://signac.io/):
   Framework overview and news.
 
