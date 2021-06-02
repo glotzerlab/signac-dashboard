@@ -1,2 +1,6 @@
-# Request bdice and one committer or contributor
+# Request bdice and one committer and one contributor per PR.
 * @bdice @glotzerlab/signac-developers
+# Request bdice for changes in requirements
+requirements.txt @bdice
+requirements-test.txt @bdice
+.pre-commit-config.yaml @bdice
