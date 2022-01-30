@@ -19,7 +19,7 @@ class FlowStatus(Module):
 
     .. code-block:: python
 
-        from project import Project  # FlowProject subclass with labels
+        from project import Project  # Project is a FlowProject with labels
         from signac_dashboard import Dashboard
 
         if __name__ == '__main__':
@@ -41,8 +41,8 @@ class FlowStatus(Module):
         self.project = dashboard.project
         if not hasattr(self.project, "labels"):
             logger.warning(
-                "The provided signac Project cannot provide labels."
-                " Try providing a FlowProject to the Dashboard's "
+                "The provided signac Project cannot provide labels. "
+                "Try providing a FlowProject to the Dashboard's "
                 "project argument."
             )
 
