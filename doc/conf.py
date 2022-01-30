@@ -189,11 +189,11 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/", None),
+    "python": ("https://docs.python.org/3/", None),
     "signac-docs": ("https://docs.signac.io/en/latest/", None),
     "signac": ("https://docs.signac.io/projects/core/en/latest/", None),
     "flow": ("https://docs.signac.io/projects/flow/en/latest/", None),
-    "flask": ("http://flask.pocoo.org/docs/", None),
+    "flask": ("https://flask.palletsprojects.com/", None),
     "werkzeug": ("https://werkzeug.palletsprojects.com/", None),
 }
 
