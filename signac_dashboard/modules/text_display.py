@@ -22,8 +22,10 @@ class TextDisplay(Module):
 
     .. code-block:: python
 
+        from signac_dashboard.modules import TextDisplay
+
         def my_text(job):
-            return 'This job id is {}.'.format(str(job))
+            return f"This job id is {job}."
 
         modules = [TextDisplay(message=my_text)]
 
@@ -59,5 +61,5 @@ class TextDisplay(Module):
                     markdown.markdown(msg, extensions=["markdown.extensions.attr_list"])
                 )
             else:
-                msg = "Error: Install the 'markdown' library to render " "Markdown."
+                msg = "Error: Install the 'markdown' library to render Markdown."
         return [{"name": self.name, "content": render_template(self.template, msg=msg)}]
