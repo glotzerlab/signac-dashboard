@@ -8,11 +8,11 @@ The recommended installation method for **signac-dashboard** is via conda_ or pi
 The software is tested for Python versions 3.6+. Its primary dependencies are signac_ and flask_.
 Supported Python and NumPy versions are determined according to the `NEP 29 deprecation policy <https://numpy.org/neps/nep-0029-deprecation_policy.html>`_.
 
-.. _conda: https://conda.io/
+.. _conda: https://docs.conda.io/
 .. _conda-forge: https://conda-forge.org/
-.. _pip: https://pip.pypa.io/en/stable/
-.. _signac: http://www.signac.io/
-.. _flask: http://flask.pocoo.org/
+.. _pip: https://pip.pypa.io/
+.. _signac: https://signac.io/
+.. _flask: https://flask.palletsprojects.com/
 
 Install with conda
 ==================
