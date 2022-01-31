@@ -53,6 +53,10 @@ def jobs_list(dashboard):
     return dashboard._render_job_view(default_view="list")
 
 
+def project_info(dashboard):
+    return dashboard._render_project_info()
+
+
 def show_job(dashboard, jobid):
     try:
         job = dashboard.project.open_job(id=jobid)

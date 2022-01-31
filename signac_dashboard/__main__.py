@@ -18,6 +18,7 @@ def main():
 
     modules = []
     # Initialize a new Dashboard using essential modules
+    modules.append(ProjectDocument())
     modules.append(StatepointList())
     modules.append(DocumentList())
     modules.append(ImageViewer())

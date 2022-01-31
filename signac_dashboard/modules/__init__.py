@@ -7,6 +7,7 @@ from .notes import Notes
 from .statepoint_list import StatepointList
 from .text_display import TextDisplay
 from .video_viewer import VideoViewer
+from .project_document import ProjectDocument
 
 __all__ = [
     "DocumentEditor",
@@ -18,4 +19,5 @@ __all__ = [
     "StatepointList",
     "TextDisplay",
     "VideoViewer",
+    "ProjectDocument"
 ]

@@ -388,6 +388,10 @@ class Dashboard:
         else:
             return self._render_error(ValueError(f"Invalid view mode: {view_mode}"))
 
+    def _render_project_info(self, *args, **kwargs):
+        g.active_page = "project"
+        return render_template("project_info.html", *args, **kwargs)
+
     def _render_error(self, error):
         if isinstance(error, Exception):
             error_string = f"{type(error).__name__}: {error}"
@@ -511,6 +515,7 @@ class Dashboard:
         self.add_url("views.home", ["/"])
         self.add_url("views.settings", ["/settings"])
         self.add_url("views.search", ["/search"])
+        self.add_url("views.project_info", ["/project"])
         self.add_url("views.jobs_list", ["/jobs/"])
         self.add_url("views.show_job", ["/jobs/<jobid>"])
         self.add_url("views.get_file", ["/jobs/<jobid>/file/<path:filename>"])
