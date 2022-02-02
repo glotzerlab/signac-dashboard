@@ -60,11 +60,6 @@ jobs:
     docker:
       - image: circleci/python:3.7
 
-  linux-python-36:
-    <<: *linux-template
-    docker:
-      - image: circleci/python:3.6
-
   linux-pypy-3:
     <<: *linux-template
     docker:
@@ -139,7 +134,6 @@ workflows:
       - linux-python-39
       - linux-python-38
       - linux-python-37
-      - linux-python-36
       - linux-pypy-3
       - windows-python-38
       - test-deploy-pypi:
@@ -150,7 +144,6 @@ workflows:
             - linux-python-39
             - linux-python-38
             - linux-python-37
-            - linux-python-36
             - linux-pypy-3
             - windows-python-38
   deploy:
