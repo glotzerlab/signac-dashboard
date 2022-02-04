@@ -54,7 +54,7 @@ def jobs_list(dashboard):
 
 
 def project_info(dashboard):
-    return dashboard._render_project_info()
+    return dashboard._render_project_overview(view_mode="project")
 
 
 def show_job(dashboard, jobid):
