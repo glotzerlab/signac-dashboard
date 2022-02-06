@@ -18,7 +18,7 @@ from flask import (
 
 
 def home(dashboard):
-    return redirect(url_for("jobs_list"))
+    return redirect(url_for("project_info"))
 
 
 def search(dashboard):
@@ -54,7 +54,13 @@ def jobs_list(dashboard):
 
 
 def project_info(dashboard):
-    return dashboard._render_project_overview(view_mode="project")
+    g.project = dashboard.project
+    project_title = dashboard.project.config["project"]
+    schema_version = dashboard.project.config["schema_version"]
+    project_dir = dashboard.project.config["project_dir"]
+    g.title = f"{project_title} - schema version {schema_version}"
+    g.subtitle = f"Project directory: {project_dir}"
+    return dashboard._render_project_view()
 
 
 def show_job(dashboard, jobid):
