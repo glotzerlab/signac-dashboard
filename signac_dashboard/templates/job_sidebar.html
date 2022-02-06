@@ -24,7 +24,7 @@
             <div class="field">
                 <div class="control">
                     <label class="checkbox">
-                        <input type="checkbox" name="modules[{{ loop.index0 }}]"{% if loop.index0 in enabled_modules %} checked{% endif %}>{{ module.name }}
+                        <input type="checkbox" name="modules[{{ loop.index0 }}]"{% if loop.index0 in enabled_modules and module.context == g.context %} checked{% endif %}>{{ module.name }}
                     </label>
                 </div>
             </div>

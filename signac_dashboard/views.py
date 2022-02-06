@@ -38,6 +38,7 @@ def search(dashboard):
         g.jobs = dashboard._get_job_details(g.pagination.paginate(jobs))
         g.title = f"Search: {g.query}"
         g.subtitle = g.pagination.item_counts()
+        g.context = "JobContext"
         return dashboard._render_job_view(default_view="list")
 
 
@@ -50,6 +51,7 @@ def jobs_list(dashboard):
     project_title = dashboard.project.config.get("project", None)
     g.title = f"{project_title}: Jobs" if project_title else "Jobs"
     g.subtitle = g.pagination.item_counts()
+    g.context = "JobContext"
     return dashboard._render_job_view(default_view="list")
 
 
@@ -60,6 +62,7 @@ def project_info(dashboard):
     project_dir = dashboard.project.config["project_dir"]
     g.title = f"{project_title} - schema version {schema_version}"
     g.subtitle = f"Project directory: {project_dir}"
+    g.context = "ProjectContext"
     return dashboard._render_project_view()
 
 
@@ -72,6 +75,7 @@ def show_job(dashboard, jobid):
         g.jobs = dashboard._get_job_details([job])
         g.title = g.jobs[0]["title"]
         g.subtitle = g.jobs[0]["subtitle"]
+        g.context = "JobContext"
         return dashboard._render_job_view(default_view="grid")
 
 
