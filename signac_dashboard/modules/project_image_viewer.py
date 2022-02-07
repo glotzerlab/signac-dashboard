@@ -34,7 +34,7 @@ class ProjectImageViewer(Module):
         self,
         name="Image Viewer",
         context="ProjectContext",
-        template="cards/image_viewer.html",
+        template="cards/project_image_viewer.html",
         img_globs=["*.png", "*.jpg", "*.gif"],
         **kwargs,
     ):

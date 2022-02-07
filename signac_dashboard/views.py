@@ -102,6 +102,23 @@ def get_file(dashboard, jobid, filename):
         else:
             abort(404, "The file requested does not exist.")
 
+def get_project_file(dashboard, filename):
+    if dashboard.project.isfile(filename):
+        mimetype = None
+        cache_timeout = 0
+        # Return logs as plaintext
+        textfile_regexes = ["job-.*\\.[oe][0-9]*", ".*\\.log", ".*\\.dat"]
+        for regex in textfile_regexes:
+            if re.match(regex, filename) is not None:
+                mimetype = "text/plain"
+        return send_file(
+            dashboard.project.fn(filename),
+            mimetype=mimetype,
+            cache_timeout=cache_timeout,
+            conditional=True,
+        )
+    else:
+        abort(404, "The file requested does not exist.")
 
 def change_modules(dashboard):
     enabled_modules = set(session.get("enabled_modules", []))
