@@ -68,25 +68,37 @@
                         </div>
                         <div class="box sidebar-box">
                         <h2 class="subtitle is-4">Modules</h2>
-                        {% if modules | length > 0 and g.jobs is defined and g.jobs | length > 0 %}
+                        {% if modules | length > 0 %}
+                        {% if session["context"] == "JobContext" and g.jobs | length > 0  or session["context"] == "ProjectContext" %}
                         <form action="{{ url_for('change_modules') }}" method="POST">
                           <input type="hidden" name="redirect" value="{{ request.url }}">
                           {% for module in modules %}
+                          {% if module.context == session["context"] %}
                           <div class="field is-horizontal">
                             <div class="field-body">
                               <div class="field">
                                 <div class="control">
                                   <label class="checkbox">
-                                    <input type="checkbox" name="modules[{{ loop.index0 }}]"{% if loop.index0 in enabled_modules and module.context == g.context %} checked{% endif %}>{{ module.name }}
+                                    <input type="checkbox" name="modules[{{ loop.index0 }}]"
+                                           {% if loop.index0 in enabled_modules %}
+                                            checked
+                                           {% endif %}>
+                                    {{ module.name }}
                                   </label>
                                 </div>
                               </div>
                             </div>
                           </div>
+                          {% endif %}
                           {% endfor %}
                           <input class="button is-primary" type="submit" value="Update">
                         </form>
                         </div>
+                        {% endif %}
+                        {% else %}
+                        <a href="https://docs.signac.io/projects/dashboard/en/latest/api.html#python-api-dashboard-modules">
+                          No modules. Add some!
+                        </a>
                         {% endif %}
                         {% endblock sidebar%}
                         {% endif %}

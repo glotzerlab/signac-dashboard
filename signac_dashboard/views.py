@@ -38,7 +38,7 @@ def search(dashboard):
         g.jobs = dashboard._get_job_details(g.pagination.paginate(jobs))
         g.title = f"Search: {g.query}"
         g.subtitle = g.pagination.item_counts()
-        g.context = "JobContext"
+        session["context"] = "JobContext"
         return dashboard._render_job_view(default_view="list")
 
 
@@ -51,7 +51,7 @@ def jobs_list(dashboard):
     project_title = dashboard.project.config.get("project", None)
     g.title = f"{project_title}: Jobs" if project_title else "Jobs"
     g.subtitle = g.pagination.item_counts()
-    g.context = "JobContext"
+    session["context"] = "JobContext"
     return dashboard._render_job_view(default_view="list")
 
 
@@ -62,7 +62,7 @@ def project_info(dashboard):
     project_dir = dashboard.project.config["project_dir"]
     g.title = f"{project_title} - schema version {schema_version}"
     g.subtitle = f"Project directory: {project_dir}"
-    g.context = "ProjectContext"
+    session["context"] = "ProjectContext"
     return dashboard._render_project_view()
 
 
@@ -75,7 +75,7 @@ def show_job(dashboard, jobid):
         g.jobs = dashboard._get_job_details([job])
         g.title = g.jobs[0]["title"]
         g.subtitle = g.jobs[0]["subtitle"]
-        g.context = "JobContext"
+        session["context"] = "JobContext"
         return dashboard._render_job_view(default_view="grid")
 
 
@@ -105,11 +105,13 @@ def get_file(dashboard, jobid, filename):
 
 def change_modules(dashboard):
     enabled_modules = set(session.get("enabled_modules", []))
+    context = session.get("context")
     for i, module in enumerate(dashboard.modules):
-        if request.form.get(f"modules[{i}]") == "on":
-            enabled_modules.add(i)
-        else:
-            enabled_modules.discard(i)
+        if module.context == context:
+            if request.form.get(f"modules[{i}]") == "on":
+                enabled_modules.add(i)
+            else:
+                enabled_modules.discard(i)
     session["enabled_modules"] = list(enabled_modules)
     return redirect(request.form.get("redirect", url_for("home")))
 
