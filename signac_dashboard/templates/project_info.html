@@ -3,6 +3,38 @@
 {% block title %}{{ g.title }}{% endblock %}
 {% block subtitle %}{{ g.subtitle }}{% endblock %}
 
-{% block panels %}{% endblock %}
+{% block panels %}
+
+{#
+
+This is minimal code to get project modules to display.
+
+Eventually it should be refactored into the job card code.
+
+#}
+
+{% set card_count = [] %}
+{% for module in modules %} {# begin modules #}
+    {% if loop.index0 in enabled_modules and module.context == 'ProjectContext' %}
+    {% for card in module.get_cards(g.project) %} {# begin cards #}
+        {# jinja variables go out of scope after the loop unless this "list" hack is used #}
+        {% if card_count.append(1) %}{% endif %}
+        <div class="column is-4-desktop is-full-mobile">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-title card-header-dashboard">
+                        {{ card.name }}
+                    </div>
+                </div>
+                <div class="card-content">
+                    {{ card.content | safe }}
+                </div>
+            </div>
+        </div>
+    {% endfor %} {# end cards #}
+    {% endif %} {# end if module should render #}
+{% endfor %} {# end modules #}
+
+{% endblock %}
 
 {% block view_options %}{% endblock %}
