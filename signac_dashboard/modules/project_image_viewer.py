@@ -45,9 +45,7 @@ class ProjectImageViewer(Module):
         def make_card(filename):
             return {
                 "name": self.name + ": " + filename,
-                "content": render_template(
-                    self.template, filename=filename
-                ),
+                "content": render_template(self.template, filename=filename),
             }
 
         image_globs = [

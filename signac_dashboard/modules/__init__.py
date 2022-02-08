@@ -4,11 +4,11 @@ from .file_list import FileList
 from .flow_status import FlowStatus
 from .image_viewer import ImageViewer
 from .notes import Notes
+from .project_document import ProjectDocument
+from .project_image_viewer import ProjectImageViewer
 from .statepoint_list import StatepointList
 from .text_display import TextDisplay
 from .video_viewer import VideoViewer
-from .project_document import ProjectDocument
-from .project_image_viewer import ProjectImageViewer
 
 __all__ = [
     "DocumentEditor",
@@ -21,5 +21,5 @@ __all__ = [
     "TextDisplay",
     "VideoViewer",
     "ProjectDocument",
-    "ProjectImageViewer"
+    "ProjectImageViewer",
 ]

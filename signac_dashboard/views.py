@@ -102,6 +102,7 @@ def get_file(dashboard, jobid, filename):
         else:
             abort(404, "The file requested does not exist.")
 
+
 def get_project_file(dashboard, filename):
     if dashboard.project.isfile(filename):
         mimetype = None
@@ -119,6 +120,7 @@ def get_project_file(dashboard, filename):
         )
     else:
         abort(404, "The file requested does not exist.")
+
 
 def change_modules(dashboard):
     enabled_modules = set(session.get("enabled_modules", []))
