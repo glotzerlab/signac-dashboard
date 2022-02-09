@@ -87,4 +87,4 @@ class VideoViewer(Module):
         ]
         video_files = itertools.chain(*video_globs)
         for filepath in video_files:
-            yield make_card(os.path.relpath(filepath, job.ws))
+            yield make_card(os.path.relpath(filepath, job.workspace()))

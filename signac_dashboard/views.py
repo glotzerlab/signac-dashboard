@@ -11,7 +11,7 @@ from flask import (
     redirect,
     render_template,
     request,
-    send_file,
+    send_from_directory,
     session,
     url_for,
 )
@@ -79,8 +79,9 @@ def get_file(dashboard, jobid, filename):
             for regex in textfile_regexes:
                 if re.match(regex, filename) is not None:
                     mimetype = "text/plain"
-            return send_file(
-                job.fn(filename),
+            return send_from_directory(
+                job.workspace(),
+                filename,
                 mimetype=mimetype,
                 cache_timeout=cache_timeout,
                 conditional=True,

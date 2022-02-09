@@ -56,4 +56,4 @@ class ImageViewer(Module):
         ]
         image_files = itertools.chain(*image_globs)
         for filepath in image_files:
-            yield make_card(os.path.relpath(filepath, job.ws))
+            yield make_card(os.path.relpath(filepath, job.workspace()))
