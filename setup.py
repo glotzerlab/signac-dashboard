@@ -34,7 +34,7 @@ setup(
     version="0.2.8",
     packages=find_packages(),
     include_package_data=True,
-    python_requires=">=3.6,<4",
+    python_requires=">=3.7,<4",
     install_requires=requirements,
     classifiers=[
         "Development Status :: 3 - Alpha",
