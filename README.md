@@ -33,7 +33,7 @@ The **signac-dashboard** package allows users to rapidly visualize and analyze d
 ## Installation
 
 The recommended installation method for **signac-dashboard** is through **conda** or **pip**.
-The software is tested for Python 3.6+ and is built for all major platforms.
+The software is tested for Python 3.7+ and is built for all major platforms.
 
 To install **signac-dashboard** *via* the [conda-forge](https://conda-forge.github.io/) channel, execute:
 

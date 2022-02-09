@@ -8,9 +8,9 @@ orbs:
   win: circleci/windows@2.2.0  # Enables Windows executors
 
 jobs:
-  linux-python-39: &linux-template
+  linux-python-310: &linux-template
     docker:
-      - image: circleci/python:3.9
+      - image: cimg/python:3.10
 
     environment:
       PYTHON: python3
@@ -50,15 +50,20 @@ jobs:
           path: test-reports
           destination: test-reports
 
+  linux-python-39:
+    <<: *linux-template
+    docker:
+      - image: cimg/python:3.9
+
   linux-python-38:
     <<: *linux-template
     docker:
-      - image: circleci/python:3.8
+      - image: cimg/python:3.8
 
   linux-python-37:
     <<: *linux-template
     docker:
-      - image: circleci/python:3.7
+      - image: cimg/python:3.7
 
   linux-pypy-3:
     <<: *linux-template
@@ -96,7 +101,7 @@ jobs:
 
   test-deploy-pypi:
     docker:
-      - image: circleci/python:3.9
+      - image: cimg/python:3.10
     working_directory: ~/repo
     steps:
       - checkout
@@ -112,7 +117,7 @@ jobs:
 
   deploy-pypi:
     docker:
-      - image: circleci/python:3.9
+      - image: cimg/python:3.10
     working_directory: ~/repo
     steps:
       - checkout
@@ -131,6 +136,7 @@ workflows:
   version: 2
   test:
     jobs:
+      - linux-python-310
       - linux-python-39
       - linux-python-38
       - linux-python-37
@@ -141,6 +147,7 @@ workflows:
             branches:
               only: /release\/.*/
           requires:
+            - linux-python-310
             - linux-python-39
             - linux-python-38
             - linux-python-37

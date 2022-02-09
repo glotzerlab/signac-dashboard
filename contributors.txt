@@ -1,5 +1,7 @@
-   385	Bradley Dice <bdice@bradleydice.com>
+   398	Bradley Dice <bdice@bradleydice.com>
     33	Carl Simon Adorf <csadorf@umich.edu>
+     6	dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
      5	Jens Glaser <jsglaser@umich.edu>
+     3	pre-commit-ci[bot] <66853113+pre-commit-ci[bot]@users.noreply.github.com>
      1	Tim Moore <tcmoore3@gmail.com>
      1	Vyas Ramasubramani <vramasub@umich.edu>
