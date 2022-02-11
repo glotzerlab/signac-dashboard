@@ -1,4 +1,4 @@
-# Copyright (c) 2019 The Regents of the University of Michigan
+# Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from collections import OrderedDict
@@ -11,7 +11,8 @@ from signac_dashboard.util import ellipsis_string
 
 
 class DocumentList(Module):
-    """Displays the job document.
+    """Displays the job or project document, depending
+    on the module context.
 
     Long values can be optionally truncated.
 
@@ -22,17 +23,23 @@ class DocumentList(Module):
 
     def __init__(
         self,
-        name="Job Document",
         context="JobContext",
+        name=None,
         template="cards/document_list.html",
         max_chars=None,
         **kwargs,
     ):
+        # set name based on intialized context
+        if name is None:
+            if context == "JobContext":
+                name = "Job Document"
+            elif context == "ProjectContext":
+                name = "Project Document"
         super().__init__(name=name, context=context, template=template, **kwargs)
         self.max_chars = max_chars
 
-    def get_cards(self, job):
-        doc = OrderedDict(sorted(job.document.items(), key=lambda t: t[0]))
+    def get_cards(self, jobOrProject):
+        doc = OrderedDict(sorted(jobOrProject.document.items(), key=lambda t: t[0]))
 
         # We manually escape the document's contents since the field is marked
         # "safe" in the Jinja template. This is necessary because we added
