@@ -40,6 +40,7 @@ Dashboard Modules
     modules.FileList
     modules.FlowStatus
     modules.ImageViewer
+    modules.IPythonDisplay
     modules.Notes
     modules.StatepointList
     modules.TextDisplay
