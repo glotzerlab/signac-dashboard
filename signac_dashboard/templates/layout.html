@@ -63,6 +63,7 @@
                                 </a>
                             </p>
                             <h2 class="subtitle is-4">Modules</h2>
+                            {% block module_list %}
                             <form action="{{ url_for('change_modules') }}" method="POST">
                             <input type="hidden" name="redirect" value="{{ request.url }}">
                             {% for module in modules %}
@@ -80,6 +81,7 @@
                             {% endfor %}
                             <input class="button is-primary" type="submit" value="Update">
                             </form>
+                            {% endblock module_list %}
                         </div>
                         {% endif %}
                     </div>
@@ -118,6 +120,12 @@
                                 {{ name }}
                             </a>
                             {% endfor %}
+                            {% if self.module_list() %}
+                            <div class="navbar-item is-hidden-tablet">
+                                <h3 class="subtitle is-4">Modules</h3>
+                                {{ self.module_list() }}
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </nav>
