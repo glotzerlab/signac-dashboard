@@ -50,6 +50,7 @@
                         {% if self.sidebar() %}{% block sidebar %}{% endblock %}{% endif %}
                         {% if modules | length > 0 and g.jobs is defined and g.jobs | length > 0 %}
                         <div class="box sidebar-box">
+                            {% block view_options %}
                             <p class="field">
                                 <a class="button" href="{{ modify_query(view='list') }}" title="List View">
                                     <span class="icon is-small">
@@ -62,6 +63,7 @@
                                     </span>
                                 </a>
                             </p>
+                            {% endblock view_options %}
                             <h2 class="subtitle is-4">Modules</h2>
                             {% block module_list %}
                             <form action="{{ url_for('change_modules') }}" method="POST">
@@ -120,6 +122,12 @@
                                 {{ name }}
                             </a>
                             {% endfor %}
+                            {% if self.view_options() %}
+                            <div class="navbar-item is-hidden-tablet">
+                                <h3 class="subtitle is-4">Views</h3>
+                                {{ self.view_options() }}
+                            </div>
+                            {% endif %}
                             {% if self.module_list() %}
                             <div class="navbar-item is-hidden-tablet">
                                 <h3 class="subtitle is-4">Modules</h3>
