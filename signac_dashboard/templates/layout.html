@@ -80,10 +80,10 @@
                                             <div class="control">
                                                 <label class="checkbox">
                                                     <input type="checkbox" name="modules[{{ loop.index0 }}]"
-                                                           {% if loop.index0 in enabled_modules %}
-                                                           checked
-                                                           {% endif %}>
-                                                    {{ module.name }}
+                                                        {%- if loop.index0 in enabled_modules -%}
+                                                        checked
+                                                        {%- endif %}>
+                                                    {{- module.name }}
                                                 </label>
                                             </div>
                                         </div>
