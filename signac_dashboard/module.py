@@ -70,12 +70,14 @@ class Module:
         self.template = template
         self.enabled = enabled
 
-    def get_cards(self):
+    def get_cards(self, obj):
         """Returns this module's cards for rendering.
 
         The cards are returned as a list of dictionaries with keys
         :code:`'name'` and :code:`'content'`.
 
+        :param obj: Containing any information needed to render a card.
+        :type obj: object
         :returns: List of module cards.
         :rtype: list
         """
