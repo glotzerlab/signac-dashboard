@@ -90,14 +90,14 @@ class Dashboard:
         self.observer = Observer()
         self.observer.schedule(self.event_handler, self.project.workspace())
 
-        self._prepare()  # Makes the flask application
+        self._prepare()
 
     def _create_app(self, config={}):
         """Creates a Flask application.
 
         :param config: Dictionary of configuration parameters.
         """
-        app = Flask("signac-dashboard")  # it all starts here
+        app = Flask("signac-dashboard")
         app.config.update(
             {
                 "SECRET_KEY": os.urandom(24),
@@ -137,7 +137,7 @@ class Dashboard:
 
         return app
 
-    def _create_assets(self):  # what is an asset?
+    def _create_assets(self):
         """Add assets for inclusion in the dashboard HTML."""
 
         assets = Environment(self.app)
@@ -338,7 +338,7 @@ class Dashboard:
             )
             raise error
 
-    @lru_cache(maxsize=65536)  # what sets this size?
+    @lru_cache(maxsize=65536)  # arbitrarily set to 2**16
     def _job_details(self, job):
         return {
             "job": job,
