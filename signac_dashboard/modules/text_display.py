@@ -30,8 +30,8 @@ class TextDisplay(Module):
         modules = [TextDisplay(message=my_text)]
 
     :param message: A callable accepting one argument of type
-        :py:class:`signac.contrib.job.Job` and returning text or Markdown
-        content.
+        :py:class:`signac.contrib.job.Job` or :py:class:`signac.Project`
+        and returning text or Markdown content.
     :type message: callable
     :param markdown: Enables Markdown rendering if True (default: False).
     :type markdown: bool
@@ -39,22 +39,23 @@ class TextDisplay(Module):
 
     def __init__(
         self,
+        context="JobContext",
         name="Text Display",
-        message=lambda job: "No message provided.",
+        message=lambda job_or_project: "No message provided.",
         markdown=False,
         **kwargs,
     ):
         super().__init__(
             name=name,
-            context="JobContext",
+            context=context,
             template="cards/text_display.html",
             **kwargs,
         )
         self.message = message
         self.markdown = markdown
 
-    def get_cards(self, job):
-        msg = self.message(job)
+    def get_cards(self, job_or_project):
+        msg = self.message(job_or_project)
         if self.markdown:
             if MARKDOWN:
                 msg = Markup(
