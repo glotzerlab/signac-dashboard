@@ -38,8 +38,8 @@ class DocumentList(Module):
         super().__init__(name=name, context=context, template=template, **kwargs)
         self.max_chars = max_chars
 
-    def get_cards(self, jobOrProject):
-        doc = OrderedDict(sorted(jobOrProject.document.items(), key=lambda t: t[0]))
+    def get_cards(self, job_or_project):
+        doc = OrderedDict(sorted(job_or_project.document.items(), key=lambda t: t[0]))
 
         # We manually escape the document's contents since the field is marked
         # "safe" in the Jinja template. This is necessary because we added
