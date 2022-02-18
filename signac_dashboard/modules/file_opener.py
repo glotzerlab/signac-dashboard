@@ -1,9 +1,10 @@
 # Copyright (c) 2019 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
+import os
+
 from flask import abort, render_template, request
 from jinja2.exceptions import TemplateNotFound
-import os
 
 from signac_dashboard.module import Module
 
@@ -40,9 +41,7 @@ class FileOpener(Module):
         return [
             {
                 "name": self.name,
-                "content": render_template(
-                    self.template, jobid=job._id
-                ),
+                "content": render_template(self.template, jobid=job._id),
             }
         ]
 
@@ -55,7 +54,7 @@ class FileOpener(Module):
             if not job.isfile(self.filename):
                 return "File not found."
             full_filename = job.fn(self.filename)
-            cmd = f'{self.open_cmd} {full_filename}'
+            cmd = f"{self.open_cmd} {full_filename}"
             os.system(cmd)
             return "Nice click!"
 
