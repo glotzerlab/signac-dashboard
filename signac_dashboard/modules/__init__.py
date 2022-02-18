@@ -1,3 +1,4 @@
+from .file_opener import FileOpener
 from .document_editor import DocumentEditor
 from .document_list import DocumentList
 from .file_list import FileList
@@ -12,6 +13,7 @@ __all__ = [
     "DocumentEditor",
     "DocumentList",
     "FileList",
+    "FileOpener",
     "FlowStatus",
     "ImageViewer",
     "Notes",

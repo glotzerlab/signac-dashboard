@@ -1,0 +1,14 @@
+<form class="file-opener-form" method="POST" action="{{ url_for('file_opener_update') }}">
+    <input type="hidden" name="redirect" value="{{ request.url }}">
+    <input type="hidden" name="jobid" value="{{ jobid }}">
+
+    <div class="field">
+        <div class="control">
+            <button class="button is-primary">Run command</button>
+        </div>
+
+        <div class="control">
+            <p class="file-opener-result"></p>
+        </div>
+    </div>
+</form>
