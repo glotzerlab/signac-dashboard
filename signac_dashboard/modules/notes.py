@@ -60,10 +60,10 @@ class Notes(Module):
 
         # Register assets
         assets = ["js/notes.js"]
-        for assetfile in assets:
+        for asset_file in assets:
             dashboard.register_module_asset(
                 {
-                    "file": f"templates/notes/{assetfile}",
-                    "url": f"/module/notes/{assetfile}",
+                    "file": f"templates/notes/{asset_file}",
+                    "url": f"/module/notes/{asset_file}",
                 }
             )
