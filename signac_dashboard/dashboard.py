@@ -124,9 +124,9 @@ class Dashboard:
         # The paths in DASHBOARD_PATHS give the preferred order of template
         # loading
         loader_list = []
-        for dashpath in list(app.config.get("DASHBOARD_PATHS", [])):
-            logger.warning(f"Adding '{dashpath}' to dashboard paths.")
-            loader_list.append(jinja2.FileSystemLoader(dashpath + "/templates"))
+        for dash_path in list(app.config.get("DASHBOARD_PATHS", [])):
+            logger.warning(f"Adding '{dash_path}' to dashboard paths.")
+            loader_list.append(jinja2.FileSystemLoader(dash_path + "/templates"))
 
         # The default loader goes last and is overridden by any custom paths
         loader_list.append(app.jinja_loader)
