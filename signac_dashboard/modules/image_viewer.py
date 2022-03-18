@@ -31,16 +31,14 @@ class ImageViewer(Module):
     """
 
     def __init__(
-        self,
-        name="Image Viewer",
-        context="JobContext",
-        template="cards/image_viewer.html",
-        img_globs=None,
-        **kwargs,
+            self,
+            name="Image Viewer",
+            context="JobContext",
+            template="cards/image_viewer.html",
+            img_globs=("*.png", "*.jpg", "*.gif"),
+            **kwargs,
     ):
         super().__init__(name=name, context=context, template=template, **kwargs)
-        if img_globs is None:
-            img_globs = ["*.png", "*.jpg", "*.gif"]
         self.img_globs = img_globs
 
     def get_cards(self, job):
