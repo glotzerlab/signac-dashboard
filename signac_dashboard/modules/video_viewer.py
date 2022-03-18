@@ -50,14 +50,12 @@ class VideoViewer(Module):
         name="Video Viewer",
         context="JobContext",
         template="cards/video_viewer.html",
-        video_globs=None,
+        video_globs=("*.mp4", "*.m4v"),
         preload="none",  # auto|metadata|none
         poster=None,
         **kwargs,
     ):
         super().__init__(name=name, context=context, template=template, **kwargs)
-        if video_globs is None:
-            video_globs = ["*.mp4", "*.m4v"]
         self.preload = preload
         self.poster = poster
         self.video_globs = video_globs
