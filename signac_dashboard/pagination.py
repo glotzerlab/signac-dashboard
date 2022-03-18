@@ -51,7 +51,7 @@ class Pagination:
         if items is None:
             return []
         else:
-            return items[self.first_item: self.last_item]
+            return items[self.first_item : self.last_item]
 
     def item_counts(self, tag="jobs"):
         if self.total_count > 0:
@@ -65,11 +65,9 @@ class Pagination:
         last = 0
         for num in range(1, self.pages + 1):
             if (
-                    num <= left_edge
-                    or (
-                    self.page - left_current - 1 < num < self.page + right_current
-                    )
-                    or num > self.pages - right_edge
+                num <= left_edge
+                or (self.page - left_current - 1 < num < self.page + right_current)
+                or num > self.pages - right_edge
             ):
                 if last + 1 != num:
                     yield None
