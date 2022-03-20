@@ -137,7 +137,7 @@ workflows:
       - linux-python-39
       - linux-python-38
       - linux-pypy-3
-      - windows-python-38
+      - windows-python-310
       - test-deploy-pypi:
           filters:
             branches:
@@ -147,7 +147,7 @@ workflows:
             - linux-python-39
             - linux-python-38
             - linux-pypy-3
-            - windows-python-38
+            - windows-python-310
   deploy:
     jobs:
       - deploy-pypi:
