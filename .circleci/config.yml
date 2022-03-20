@@ -35,16 +35,15 @@ jobs:
             . venv/bin/activate
             ${PYTHON} -m pip install --progress-bar off -U pip>=20.3
             ${PYTHON} -m pip install --progress-bar off -U codecov
-            ${PYTHON} -m pip install --progress-bar off -r requirements.txt
-            ${PYTHON} -m pip install --progress-bar off -r requirements-test.txt
-            ${PYTHON} -m pip install --progress-bar off .
+            ${PYTHON} -m pip install --progress-bar off -U -r requirements-test.txt
+            ${PYTHON} -m pip install --progress-bar off -e .
 
       - run:
           name: Run tests
           command: |
             . venv/bin/activate
             ${PYTHON} -m pytest --cov=signac_dashboard --cov-config=setup.cfg --cov-report=xml tests/ -v
-            codecov
+            ${PYTHON} -m codecov
 
       - store_artifacts:
           path: test-reports
@@ -60,11 +59,6 @@ jobs:
     docker:
       - image: cimg/python:3.8
 
-  linux-python-37:
-    <<: *linux-template
-    docker:
-      - image: cimg/python:3.7
-
   linux-pypy-3:
     <<: *linux-template
     docker:
@@ -72,8 +66,12 @@ jobs:
     environment:
       PYTHON: pypy3
 
-  windows-python-38:
+  windows-python-310:
     executor: win/default
+      name: win/default
+      shell: bash.exe
+    environment:
+      PYTHON: C:\Python310\python
     steps:
       - checkout
       - run:
@@ -84,20 +82,19 @@ jobs:
       - run:
           name: Install Python
           command: |
-            choco install python --version 3.8.1 --limit-output --no-progress
+            choco install python --version 3.10.2 --limit-output --no-progress
       - run:
           name: Install dependencies
           command: |
-            python --version
-            python -m pip install --progress-bar off certifi
-            python -m pip install --progress-bar off -U coverage mock
-            python -m pip install --progress-bar off -U -e .
+            ${PYTHON} -m pip install --progress-bar off -U pip>=20.3
+            ${PYTHON} -m pip install --progress-bar off -U codecov
+            ${PYTHON} -m pip install --progress-bar off -U -r requirements/requirements-test.txt
+            ${PYTHON} -m pip install --progress-bar off -U -e .
       - run:
           name: Run tests
           command: |
-            python -m coverage run --source=signac_dashboard/ -m unittest discover tests/ -v
-            python -m coverage report -i --include="signac_dashboard*"
-
+            ${PYTHON} -m pytest --cov=signac_dashboard --cov-config=setup.cfg --cov-report=xml tests/ -v
+            ${PYTHON} -m codecov
 
   test-deploy-pypi:
     docker:
@@ -139,7 +136,6 @@ workflows:
       - linux-python-310
       - linux-python-39
       - linux-python-38
-      - linux-python-37
       - linux-pypy-3
       - windows-python-38
       - test-deploy-pypi:
@@ -150,7 +146,6 @@ workflows:
             - linux-python-310
             - linux-python-39
             - linux-python-38
-            - linux-python-37
             - linux-pypy-3
             - windows-python-38
   deploy:
