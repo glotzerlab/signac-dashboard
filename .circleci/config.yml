@@ -67,7 +67,7 @@ jobs:
       PYTHON: pypy3
 
   windows-python-310:
-    executor: win/default
+    executor:
       name: win/default
       shell: bash.exe
     environment:
