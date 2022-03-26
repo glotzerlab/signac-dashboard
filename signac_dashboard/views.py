@@ -58,10 +58,7 @@ def jobs_list(dashboard):
 def project_info(dashboard):
     g.project = dashboard.project
     project_title = dashboard.project.config["project"]
-    schema_version = dashboard.project.config["schema_version"]
-    project_dir = dashboard.project.config["project_dir"]
-    g.title = f"{project_title} - schema version {schema_version}"
-    g.subtitle = f"Project directory: {project_dir}"
+    g.title = f"{project_title}"
     session["context"] = "ProjectContext"
     return dashboard._render_project_view()
 
