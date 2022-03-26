@@ -46,7 +46,7 @@ class ImageViewer(Module):
             return {
                 "name": self.name + ": " + filename,
                 "content": render_template(
-                    self.template, jobid=job._id, filename=filename
+                    self.template, modal_label=job._id, jobid=job._id, filename=filename
                 ),
             }
 
