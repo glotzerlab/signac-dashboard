@@ -76,7 +76,7 @@ def show_job(dashboard, jobid):
         return dashboard._render_job_view(default_view="grid")
 
 
-def get_file(dashboard, jobid, filename):
+def _get_job_file(dashboard, jobid, filename):
     try:
         job = dashboard.project.open_job(id=jobid)
     except KeyError:
@@ -100,7 +100,7 @@ def get_file(dashboard, jobid, filename):
             abort(404, "The file requested does not exist.")
 
 
-def get_project_file(dashboard, filename):
+def _get_project_file(dashboard, filename):
     if dashboard.project.isfile(filename):
         mimetype = None
         cache_timeout = 0
@@ -117,6 +117,13 @@ def get_project_file(dashboard, filename):
         )
     else:
         abort(404, "The file requested does not exist.")
+
+
+def get_file(dashboard, filename,  jobid=None):
+    if jobid is None:
+        return _get_project_file(dashboard, filename)
+    else:
+        return _get_job_file(dashboard, jobid, filename)
 
 
 def change_modules(dashboard):
