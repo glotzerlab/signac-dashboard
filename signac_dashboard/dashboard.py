@@ -179,7 +179,7 @@ class Dashboard:
         self.config.setdefault("PER_PAGE", 25)
 
         # Create and configure the Flask application
-        self.app = self._create_app(self.config)  # called here
+        self.app = self._create_app(self.config)
 
         # Add assets and routes
         self.assets = self._create_assets()
