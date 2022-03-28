@@ -59,6 +59,8 @@ def project_info(dashboard):
     g.project = dashboard.project
     project_title = dashboard.project.config["project"]
     g.title = f"{project_title}"
+    num_jobs = len(dashboard.project.find_jobs())
+    g.subtitle = f"{num_jobs} jobs"
     session["context"] = "ProjectContext"
     return dashboard._render_project_view()
 
