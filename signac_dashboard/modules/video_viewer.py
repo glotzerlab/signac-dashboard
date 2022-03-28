@@ -4,6 +4,7 @@
 import glob
 import itertools
 import os
+import signac
 
 from flask import render_template
 
@@ -11,7 +12,8 @@ from signac_dashboard.module import Module
 
 
 class VideoViewer(Module):
-    """Displays videos in the job workspace that match a glob.
+    """Displays videos in the job workspace or project directory that
+    match a glob, depending on the module context.
 
     The :py:class:`~signac_dashboard.modules.VideoViewer` module displays
     videos using an HTML ``<video>`` tag. The module defaults to showing all
@@ -40,15 +42,16 @@ class VideoViewer(Module):
     :param preload: Option for preloading videos, one of :code:`'auto'`,
         :code:`'metadata'`, or :code:`'none'` (default: :code:`'none'`).
     :type preload: str
-    :param poster: A path in the job workspace for a poster image to be shown
-        before a video begins playback (default: :code:`None`).
+    :param poster: A path in the job workspace or project directory for a 
+        poster image to be shown before a video begins playback (default: :code:`None`).
     :type poster: str
+
     """
 
     def __init__(
         self,
-        name="Video Viewer",
         context="JobContext",
+        name="Video Viewer",
         template="cards/video_viewer.html",
         video_globs=("*.mp4", "*.m4v"),
         preload="none",  # auto|metadata|none
@@ -60,13 +63,16 @@ class VideoViewer(Module):
         self.poster = poster
         self.video_globs = video_globs
 
-    def get_cards(self, job):
+    def get_cards(self, job_or_project):
+        if type(job_or_project) is signac.contrib.job.Job:
+            jobid = job_or_project._id
+        elif type(job_or_project) is signac.Project:
+            jobid=None
         def make_card(filename):
-            jobid = job._id
-            if not job.isfile(filename):
+            if not job_or_project.isfile(filename):
                 raise FileNotFoundError(
                     "The filename {} could not be found "
-                    "for job {}.".format(filename, jobid)
+                    "for {}.".format(filename, "project" if jobid is None else f"job {jobid}")
                 )
             return {
                 "name": self.name + ": " + filename,
@@ -74,7 +80,7 @@ class VideoViewer(Module):
                     self.template,
                     jobid=jobid,
                     poster=self.poster
-                    if self.poster and job.isfile(self.poster)
+                    if self.poster and job_or_project.isfile(self.poster)
                     else None,
                     preload=self.preload,
                     filename=filename,
@@ -82,9 +88,9 @@ class VideoViewer(Module):
             }
 
         video_globs = [
-            glob.iglob(job.workspace() + os.sep + video_glob)
+            glob.iglob(job_or_project.fn(video_glob))
             for video_glob in self.video_globs
         ]
         video_files = itertools.chain(*video_globs)
         for filepath in video_files:
-            yield make_card(os.path.relpath(filepath, job.workspace()))
+            yield make_card(os.path.relpath(filepath, job_or_project.fn("")))
