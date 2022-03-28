@@ -34,7 +34,7 @@ class ProjectImageViewer(Module):
         self,
         name="Image Viewer",
         context="ProjectContext",
-        template="cards/project_image_viewer.html",
+        template="cards/image_viewer.html",
         img_globs=["*.png", "*.jpg", "*.gif"],
         **kwargs,
     ):
@@ -45,7 +45,10 @@ class ProjectImageViewer(Module):
         def make_card(filename):
             return {
                 "name": self.name + ": " + filename,
-                "content": render_template(self.template, filename=filename),
+                "content": render_template(self.template,
+                                           modal_label = 'project',
+                                           jobid=None,
+                                           filename=filename),
             }
 
         image_globs = [
