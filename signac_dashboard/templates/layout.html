@@ -93,7 +93,6 @@
                                 {% endfor %}
                                 <input class="button is-primary" type="submit" value="Update">
                             </form>
-                            {% endblock module_list %}
                         </div>
                         {% endif %}
                         {% else %}
@@ -139,18 +138,6 @@
                                 {{ name }}
                             </a>
                             {% endfor %}
-                            {% if self.view_options() %}
-                            <div class="navbar-item is-hidden-tablet">
-                                <h3 class="subtitle is-4">Views</h3>
-                                {{ self.view_options() }}
-                            </div>
-                            {% endif %}
-                            {% if self.module_list() %}
-                            <div class="navbar-item is-hidden-tablet">
-                                <h3 class="subtitle is-4">Modules</h3>
-                                {{ self.module_list() }}
-                            </div>
-                            {% endif %}
                         </div>
                     </div>
                 </nav>
