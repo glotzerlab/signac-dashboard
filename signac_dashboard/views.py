@@ -119,7 +119,7 @@ def _get_project_file(dashboard, filename):
         abort(404, "The file requested does not exist.")
 
 
-def get_file(dashboard, filename,  jobid=None):
+def get_file(dashboard, filename, jobid=None):
     if jobid is None:
         return _get_project_file(dashboard, filename)
     else:

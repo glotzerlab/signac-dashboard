@@ -519,8 +519,7 @@ class Dashboard:
         self.add_url("views.project_info", ["/project"])
         self.add_url("views.jobs_list", ["/jobs/"])
         self.add_url("views.show_job", ["/jobs/<jobid>"])
-        self.add_url("views.get_file", ["/jobs/<jobid>/file/<path:filename>"])
-        self.add_url("views.get_project_file", ["/project/file/<path:filename>"])
+        self.add_url("views.get_file", ["/jobs/<jobid>/file/<path:filename>", "/project/file/<path:filename>"])
         self.add_url("views.change_modules", ["/modules"], methods=["POST"])
 
     def update_cache(self):
