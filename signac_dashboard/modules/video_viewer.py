@@ -4,8 +4,8 @@
 import glob
 import itertools
 import os
-import signac
 
+import signac
 from flask import render_template
 
 from signac_dashboard.module import Module
@@ -42,7 +42,7 @@ class VideoViewer(Module):
     :param preload: Option for preloading videos, one of :code:`'auto'`,
         :code:`'metadata'`, or :code:`'none'` (default: :code:`'none'`).
     :type preload: str
-    :param poster: A path in the job workspace or project directory for a 
+    :param poster: A path in the job workspace or project directory for a
         poster image to be shown before a video begins playback (default: :code:`None`).
     :type poster: str
 
@@ -67,12 +67,15 @@ class VideoViewer(Module):
         if type(job_or_project) is signac.contrib.job.Job:
             jobid = job_or_project._id
         elif type(job_or_project) is signac.Project:
-            jobid=None
+            jobid = None
+
         def make_card(filename):
             if not job_or_project.isfile(filename):
                 raise FileNotFoundError(
                     "The filename {} could not be found "
-                    "for {}.".format(filename, "project" if jobid is None else f"job {jobid}")
+                    "for {}.".format(
+                        filename, "project" if jobid is None else f"job {jobid}"
+                    )
                 )
             return {
                 "name": self.name + ": " + filename,
@@ -88,8 +91,7 @@ class VideoViewer(Module):
             }
 
         video_globs = [
-            glob.iglob(job_or_project.fn(video_glob))
-            for video_glob in self.video_globs
+            glob.iglob(job_or_project.fn(video_glob)) for video_glob in self.video_globs
         ]
         video_files = itertools.chain(*video_globs)
         for filepath in video_files:
