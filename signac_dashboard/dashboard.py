@@ -452,10 +452,11 @@ class Dashboard:
         """
         if import_file is not None:
             import_name = import_file + "." + import_name
+        view = LazyView(dashboard = self, import_name = import_name)
         for url_rule in url_rules:
             self.app.add_url_rule(
                 rule=url_rule,
-                view_func=LazyView(dashboard=self, import_name=import_name),
+                view_func=view,
                 **options,
             )
 
