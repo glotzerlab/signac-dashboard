@@ -4,8 +4,8 @@
 import glob
 import itertools
 import os
-import signac
 
+import signac
 from flask import render_template
 
 from signac_dashboard.module import Module
@@ -51,6 +51,7 @@ class ImageViewer(Module):
 
     def get_cards(self, job_or_project):
         if type(job_or_project) is signac.contrib.job.Job:
+
             def make_card(filename):
                 return {
                     "name": self.name + ": " + filename,
@@ -58,24 +59,25 @@ class ImageViewer(Module):
                         self.template,
                         modal_label=job_or_project._id,
                         jobid=job_or_project._id,
-                        filename=filename
+                        filename=filename,
                     ),
                 }
+
         elif type(job_or_project) is signac.Project:
+
             def make_card(filename):
-               return {
+                return {
                     "name": self.name + ": " + filename,
                     "content": render_template(
                         self.template,
-                        modal_label='project',
+                        modal_label="project",
                         jobid=None,
-                        filename=filename
+                        filename=filename,
                     ),
-               }
+                }
 
         image_globs = [
-            glob.iglob(job_or_project.fn(image_glob))
-            for image_glob in self.img_globs
+            glob.iglob(job_or_project.fn(image_glob)) for image_glob in self.img_globs
         ]
         image_files = itertools.chain(*image_globs)
         for filepath in image_files:
