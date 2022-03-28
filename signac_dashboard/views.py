@@ -120,6 +120,7 @@ def _get_project_file(dashboard, filename):
 
 
 def get_file(dashboard, filename, jobid=None):
+    # TODO:  _get_project_file and _get_job_file can probably be refactored
     if jobid is None:
         return _get_project_file(dashboard, filename)
     else:
