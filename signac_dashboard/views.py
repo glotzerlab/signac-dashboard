@@ -110,8 +110,9 @@ def _get_project_file(dashboard, filename):
         for regex in textfile_regexes:
             if re.match(regex, filename) is not None:
                 mimetype = "text/plain"
-        return send_file(
-            dashboard.project.fn(filename),
+        return send_from_directory(
+            dashboard.project.root_directory(),
+            filename,
             mimetype=mimetype,
             cache_timeout=cache_timeout,
             conditional=True,
