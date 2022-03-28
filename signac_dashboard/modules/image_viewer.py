@@ -4,6 +4,7 @@
 import glob
 import itertools
 import os
+import signac
 
 from flask import render_template
 
@@ -11,7 +12,7 @@ from signac_dashboard.module import Module
 
 
 class ImageViewer(Module):
-    """Displays images in the job workspace that match a glob.
+    """Displays images in the job workspace or project directory that match a glob.
 
     This module can display images in any format that works with a standard
     ``<img>`` tag. The module defaults to showing all images of PNG, JPG, or
@@ -32,8 +33,8 @@ class ImageViewer(Module):
 
     def __init__(
         self,
-        name="Image Viewer",
         context="JobContext",
+        name="Image Viewer",
         template="cards/image_viewer.html",
         img_globs=["*.png", "*.jpg", "*.gif"],
         **kwargs,
@@ -41,19 +42,34 @@ class ImageViewer(Module):
         super().__init__(name=name, context=context, template=template, **kwargs)
         self.img_globs = img_globs
 
-    def get_cards(self, job):
-        def make_card(filename):
-            return {
-                "name": self.name + ": " + filename,
-                "content": render_template(
-                    self.template, modal_label=job._id, jobid=job._id, filename=filename
-                ),
-            }
+    def get_cards(self, job_or_project):
+        if type(job_or_project) is signac.contrib.job.Job:
+            def make_card(filename):
+                return {
+                    "name": self.name + ": " + filename,
+                    "content": render_template(
+                        self.template,
+                        modal_label=job_or_project._id,
+                        jobid=job_or_project._id,
+                        filename=filename
+                    ),
+                }
+        elif type(job_or_project) is signac.Project:
+            def make_card(filename):
+               return {
+                    "name": self.name + ": " + filename,
+                    "content": render_template(
+                        self.template,
+                        modal_label='project',
+                        jobid=None,
+                        filename=filename
+                    ),
+               }
 
         image_globs = [
-            glob.iglob(job.workspace() + os.sep + image_glob)
+            glob.iglob(job_or_project.fn(image_glob))
             for image_glob in self.img_globs
         ]
         image_files = itertools.chain(*image_globs)
         for filepath in image_files:
-            yield make_card(os.path.relpath(filepath, job.ws))
+            yield make_card(os.path.relpath(filepath, job_or_project.fn("")))
