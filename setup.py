@@ -31,18 +31,19 @@ except OSError:
 
 setup(
     name="signac-dashboard",
-    version="0.2.8",
+    version="0.2.9",
     packages=find_packages(),
     include_package_data=True,
-    python_requires=">=3.6,<4",
+    # Supported versions are determined according to NEP 29.
+    # https://numpy.org/neps/nep-0029-deprecation_policy.html
+    python_requires=">=3.8,<4",
     install_requires=requirements,
     classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: BSD License",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
     author="Bradley Dice",
     author_email="bdice@bradleydice.com",

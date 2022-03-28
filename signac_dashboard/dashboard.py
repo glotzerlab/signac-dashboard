@@ -124,9 +124,9 @@ class Dashboard:
         # The paths in DASHBOARD_PATHS give the preferred order of template
         # loading
         loader_list = []
-        for dashpath in list(app.config.get("DASHBOARD_PATHS", [])):
-            logger.warning(f"Adding '{dashpath}' to dashboard paths.")
-            loader_list.append(jinja2.FileSystemLoader(dashpath + "/templates"))
+        for dash_path in list(app.config.get("DASHBOARD_PATHS", [])):
+            logger.warning(f"Adding '{dash_path}' to dashboard paths.")
+            loader_list.append(jinja2.FileSystemLoader(dash_path + "/templates"))
 
         # The default loader goes last and is overridden by any custom paths
         loader_list.append(app.jinja_loader)
@@ -219,12 +219,12 @@ class Dashboard:
                     port += 1
                 pass
 
-    @lru_cache()
+    @lru_cache
     def _schema_variables(self):
         schema = self.project.detect_schema(exclude_const=True)
         return [key for key in schema]
 
-    @lru_cache()
+    @lru_cache
     def _project_min_len_unique_id(self):
         return self.project.min_len_unique_id()
 
@@ -295,7 +295,7 @@ class Dashboard:
         key = natsort.natsort_keygen(key=self.job_title, alg=natsort.REAL)
         return key(job)
 
-    @lru_cache()
+    @lru_cache
     def _get_all_jobs(self):
         return sorted(self.project.find_jobs(), key=self.job_sorter)
 

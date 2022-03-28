@@ -16,12 +16,8 @@ def main():
         print("No signac project could be found in the current directory.")
         sys.exit(1)
 
-    modules = []
     # Initialize a new Dashboard using essential modules
-    modules.append(ProjectDocument())
-    modules.append(StatepointList())
-    modules.append(DocumentList())
-    modules.append(ImageViewer())
+    modules = [StatepointList(), DocumentList(), ImageViewer()]
     Dashboard(modules=modules, project=project).main()
 
 

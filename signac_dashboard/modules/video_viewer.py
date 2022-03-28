@@ -50,7 +50,7 @@ class VideoViewer(Module):
         name="Video Viewer",
         context="JobContext",
         template="cards/video_viewer.html",
-        video_globs=["*.mp4", "*.m4v"],
+        video_globs=("*.mp4", "*.m4v"),
         preload="none",  # auto|metadata|none
         poster=None,
         **kwargs,
@@ -87,4 +87,4 @@ class VideoViewer(Module):
         ]
         video_files = itertools.chain(*video_globs)
         for filepath in video_files:
-            yield make_card(os.path.relpath(filepath, job.ws))
+            yield make_card(os.path.relpath(filepath, job.workspace()))

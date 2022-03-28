@@ -7,6 +7,27 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.2
 ===========
 
+[0.2.10] -- 2022-xx-xx
+----------------------
+
+Added
++++++
+
+- Ability to select modules and views on narrow screens (#114)
+
+Removed
++++++++
+
+- Dropped support for Python 3.7 following the recommended support schedules of `NEP 29 <https://numpy.org/neps/nep-0029-deprecation_policy.html>`__.
+
+[0.2.9] -- 2022-02-08
+---------------------
+
+Fixed
++++++
+
+- Use Flask's ``send_from_directory`` for safety (#111).
+
 [0.2.8] -- 2021-05-26
 ---------------------
 
