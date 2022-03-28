@@ -452,7 +452,7 @@ class Dashboard:
         """
         if import_file is not None:
             import_name = import_file + "." + import_name
-        view = LazyView(dashboard = self, import_name = import_name)
+        view = LazyView(dashboard=self, import_name=import_name)
         for url_rule in url_rules:
             self.app.add_url_rule(
                 rule=url_rule,
@@ -519,7 +519,10 @@ class Dashboard:
         self.add_url("views.project_info", ["/project"])
         self.add_url("views.jobs_list", ["/jobs/"])
         self.add_url("views.show_job", ["/jobs/<jobid>"])
-        self.add_url("views.get_file", ["/jobs/<jobid>/file/<path:filename>", "/project/file/<path:filename>"])
+        self.add_url(
+            "views.get_file",
+            ["/jobs/<jobid>/file/<path:filename>", "/project/file/<path:filename>"],
+        )
         self.add_url("views.change_modules", ["/modules"], methods=["POST"])
 
     def update_cache(self):

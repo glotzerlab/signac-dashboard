@@ -34,7 +34,7 @@ class SchemaView(Module):
         self.exclude_const = exclude_const
 
     def get_cards(self, project):
-        schema = project.detect_schema(exclude_const = self.exclude_const)
+        schema = project.detect_schema(exclude_const=self.exclude_const)
         schema = OrderedDict(schema.items())
 
         # We manually escape the schema contents since the field is marked
@@ -52,5 +52,8 @@ class SchemaView(Module):
                 schema[key] = escape(schema[key])
 
         return [
-            {"name": self.name, "content": render_template(self.template, document=schema)}
+            {
+                "name": self.name,
+                "content": render_template(self.template, document=schema),
+            }
         ]
