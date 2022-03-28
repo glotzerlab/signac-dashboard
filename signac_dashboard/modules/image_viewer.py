@@ -41,6 +41,13 @@ class ImageViewer(Module):
     ):
         super().__init__(name=name, context=context, template=template, **kwargs)
         self.img_globs = img_globs
+        if context == "JobContext":
+            # TODO refactor the dual make_card definitions below
+            # because the context determines whether job_or_project is
+            # a job or a project
+            pass
+        elif context == "ProjectContext":
+            pass
 
     def get_cards(self, job_or_project):
         if type(job_or_project) is signac.contrib.job.Job:
