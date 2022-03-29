@@ -28,6 +28,26 @@ class IPythonDisplay(Module):
 
         modules = [IPythonDisplay(contents=render_job)]
 
+    Many common Python libraries (such as pandas) come with classes that already
+    implement ``_repr_html_`` and can be used directly. However, this next
+    example shows a custom output (in this case a bolded temperature).
+
+    .. code-block:: python
+
+        from signac_dashboard.modules import IPythonDisplay
+
+        class BoldTemperature:
+            def __init__(self, job):
+                self.job = job
+
+            def _repr_html_(self):
+                return f"<strong>T={self.job.sp.temperature}</strong>"
+
+        def render_job(job):
+            return BoldTemperature(job)
+
+        modules = [IPythonDisplay(contents=render_job)]
+
     :param contents: A callable accepting one argument of type
         :py:class:`signac.contrib.job.Job` and returning an object to be
         rendered with IPython's :code:`HTMLFormatter`.
