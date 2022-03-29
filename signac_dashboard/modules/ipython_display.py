@@ -7,6 +7,7 @@ from signac_dashboard.module import Module
 
 try:
     from IPython.core.formatters import HTMLFormatter, PlainTextFormatter
+
     HTML_FORMATTER = True
 except ImportError:
     HTML_FORMATTER = False
