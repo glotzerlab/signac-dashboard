@@ -6,8 +6,7 @@ from flask import render_template
 from signac_dashboard.module import Module
 
 try:
-    from IPython.core.formatters import HTMLFormatter
-
+    from IPython.core.formatters import HTMLFormatter, PlainTextFormatter
     HTML_FORMATTER = True
 except ImportError:
     HTML_FORMATTER = False
@@ -72,6 +71,9 @@ class IPythonDisplay(Module):
         contents = self.contents(job)
         if HTML_FORMATTER:
             html_contents = HTMLFormatter()(contents)
+            # Handle lack of _repr_html_ like IPython
+            if html_contents is None:
+                html_contents = "<p>" + PlainTextFormatter()(contents) + "</p>"
         else:
             html_contents = "Error: Install the 'IPython' library to render contents."
         return [
