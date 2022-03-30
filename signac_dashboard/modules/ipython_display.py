@@ -138,7 +138,7 @@ class IPythonDisplay(Module):
     def __init__(
         self,
         name="IPython Display",
-        contents=lambda job: "No contents provided.",
+        contents=None,
         **kwargs,
     ):
         super().__init__(
@@ -147,7 +147,13 @@ class IPythonDisplay(Module):
             template="cards/ipython_display.html",
             **kwargs,
         )
-        self.contents = contents
+        if contents is None:
+            if HTML_FORMATTER:
+                self.contents = _JobHTMLView
+            else:
+                self.contents = lambda j: j
+        else:
+            self.contents = contents
 
     def get_cards(self, job):
         contents = self.contents(job)
