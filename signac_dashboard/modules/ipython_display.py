@@ -1,6 +1,8 @@
 # Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
+import collections.abc
+
 from flask import render_template
 
 from signac_dashboard.module import Module
@@ -11,6 +13,85 @@ try:
     HTML_FORMATTER = True
 except ImportError:
     HTML_FORMATTER = False
+
+
+def _dict_to_collapsible_table(dict_):
+    button_fmt = '<button type="button" class="collapsible">{}</button>'
+    content_fmt = '<div class="content">{}</div>'
+    content = []
+    content.append('<div class="collapsible-table">')
+    for key, value in dict_.items():
+        content.append(button_fmt.format(key))
+        if isinstance(value, collections.abc.Mapping):
+            inner_content = _dict_to_collapsible_table(value)
+        else:
+            inner_content = "<p>" + repr(value) + "</p>"
+        content.append(content_fmt.format(inner_content))
+    content.append("</div>")
+    return "".join(content)
+
+
+class _JobHTMLView:
+    """Provides a rich HTML expandable node view of a job's statepoint."""
+
+    _css_style = """
+    <style>
+        .collapsible {
+            text-align: left;
+            border: none;
+            background: none;
+            padding: 10px;
+        }
+        .collapsible:before {
+            content: "⏷";
+        }
+        .show:before {
+            content: "⏶";
+            color: #3273dc;
+        }
+        .show {
+            color: #3273dc;
+        }
+
+        .content {
+            padding: 0px;
+            margin: 0px 0px 0px 2vw;
+            display: none;
+            overflow: hidden;
+        }
+        .collapsible-table {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    </style>
+    """
+
+    _js_script = """
+    <script>
+        var nodes = document.getElementsByClassName("collapsible");
+        var i;
+        for (i = 0; i < nodes.length; i++) {
+            nodes[i].addEventListener("click", function() {
+                this.classList.toggle("show")
+                var node_content = this.nextElementSibling;
+                if (node_content.style.display === "block") {
+                    node_content.style.display = "none";
+                }
+                else {
+                    node_content.style.display = "block";
+                }
+            })
+        };
+    </script>
+    """
+
+    def __init__(self, job):
+        self.job = job
+
+    def _repr_html_(self):
+        content = _dict_to_collapsible_table(self.job.sp)
+        return content + self._css_style + self._js_script
 
 
 class IPythonDisplay(Module):
