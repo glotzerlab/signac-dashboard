@@ -34,64 +34,11 @@ def _dict_to_collapsible_table(dict_):
 class _JobHTMLView:
     """Provides a rich HTML expandable node view of a job's statepoint."""
 
-    _css_style = """
-    <style>
-        .collapsible {
-            text-align: left;
-            border: none;
-            background: none;
-            padding: 10px;
-        }
-        .collapsible:before {
-            content: "⏷";
-        }
-        .show:before {
-            content: "⏶";
-            color: #3273dc;
-        }
-        .show {
-            color: #3273dc;
-        }
-
-        .content {
-            padding: 0px;
-            margin: 0px 0px 0px 2vw;
-            display: none;
-            overflow: hidden;
-        }
-        .collapsible-table {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-    </style>
-    """
-
-    _js_script = """
-    <script>
-        var nodes = document.getElementsByClassName("collapsible");
-        var i;
-        for (i = 0; i < nodes.length; i++) {
-            nodes[i].addEventListener("click", function() {
-                this.classList.toggle("show")
-                var node_content = this.nextElementSibling;
-                if (node_content.style.display === "block") {
-                    node_content.style.display = "none";
-                }
-                else {
-                    node_content.style.display = "block";
-                }
-            })
-        };
-    </script>
-    """
-
     def __init__(self, job):
         self.job = job
 
     def _repr_html_(self):
-        content = _dict_to_collapsible_table(self.job.sp)
-        return content + self._css_style + self._js_script
+        return _dict_to_collapsible_table(self.job.sp)
 
 
 class IPythonDisplay(Module):
@@ -170,3 +117,14 @@ class IPythonDisplay(Module):
                 "content": render_template(self.template, html_contents=html_contents),
             }
         ]
+
+    def register(self, dashboard):
+        # Register assets
+        assets = ["js/ipython_job_viewer.js", "css/ipython_job_viewer.css"]
+        for assetfile in assets:
+            dashboard.register_module_asset(
+                {
+                    "file": f"templates/ipython_display/{assetfile}",
+                    "url": f"module/ipython_display/{assetfile}",
+                }
+            )

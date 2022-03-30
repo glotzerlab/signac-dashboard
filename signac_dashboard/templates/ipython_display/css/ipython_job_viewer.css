@@ -1,0 +1,28 @@
+.collapsible {
+	text-align: left;
+	border: none;
+	background: none;
+	padding: 10px;
+}
+.collapsible:before {
+	content: "⏷";
+}
+.show:before {
+	content: "⏶";
+	color: #3273dc;
+}
+.show {
+	color: #3273dc;
+}
+
+.content {
+	padding: 0px;
+	margin: 0px 0px 0px 2vw;
+	display: none;
+	overflow: hidden;
+}
+.collapsible-table {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
