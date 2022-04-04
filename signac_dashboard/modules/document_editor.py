@@ -5,8 +5,8 @@ from ast import literal_eval
 from collections import OrderedDict
 
 from flask import abort, render_template, request
-from markupsafe import escape
 from jinja2.exceptions import TemplateNotFound
+from markupsafe import escape
 
 from signac_dashboard.module import Module
 
