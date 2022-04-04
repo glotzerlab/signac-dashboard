@@ -5,7 +5,7 @@ from ast import literal_eval
 from collections import OrderedDict
 
 from flask import abort, render_template, request
-from jinja2 import escape
+from markupsafe import escape
 from jinja2.exceptions import TemplateNotFound
 
 from signac_dashboard.module import Module
