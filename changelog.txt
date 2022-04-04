@@ -13,7 +13,12 @@ Version 0.2
 Added
 +++++
 
-- Ability to select modules and views on narrow screens (#114)
+- Ability to select modules and views on narrow screens (#114).
+
+Fixed
++++++
+
+- Jinja2 and markupsafe are now dependencies (#123, #125).
 
 Removed
 +++++++
