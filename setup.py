@@ -33,7 +33,7 @@ except OSError:
 
 setup(
     name="signac-dashboard",
-    version="0.2.9",
+    version="0.2.10",
     packages=find_packages(),
     include_package_data=True,
     # Supported versions are determined according to NEP 29.
