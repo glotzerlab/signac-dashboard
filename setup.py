@@ -11,8 +11,8 @@ requirements = [
     "flask-turbolinks",
     "jinja2>=3.0.0",
     "jsmin",
-    "markupsafe>=2.0.0",
     "libsass",
+    "markupsafe>=2.0.0",
     "natsort",
     "signac>=1.0.0",
     "watchdog",
@@ -33,7 +33,7 @@ except OSError:
 
 setup(
     name="signac-dashboard",
-    version="0.2.9",
+    version="0.2.10",
     packages=find_packages(),
     include_package_data=True,
     # Supported versions are determined according to NEP 29.
