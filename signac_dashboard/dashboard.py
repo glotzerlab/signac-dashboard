@@ -338,7 +338,7 @@ class Dashboard:
             )
             raise error
 
-    @lru_cache(maxsize=65536)  # arbitrarily set to 2**16
+    @lru_cache(maxsize=65536)
     def _job_details(self, job):
         return {
             "job": job,
