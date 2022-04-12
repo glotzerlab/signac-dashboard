@@ -7,13 +7,18 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.2
 ===========
 
-[0.2.10] -- 2022-xx-xx
+[0.2.10] -- 2022-04-05
 ----------------------
 
 Added
 +++++
 
-- Ability to select modules and views on narrow screens (#114)
+- Ability to select modules and views on narrow screens (#114).
+
+Fixed
++++++
+
+- Jinja2 and markupsafe are now dependencies (#123, #125).
 
 Removed
 +++++++

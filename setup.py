@@ -6,16 +6,18 @@ import os
 from setuptools import find_packages, setup
 
 requirements = [
-    "flask>=1.0",
-    "flask-assets>=2.0",
+    "flask>=1.0.0",
+    "flask-assets>=2.0.0",
     "flask-turbolinks",
+    "jinja2>=3.0.0",
     "jsmin",
     "libsass",
+    "markupsafe>=2.0.0",
     "natsort",
-    "signac>=1.0",
+    "signac>=1.0.0",
     "watchdog",
-    "webassets>=2.0",
-    "werkzeug>=1.0",
+    "webassets>=2.0.0",
+    "werkzeug>=1.0.0",
 ]
 
 description = "Visualize data spaces in a web browser."
@@ -31,7 +33,7 @@ except OSError:
 
 setup(
     name="signac-dashboard",
-    version="0.2.9",
+    version="0.2.10",
     packages=find_packages(),
     include_package_data=True,
     # Supported versions are determined according to NEP 29.
