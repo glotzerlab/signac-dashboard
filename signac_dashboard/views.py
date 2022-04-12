@@ -78,33 +78,16 @@ def show_job(dashboard, jobid):
         return dashboard._render_job_view(default_view="grid")
 
 
-def _get_job_file(dashboard, jobid, filename):
-    try:
-        job = dashboard.project.open_job(id=jobid)
-    except KeyError:
-        abort(404, "The job id requested could not be found.")
+def get_file(dashboard, filename, jobid=None):
+    if jobid is not None:
+        try:
+            job_or_project = dashboard.project.open_job(id=jobid)
+        except KeyError:
+            abort(404, "The job id requested could not be found.")
     else:
-        if job.isfile(filename):
-            mimetype = None
-            cache_timeout = 0
-            # Return logs as plaintext
-            textfile_regexes = ["job-.*\\.[oe][0-9]*", ".*\\.log", ".*\\.dat"]
-            for regex in textfile_regexes:
-                if re.match(regex, filename) is not None:
-                    mimetype = "text/plain"
-            return send_from_directory(
-                job.workspace(),
-                filename,
-                mimetype=mimetype,
-                cache_timeout=cache_timeout,
-                conditional=True,
-            )
-        else:
-            abort(404, "The file requested does not exist.")
-
-
-def _get_project_file(dashboard, filename):
-    if dashboard.project.isfile(filename):
+        job_or_project = dashboard.project
+    if job_or_project.isfile(filename):
+        directory = job_or_project.root_directory() if jobid is None else job_or_project.workspace()
         mimetype = None
         cache_timeout = 0
         # Return logs as plaintext
@@ -113,7 +96,7 @@ def _get_project_file(dashboard, filename):
             if re.match(regex, filename) is not None:
                 mimetype = "text/plain"
         return send_from_directory(
-            dashboard.project.root_directory(),
+            directory,
             filename,
             mimetype=mimetype,
             cache_timeout=cache_timeout,
@@ -121,14 +104,6 @@ def _get_project_file(dashboard, filename):
         )
     else:
         abort(404, "The file requested does not exist.")
-
-
-def get_file(dashboard, filename, jobid=None):
-    # TODO:  _get_project_file and _get_job_file can probably be refactored
-    if jobid is None:
-        return _get_project_file(dashboard, filename)
-    else:
-        return _get_job_file(dashboard, jobid, filename)
 
 
 def change_modules(dashboard):
