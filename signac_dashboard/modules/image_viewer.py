@@ -48,11 +48,14 @@ class ImageViewer(Module):
                 "name": self.name + ": " + filename,
                 "content": render_template(
                     self.template,
-                    modal_label=job_or_project._id if self.context == "JobContext" else "project",
+                    modal_label=job_or_project._id
+                    if self.context == "JobContext"
+                    else "project",
                     jobid=job_or_project._id if self.context == "JobContext" else None,
                     filename=filename,
                 ),
             }
+
         image_globs = [
             glob.iglob(job_or_project.fn(image_glob)) for image_glob in self.img_globs
         ]

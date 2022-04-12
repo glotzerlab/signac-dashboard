@@ -87,7 +87,11 @@ def get_file(dashboard, filename, jobid=None):
     else:
         job_or_project = dashboard.project
     if job_or_project.isfile(filename):
-        directory = job_or_project.root_directory() if jobid is None else job_or_project.workspace()
+        directory = (
+            job_or_project.root_directory()
+            if jobid is None
+            else job_or_project.workspace()
+        )
         mimetype = None
         cache_timeout = 0
         # Return logs as plaintext
