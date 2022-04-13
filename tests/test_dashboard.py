@@ -34,6 +34,11 @@ class DashboardTestCase(unittest.TestCase):
         self.test_client = self.dashboard.app.test_client()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
 
+    def test_get_project(self):
+        rv = self.test_client.get("/project/", follow_redirects=True)
+        response = str(rv.get_data())
+        assert "dashboard-test-project" in response
+
     def test_get_jobs(self):
         rv = self.test_client.get("/jobs/", follow_redirects=True)
         response = str(rv.get_data())
