@@ -26,7 +26,7 @@ class Notes(Module):
         key="notes",
         **kwargs,
     ):
-        super().__init__(name=name, context=context, template=template, **kwargs)
+        super().__init__(name=name, context=context, template=template, enabled_contexts = {"JobContext"}, **kwargs)
         self.key = key
 
     def get_cards(self, job):

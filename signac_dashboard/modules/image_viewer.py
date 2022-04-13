@@ -38,7 +38,7 @@ class ImageViewer(Module):
         img_globs=("*.png", "*.jpg", "*.gif"),
         **kwargs,
     ):
-        super().__init__(name=name, context=context, template=template, **kwargs)
+        super().__init__(name=name, context=context, template=template, enabled_contexts = {"JobContext", "ProjectContext"}, **kwargs)
         self.img_globs = img_globs
 
     def get_cards(self, job_or_project):

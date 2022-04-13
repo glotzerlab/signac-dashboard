@@ -18,7 +18,7 @@ class StatepointList(Module):
         template="cards/statepoint_list.html",
         **kwargs,
     ):
-        super().__init__(name=name, context=context, template=template, **kwargs)
+        super().__init__(name=name, context=context, template=template, enabled_contexts = {"JobContext"}, **kwargs)
 
     def get_cards(self, job):
         sp = OrderedDict(sorted(job.statepoint().items(), key=lambda t: t[0]))

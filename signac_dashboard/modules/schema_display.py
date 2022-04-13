@@ -29,7 +29,7 @@ class SchemaView(Module):
         exclude_const=False,
         **kwargs,
     ):
-        super().__init__(name=name, context=context, template=template, **kwargs)
+        super().__init__(name=name, context=context, template=template, enabled_contexts = {"ProjectContext"}, **kwargs)
         self.max_chars = max_chars
         self.exclude_const = exclude_const
 

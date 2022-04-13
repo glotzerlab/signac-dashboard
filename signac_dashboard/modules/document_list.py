@@ -35,7 +35,7 @@ class DocumentList(Module):
                 name = "Job Document"
             elif context == "ProjectContext":
                 name = "Project Document"
-        super().__init__(name=name, context=context, template=template, **kwargs)
+        super().__init__(name=name, context=context, template=template, enabled_contexts = {"JobContext", "ProjectContext"}, **kwargs)
         self.max_chars = max_chars
 
     def get_cards(self, job_or_project):

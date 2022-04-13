@@ -62,12 +62,15 @@ class Module:
     :type template: str
     """  # noqa: E501
 
-    def __init__(self, name, context, template, enabled=True):
+    def __init__(self, name, context, template, enabled_contexts, enabled=True):
         self._module = self.__module__
         self._moduletype = self.__class__.__name__
         self.name = name
+        if context not in enabled_contexts:
+            raise RuntimeError(f"{self._moduletype} does not support the {context}, only {enabled_contexts}")
         self.context = context
         self.template = template
+        self.enabled_contexts = enabled_contexts
         self.enabled = enabled
 
     def get_cards(self, obj):
