@@ -4,7 +4,7 @@
 from collections import OrderedDict
 
 from flask import render_template
-from jinja2 import escape
+from markupsafe import escape
 
 from signac_dashboard.module import Module
 from signac_dashboard.util import ellipsis_string
