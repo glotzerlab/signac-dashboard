@@ -116,9 +116,9 @@ class AllModulesTestCase(DashboardTestCase):
         for m in signac_dashboard.modules.__all__:
             module = getattr(signac_dashboard.modules, m)
             for c in module().enabled_contexts:
-                modules.append(module(context = c))
+                modules.append(module(context=c))
                 with self.assertRaises(RuntimeError):
-                    module(context = "BadContext")
+                    module(context="BadContext")
         self.modules = modules
         self.dashboard = Dashboard(
             config=self.config, project=self.project, modules=self.modules

@@ -16,7 +16,13 @@ class AwesomeModule(Module):
         template="cards/awesome_module.html",
         **kwargs,
     ):
-        super().__init__(name=name, context=context, template=template, enabled_contexts = {"JobContext"}, **kwargs)
+        super().__init__(
+            name=name,
+            context=context,
+            template=template,
+            enabled_contexts={"JobContext"},
+            **kwargs,
+        )
 
     def get_cards(self, job):
         return [
