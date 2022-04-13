@@ -11,7 +11,7 @@ from signac_dashboard.util import ellipsis_string
 
 
 class SchemaView(Module):
-    """Displays project schema.
+    """Displays the project schema.
 
     Long values can be optionally truncated.
 

@@ -11,8 +11,7 @@ from signac_dashboard.util import ellipsis_string
 
 
 class DocumentList(Module):
-    """Displays the job or project document, depending
-    on the module context.
+    """Displays the job or project document.
 
     Long values can be optionally truncated.
 
