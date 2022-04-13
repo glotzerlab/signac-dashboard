@@ -7,6 +7,24 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.2
 ===========
 
+[0.2.11] -- 2022-xx-xx
+----------------------
+
+Added
++++++
+
+- Project overview page and modules for it (#110).
+
+Changed
++++++++
+
+- Module context must now be specified for every new module.
+- Position of first two module arguments switched.
+
+
+Version 0.2
+===========
+
 [0.2.10] -- 2022-04-05
 ----------------------
 
