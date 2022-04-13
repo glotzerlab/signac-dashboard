@@ -35,12 +35,12 @@ class DashboardTestCase(unittest.TestCase):
         self.addCleanup(shutil.rmtree, self._tmp_dir)
 
     def test_get_jobs(self):
-        rv = self.test_client.get("/jobs", follow_redirects=True)
+        rv = self.test_client.get("/jobs/", follow_redirects=True)
         response = str(rv.get_data())
         assert "dashboard-test-project" in response
 
     def test_job_count(self):
-        rv = self.test_client.get("/jobs", follow_redirects=True)
+        rv = self.test_client.get("/jobs/", follow_redirects=True)
         response = str(rv.get_data())
         assert f"{self.project.num_jobs()} jobs" in response
 

@@ -516,7 +516,7 @@ class Dashboard:
         self.add_url("views.home", ["/"])
         self.add_url("views.settings", ["/settings"])
         self.add_url("views.search", ["/search"])
-        self.add_url("views.project_info", ["/project"])
+        self.add_url("views.project_info", ["/project/"])
         self.add_url("views.jobs_list", ["/jobs/"])
         self.add_url("views.show_job", ["/jobs/<jobid>"])
         self.add_url(
