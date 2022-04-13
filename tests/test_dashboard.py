@@ -114,7 +114,9 @@ class AllModulesTestCase(DashboardTestCase):
         self.config = {}
         modules = []
         for m in signac_dashboard.modules.__all__:
-            modules.append(getattr(signac_dashboard.modules, m)())
+            module = getattr(signac_dashboard.modules, m)
+            for c in module().enabled_contexts:
+                modules.append(module(context = c))
         self.modules = modules
         self.dashboard = Dashboard(
             config=self.config, project=self.project, modules=self.modules
