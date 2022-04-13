@@ -67,7 +67,9 @@ class Module:
         self._moduletype = self.__class__.__name__
         self.name = name
         if context not in enabled_contexts:
-            raise RuntimeError(f"{self._moduletype} does not support the {context}, only {enabled_contexts}")
+            raise RuntimeError(
+                f"{self._moduletype} does not support the {context}, only {enabled_contexts}"
+            )
         self.context = context
         self.template = template
         self.enabled_contexts = enabled_contexts

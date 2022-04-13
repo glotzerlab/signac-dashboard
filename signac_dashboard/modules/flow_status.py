@@ -35,7 +35,13 @@ class FlowStatus(Module):
         project_class="Project",
         **kwargs,
     ):
-        super().__init__(name=name, context=context, template=template, enabled_contexts = {"JobContext"}, **kwargs)
+        super().__init__(
+            name=name,
+            context=context,
+            template=template,
+            enabled_contexts={"JobContext"},
+            **kwargs,
+        )
 
     def register(self, dashboard):
         self.project = dashboard.project

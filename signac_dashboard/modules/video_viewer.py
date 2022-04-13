@@ -58,7 +58,13 @@ class VideoViewer(Module):
         poster=None,
         **kwargs,
     ):
-        super().__init__(name=name, context=context, template=template, enabled_contexts = {"JobContext", "ProjectContext"}, **kwargs)
+        super().__init__(
+            name=name,
+            context=context,
+            template=template,
+            enabled_contexts={"JobContext", "ProjectContext"},
+            **kwargs,
+        )
         self.preload = preload
         self.poster = poster
         self.video_globs = video_globs

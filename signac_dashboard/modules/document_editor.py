@@ -28,7 +28,13 @@ class DocumentEditor(Module):
         template="cards/document_editor.html",
         **kwargs,
     ):
-        super().__init__(name=name, context=context, template=template, enabled_contexts = {"JobContext"}, **kwargs)
+        super().__init__(
+            name=name,
+            context=context,
+            template=template,
+            enabled_contexts={"JobContext"},
+            **kwargs,
+        )
 
     def get_cards(self, job):
         doc = OrderedDict(sorted(job.document.items(), key=lambda t: t[0]))

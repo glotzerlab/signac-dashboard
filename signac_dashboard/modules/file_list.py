@@ -24,7 +24,13 @@ class FileList(Module):
         prefix_jobid=True,
         **kwargs,
     ):
-        super().__init__(name=name, context=context, template=template, enabled_contexts = {"JobContext"}, **kwargs)
+        super().__init__(
+            name=name,
+            context=context,
+            template=template,
+            enabled_contexts={"JobContext"},
+            **kwargs,
+        )
         self.prefix_jobid = prefix_jobid
 
     def download_name(self, job, filename):

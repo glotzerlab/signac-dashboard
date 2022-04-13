@@ -49,7 +49,7 @@ class TextDisplay(Module):
             name=name,
             context=context,
             template="cards/text_display.html",
-            enabled_contexts = {"JobContext", "ProjectContext"},
+            enabled_contexts={"JobContext", "ProjectContext"},
             **kwargs,
         )
         self.message = message
