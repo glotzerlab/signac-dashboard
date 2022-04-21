@@ -86,7 +86,7 @@ def get_file(dashboard, jobid, filename):
                 cache_timeout=cache_timeout,
                 conditional=True,
                 as_attachment=True,
-                download_name='35478bb1cef990f56fd7a37abe2f88a5_energy-plot-timesteps.txt',
+                download_name="35478bb1cef990f56fd7a37abe2f88a5_energy-plot-timesteps.txt",
             )
         else:
             abort(404, "The file requested does not exist.")
