@@ -65,7 +65,9 @@ def show_job(dashboard, jobid):
         return dashboard._render_job_view(default_view="grid")
 
 
-def get_file(dashboard, jobid, filename): # not sure if *args, **kwargs needed in argument list
+def get_file(
+    dashboard, jobid, filename
+):  # not sure if *args, **kwargs needed in argument list
     try:
         job = dashboard.project.open_job(id=jobid)
     except KeyError:
@@ -86,7 +88,7 @@ def get_file(dashboard, jobid, filename): # not sure if *args, **kwargs needed i
                 mimetype=mimetype,
                 cache_timeout=cache_timeout,
                 conditional=True,
-                download_name=download_name
+                download_name=download_name,
             )
         else:
             abort(404, "The file requested does not exist.")
