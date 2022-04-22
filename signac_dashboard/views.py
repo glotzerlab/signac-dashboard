@@ -65,7 +65,7 @@ def show_job(dashboard, jobid):
         return dashboard._render_job_view(default_view="grid")
 
 
-def get_file(dashboard, jobid, filename):
+def get_file(dashboard, jobid, filename): # not sure if *args, **kwargs needed in argument list
     try:
         job = dashboard.project.open_job(id=jobid)
     except KeyError:
@@ -79,14 +79,14 @@ def get_file(dashboard, jobid, filename):
             for regex in textfile_regexes:
                 if re.match(regex, filename) is not None:
                     mimetype = "text/plain"
+            download_name = request.args.get("download_name", filename)
             return send_from_directory(
                 job.workspace(),
-                filename,
+                path=filename,
                 mimetype=mimetype,
                 cache_timeout=cache_timeout,
                 conditional=True,
-                as_attachment=True,
-                download_name="35478bb1cef990f56fd7a37abe2f88a5_energy-plot-timesteps.txt",
+                download_name=download_name
             )
         else:
             abort(404, "The file requested does not exist.")
