@@ -15,11 +15,6 @@ Added
 
 - The endpoint ``views.get_file`` now reads the ``download_name`` request argument (#127).
 
-Changed
-+++++++
-
-- ``Dashboard.add_url`` now only accepts one rule (#129).
-
 Fixed
 +++++
 

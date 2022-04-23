@@ -401,12 +401,7 @@ class Dashboard:
         return [self._job_details(job) for job in list(jobs)]
 
     def add_url(
-        self,
-        import_name,
-        url_rule,
-        endpoint=None,
-        import_file="signac_dashboard",
-        **kwargs,
+        self, import_name, url_rules=[], import_file="signac_dashboard", **options
     ):
         """Add a route to the dashboard.
 
@@ -442,25 +437,23 @@ class Dashboard:
 
         :param import_name: The view function name to be imported.
         :type import_name: str
-        :param url_rule: URL rule, see :py:meth:`flask.Flask.add_url_rule`.
-        :type url_rule: str
-        :param endpoint: The endpoint name. Must be unique. If None, defaults
-            to the name of the view function (default: None).
-        :type endpoint: str
+        :param url_rules: A list of URL rules, see
+            :py:meth:`flask.Flask.add_url_rule`.
+        :type url_rules: list
         :param import_file: The module from which to import (default:
             :code:`'signac_dashboard'`).
         :type import_file: str
-        :param \\**kwargs: Additional keyword arguments to pass to
+        :param \\**options: Additional options to pass to
             :py:meth:`flask.Flask.add_url_rule`.
         """
         if import_file is not None:
             import_name = import_file + "." + import_name
-        self.app.add_url_rule(
-            rule=url_rule,
-            endpoint=endpoint,
-            view_func=LazyView(dashboard=self, import_name=import_name),
-            **kwargs,
-        )
+        for url_rule in url_rules:
+            self.app.add_url_rule(
+                rule=url_rule,
+                view_func=LazyView(dashboard=self, import_name=import_name),
+                **options,
+            )
 
     def _register_routes(self):
         """Registers routes with the Flask application.
@@ -515,13 +508,13 @@ class Dashboard:
         def favicon():
             return url_for("static", filename="favicon.ico")
 
-        self.add_url("views.home", "/")
-        self.add_url("views.settings", "/settings")
-        self.add_url("views.search", "/search")
-        self.add_url("views.jobs_list", "/jobs/")
-        self.add_url("views.show_job", "/jobs/<jobid>")
-        self.add_url("views.get_file", "/jobs/<jobid>/file/<path:filename>")
-        self.add_url("views.change_modules", "/modules", methods=["POST"])
+        self.add_url("views.home", ["/"])
+        self.add_url("views.settings", ["/settings"])
+        self.add_url("views.search", ["/search"])
+        self.add_url("views.jobs_list", ["/jobs/"])
+        self.add_url("views.show_job", ["/jobs/<jobid>"])
+        self.add_url("views.get_file", ["/jobs/<jobid>/file/<path:filename>"])
+        self.add_url("views.change_modules", ["/modules"], methods=["POST"])
 
     def update_cache(self):
         """Clear project and dashboard server caches.
