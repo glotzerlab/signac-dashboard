@@ -79,12 +79,14 @@ def get_file(dashboard, jobid, filename):
             for regex in textfile_regexes:
                 if re.match(regex, filename) is not None:
                     mimetype = "text/plain"
+            download_name = request.args.get("download_name", filename)
             return send_from_directory(
-                job.workspace(),
-                filename,
+                directory=job.workspace(),
+                path=filename,
                 mimetype=mimetype,
                 cache_timeout=cache_timeout,
                 conditional=True,
+                download_name=download_name,
             )
         else:
             abort(404, "The file requested does not exist.")
