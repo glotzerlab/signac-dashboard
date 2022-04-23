@@ -23,7 +23,7 @@ Changed
 Fixed
 +++++
 
-- FileList module now respects prefix_jobid option. (#127, #128)
+- FileList module now respects prefix_jobid option (#127, #128).
 
 [0.2.10] -- 2022-04-05
 ----------------------
