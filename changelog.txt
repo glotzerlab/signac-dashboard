@@ -7,6 +7,14 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.2
 ===========
 
+[0.2.11] -- 2022-xx-xx
+----------------------
+
+Changed
++++++++
+
+- ``Dashboard.add_url`` now only accepts one rule.
+
 [0.2.10] -- 2022-04-05
 ----------------------
 
