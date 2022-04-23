@@ -443,7 +443,7 @@ class Dashboard:
         :param import_file: The module from which to import (default:
             :code:`'signac_dashboard'`).
         :type import_file: str
-        :param \\**kwargs: Additional options to pass to
+        :param \\**kwargs: Additional keyword arguments to pass to
             :py:meth:`flask.Flask.add_url_rule`.
         """
         if import_file is not None:
