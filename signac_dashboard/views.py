@@ -65,9 +65,7 @@ def show_job(dashboard, jobid):
         return dashboard._render_job_view(default_view="grid")
 
 
-def get_file(
-    dashboard, jobid, filename
-):  # not sure if *args, **kwargs needed in argument list
+def get_file(dashboard, jobid, filename):
     try:
         job = dashboard.project.open_job(id=jobid)
     except KeyError:
