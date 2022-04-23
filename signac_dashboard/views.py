@@ -81,7 +81,7 @@ def get_file(dashboard, jobid, filename):
                     mimetype = "text/plain"
             download_name = request.args.get("download_name", filename)
             return send_from_directory(
-                job.workspace(),
+                directory=job.workspace(),
                 path=filename,
                 mimetype=mimetype,
                 cache_timeout=cache_timeout,
