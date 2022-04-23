@@ -19,7 +19,7 @@ Fixed
 +++++
 
 - FileList module now respects prefix_jobid option (#127, #128).
-- View functions added via ``Dashboard.add_url`` can be used with multiple routes (#130).
+- Endpoints added via ``Dashboard.add_url`` can be used with multiple routes (#130).
 
 [0.2.10] -- 2022-04-05
 ----------------------
