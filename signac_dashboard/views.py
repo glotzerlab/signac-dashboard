@@ -112,7 +112,7 @@ def get_file(dashboard, filename, jobid=None):
 
 def change_modules(dashboard):
     enabled_modules = set(session.get("enabled_modules", []))
-    context = session.get("context")
+    context = session.get("context", "JobContext")
     for i, module in enumerate(dashboard.modules):
         if module.context == context:
             if request.form.get(f"modules[{i}]") == "on":
