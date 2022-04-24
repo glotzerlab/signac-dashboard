@@ -405,7 +405,7 @@ class Dashboard:
         return [self._job_details(job) for job in list(jobs)]
 
     def add_url(
-        self, import_name, url_rules=[], import_file="signac_dashboard", **options
+        self, import_name, url_rules=[], import_file="signac_dashboard", **kwargs
     ):
         """Add a route to the dashboard.
 
@@ -447,7 +447,7 @@ class Dashboard:
         :param import_file: The module from which to import (default:
             :code:`'signac_dashboard'`).
         :type import_file: str
-        :param \\**options: Additional options to pass to
+        :param \\**kwargs: Additional keyword arguments to pass to
             :py:meth:`flask.Flask.add_url_rule`.
         """
         if import_file is not None:
@@ -457,7 +457,7 @@ class Dashboard:
             self.app.add_url_rule(
                 rule=url_rule,
                 view_func=view,
-                **options,
+                **kwargs,
             )
 
     def _register_routes(self):

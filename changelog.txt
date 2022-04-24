@@ -4,6 +4,16 @@ Changes
 
 The **signac-dashboard** package follows `semantic versioning <https://semver.org/>`_.
 
+Version 0.3
+===========
+
+[0.3.1] -- 2022-xx-xx
+
+Added
++++++
+
+- Project overview page and modules with ProjectContext (#110).
+
 Version 0.2
 ===========
 
@@ -13,17 +23,13 @@ Version 0.2
 Added
 +++++
 
-- Project overview page and modules for it (#110).
+- The endpoint ``views.get_file`` now reads the ``download_name`` request argument (#127).
 
-Changed
-+++++++
+Fixed
++++++
 
-- Module context must now be specified for every new module.
-- Position of first two module arguments switched.
-
-
-Version 0.2
-===========
+- FileList module now respects prefix_jobid option (#127, #128).
+- Endpoints added via ``Dashboard.add_url`` can be used with multiple routes (#130).
 
 [0.2.10] -- 2022-04-05
 ----------------------

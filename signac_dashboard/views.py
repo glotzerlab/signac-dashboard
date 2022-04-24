@@ -93,12 +93,14 @@ def get_file(dashboard, filename, jobid=None):
         directory = job_or_project.fn("")
         mimetype = None
         cache_timeout = 0
+        download_name = request.args.get("download_name", filename)
         return send_from_directory(
-            directory,
-            filename,
+            directory=directory,
+            path=filename,
             mimetype=mimetype,
             cache_timeout=cache_timeout,
             conditional=True,
+            download_name=download_name,
         )
     else:
         abort(404, "The file requested does not exist.")
