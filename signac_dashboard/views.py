@@ -84,6 +84,9 @@ def get_file(dashboard, filename, jobid=None):
             job_or_project = dashboard.project.open_job(id=jobid)
         except KeyError:
             abort(404, "The job id requested could not be found.")
+        except LookupError:
+            dashboard.project.find_jobs()
+            abort(404, "Multiple jobs match the requested job id.")
     else:
         job_or_project = dashboard.project
     if job_or_project.isfile(filename):
