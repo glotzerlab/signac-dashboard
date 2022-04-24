@@ -28,7 +28,7 @@ class DocumentList(Module):
         max_chars=None,
         **kwargs,
     ):
-        # set name based on intialized context
+        # Set name based on context
         if name is None:
             if context == "JobContext":
                 name = "Job Document"

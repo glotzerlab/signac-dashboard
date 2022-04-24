@@ -11,7 +11,7 @@ from signac_dashboard.module import Module
 
 
 class ImageViewer(Module):
-    """Displays images in the job or project directory that match a glob.
+    """Displays images that match a glob.
 
     This module can display images in any format that works with a standard
     ``<img>`` tag. The module defaults to showing all images of PNG, JPG, or

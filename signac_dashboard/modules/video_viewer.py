@@ -12,8 +12,7 @@ from signac_dashboard.module import Module
 
 
 class VideoViewer(Module):
-    """Displays videos in the job or project directory that
-    match a glob
+    """Displays videos that match a glob.
 
     The :py:class:`~signac_dashboard.modules.VideoViewer` module displays
     videos using an HTML ``<video>`` tag. The module defaults to showing all
