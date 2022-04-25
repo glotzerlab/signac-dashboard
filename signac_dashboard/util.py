@@ -29,7 +29,7 @@ def ellipsis_string(string, length=60):
 
 
 class LazyView:
-    # https://flask.palletsprojects.com/en/2.0.x/patterns/lazyloading
+    # See https://flask.palletsprojects.com/en/2.1.x/patterns/lazyloading/
     def __init__(self, dashboard, import_name):
         self.__module__, self.__name__ = import_name.rsplit(".", 1)
         self.import_name = import_name
