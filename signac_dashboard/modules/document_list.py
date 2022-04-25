@@ -34,11 +34,11 @@ class DocumentList(Module):
                 name = "Job Document"
             elif context == "ProjectContext":
                 name = "Project Document"
+        self._enabled_contexts={"JobContext", "ProjectContext"}
         super().__init__(
             name=name,
             context=context,
             template=template,
-            enabled_contexts={"JobContext", "ProjectContext"},
             **kwargs,
         )
         self.max_chars = max_chars

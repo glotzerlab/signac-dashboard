@@ -45,11 +45,11 @@ class TextDisplay(Module):
         markdown=False,
         **kwargs,
     ):
+        self._enabled_contexts={"JobContext", "ProjectContext"}
         super().__init__(
             name=name,
             context=context,
             template="cards/text_display.html",
-            enabled_contexts={"JobContext", "ProjectContext"},
             **kwargs,
         )
         self.message = message

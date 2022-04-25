@@ -18,11 +18,11 @@ class StatepointList(Module):
         template="cards/statepoint_list.html",
         **kwargs,
     ):
+        self._enabled_contexts={"JobContext"}
         super().__init__(
             name=name,
             context=context,
             template=template,
-            enabled_contexts={"JobContext"},
             **kwargs,
         )
 

@@ -57,11 +57,11 @@ class VideoViewer(Module):
         poster=None,
         **kwargs,
     ):
+        self._enabled_contexts={"JobContext", "ProjectContext"}
         super().__init__(
             name=name,
             context=context,
             template=template,
-            enabled_contexts={"JobContext", "ProjectContext"},
             **kwargs,
         )
         self.preload = preload
