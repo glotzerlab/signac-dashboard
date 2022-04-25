@@ -33,8 +33,8 @@ class ImageViewer(Module):
 
     def __init__(
         self,
-        context="JobContext",
         name="Image Viewer",
+        context="JobContext",
         template="cards/image_viewer.html",
         img_globs=("*.png", "*.jpg", "*.gif"),
         **kwargs,

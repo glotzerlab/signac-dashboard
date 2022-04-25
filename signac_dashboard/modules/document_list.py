@@ -22,8 +22,8 @@ class DocumentList(Module):
 
     def __init__(
         self,
-        context="JobContext",
         name=None,
+        context="JobContext",
         template="cards/document_list.html",
         max_chars=None,
         **kwargs,

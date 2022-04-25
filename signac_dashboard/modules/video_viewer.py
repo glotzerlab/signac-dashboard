@@ -49,8 +49,8 @@ class VideoViewer(Module):
 
     def __init__(
         self,
-        context="JobContext",
         name="Video Viewer",
+        context="JobContext",
         template="cards/video_viewer.html",
         video_globs=("*.mp4", "*.m4v"),
         preload="none",  # auto|metadata|none

@@ -22,8 +22,8 @@ class SchemaView(Module):
 
     def __init__(
         self,
-        context="ProjectContext",
         name="Project Schema",
+        context="ProjectContext",
         template="cards/document_list.html",
         max_chars=None,
         exclude_const=False,

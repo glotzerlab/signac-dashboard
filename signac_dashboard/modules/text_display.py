@@ -39,8 +39,8 @@ class TextDisplay(Module):
 
     def __init__(
         self,
-        context="JobContext",
         name="Text Display",
+        context="JobContext",
         message=lambda job_or_project: "No message provided.",
         markdown=False,
         **kwargs,
