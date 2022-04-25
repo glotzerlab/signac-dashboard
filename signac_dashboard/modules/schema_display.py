@@ -29,7 +29,7 @@ class SchemaView(Module):
         exclude_const=False,
         **kwargs,
     ):
-        self._enabled_contexts={"ProjectContext"}
+        self._enabled_contexts = {"ProjectContext"}
         super().__init__(
             name=name,
             context=context,

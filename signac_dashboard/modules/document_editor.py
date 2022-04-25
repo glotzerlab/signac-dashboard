@@ -28,7 +28,7 @@ class DocumentEditor(Module):
         template="cards/document_editor.html",
         **kwargs,
     ):
-        self._enabled_contexts={"JobContext"}
+        self._enabled_contexts = {"JobContext"}
         super().__init__(
             name=name,
             context=context,

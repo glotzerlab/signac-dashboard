@@ -16,7 +16,7 @@ class AwesomeModule(Module):
         template="cards/awesome_module.html",
         **kwargs,
     ):
-        self._enabled_contexts={"JobContext"}
+        self._enabled_contexts = {"JobContext"}
         super().__init__(
             name=name,
             context=context,

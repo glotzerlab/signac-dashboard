@@ -35,7 +35,7 @@ class FlowStatus(Module):
         project_class="Project",
         **kwargs,
     ):
-        self._enabled_contexts={"JobContext"}
+        self._enabled_contexts = {"JobContext"}
         super().__init__(
             name=name,
             context=context,

@@ -24,7 +24,7 @@ class FileList(Module):
         prefix_jobid=True,
         **kwargs,
     ):
-        self._enabled_contexts={"JobContext"}
+        self._enabled_contexts = {"JobContext"}
         super().__init__(
             name=name,
             context=context,

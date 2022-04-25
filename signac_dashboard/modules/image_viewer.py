@@ -39,7 +39,7 @@ class ImageViewer(Module):
         img_globs=("*.png", "*.jpg", "*.gif"),
         **kwargs,
     ):
-        self._enabled_contexts={"JobContext", "ProjectContext"}
+        self._enabled_contexts = {"JobContext", "ProjectContext"}
         super().__init__(
             name=name,
             context=context,
