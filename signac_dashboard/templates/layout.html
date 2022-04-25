@@ -69,11 +69,11 @@
                         <div class="box sidebar-box">
                             <h2 class="subtitle is-4">Modules</h2>
                             {% if modules | length > 0 %}
-                            {% if session["context"] == "JobContext" and g.jobs | length > 0  or session["context"] == "ProjectContext" %}
+                            {% if g.active_page == "jobs" and g.jobs | length > 0  or g.active_page == "project" %}
                             <form action="{{ url_for('change_modules') }}" method="POST">
                                 <input type="hidden" name="redirect" value="{{ request.url }}">
                                 {% for module in modules %}
-                                {% if module.context == session["context"] %}
+                                {% if module.context == {"jobs": "JobContext", "project": "ProjectContext"}[g.active_page] %}
                                 <div class="field is-horizontal">
                                     <div class="field-body">
                                         <div class="field">
