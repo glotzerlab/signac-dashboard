@@ -49,15 +49,20 @@ class ImageViewer(Module):
         self.img_globs = img_globs
 
     def get_cards(self, job_or_project):
+        if self.context == "JobContext":
+            jobid = job_or_project._id
+            modal_label = job_or_project._id
+        elif self.context == "ProjectContext":
+            jobid = None
+            modal_label = "project"
+
         def make_card(filename):
             return {
                 "name": self.name + ": " + filename,
                 "content": render_template(
                     self.template,
-                    modal_label=job_or_project._id
-                    if self.context == "JobContext"
-                    else "project",
-                    jobid=job_or_project._id if self.context == "JobContext" else None,
+                    modal_label=modal_label,
+                    jobid=jobid,
                     filename=filename,
                 ),
             }

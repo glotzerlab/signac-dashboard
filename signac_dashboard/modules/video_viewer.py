@@ -69,9 +69,9 @@ class VideoViewer(Module):
         self.video_globs = video_globs
 
     def get_cards(self, job_or_project):
-        if type(job_or_project) is signac.contrib.job.Job:
+        if self.context == "JobContext":
             jobid = job_or_project._id
-        elif type(job_or_project) is signac.Project:
+        elif self.context == "ProjectContext":
             jobid = None
 
         def make_card(filename):
