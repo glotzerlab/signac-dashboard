@@ -49,9 +49,9 @@
                     <div class="sidebar-content">
                         {% if self.sidebar() %}
                         {% block sidebar %}
+                        {% block view_options %}
                         <div class="box sidebar-box">
                             <h2 class="subtitle is-4">Views</h2>
-                            {% block view_options %}
                             <p class="field">
                                 <a class="button" href="{{ modify_query(view='list') }}" title="List View">
                                     <span class="icon is-small">
@@ -64,8 +64,9 @@
                                     </span>
                                 </a>
                             </p>
-                            {% endblock view_options %}
                         </div>
+                        {% endblock view_options %}
+                        {% block module_selector %}
                         <div class="box sidebar-box">
                             <h2 class="subtitle is-4">Modules</h2>
                             {% if modules | length > 0 %}
@@ -100,6 +101,7 @@
                             No modules. Add some!
                         </a>
                         {% endif %}
+                        {% endblock module_selector %}
                         {% endblock sidebar %}
                         {% endif %}
                     </div>
