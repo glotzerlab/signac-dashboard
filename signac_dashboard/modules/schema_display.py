@@ -41,7 +41,7 @@ class SchemaView(Module):
 
     def get_cards(self, project):
         schema = project.detect_schema(exclude_const=self.exclude_const)
-        schema = OrderedDict(schema.items())
+        schema = dict(schema.items())
 
         # We manually escape the schema contents since the field is marked
         # "safe" in the Jinja template. This is necessary because we added
