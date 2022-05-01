@@ -3,6 +3,14 @@
 {% block title %}{{ g.title }}{% endblock %}
 {% block subtitle %}{{ g.subtitle }}{% endblock %}
 
+{# Hides the view options when showing 1 job so users don't click on 'list' view. #}
+{% block view_options %}
+    {% if g.jobs | length == 1 %}
+    {% else %}
+        {{ super() }}
+    {% endif %}
+{% endblock view_options %}
+
 {% block panels %}
 {% if enabled_modules | length <= 1 %}
 <section class="section panel">
