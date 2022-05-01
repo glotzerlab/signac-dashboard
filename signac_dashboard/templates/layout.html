@@ -140,6 +140,16 @@
                                 {{ name }}
                             </a>
                             {% endfor %}
+                            {% if self.view_options() %}
+                            <div class="navbar-item is-hidden-tablet">
+                                {{ self.view_options() }}
+                            </div>
+                            {% endif %}
+                            {% if self.module_selector() %}
+                            <div class="navbar-item is-hidden-tablet">
+                                {{ self.module_selector() }}
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </nav>
