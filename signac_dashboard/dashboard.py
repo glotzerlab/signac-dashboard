@@ -392,6 +392,8 @@ class Dashboard:
     def _render_project_view(self, *args, **kwargs):
         g.active_page = "project"
         session["context"] = "ProjectContext"
+        if "enabled_modules" in session and len(session.get("enabled_modules", [])) == 0:
+            flash("No modules are enabled.", "info")
         return render_template("project_info.html", *args, **kwargs)
 
     def _render_error(self, error):

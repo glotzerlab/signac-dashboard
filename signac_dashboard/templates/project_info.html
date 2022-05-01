@@ -30,6 +30,14 @@
     {% endif %} {# end if module should render #}
 {% endfor %} {# end modules #}
 
+{% if card_count | length == 0 and enabled_modules | length >= 1 %}
+<div class="column">
+<div class="message is-info">
+<h5 class="message-header">No cards to show.</h5>
+</div>
+</div>
+{% endif %}
+
 {% if enabled_modules | length > 1 %}
 </div>
 {% endif %}
