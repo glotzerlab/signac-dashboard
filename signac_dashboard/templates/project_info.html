@@ -6,6 +6,9 @@
 {% block panels %}
 
 {% set card_count = [] %}
+{% if enabled_modules | length > 1 %}
+<div class="columns is-mobile is-multiline">
+{% endif %}
 {% for module in modules %} {# begin modules #}
     {% if loop.index0 in enabled_modules and module.context == 'ProjectContext' %}
     {% for card in module.get_cards(g.project) %} {# begin cards #}
@@ -26,6 +29,10 @@
     {% endfor %} {# end cards #}
     {% endif %} {# end if module should render #}
 {% endfor %} {# end modules #}
+
+{% if enabled_modules | length > 1 %}
+</div>
+{% endif %}
 
 {% endblock %}
 
