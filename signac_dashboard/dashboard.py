@@ -390,9 +390,9 @@ class Dashboard:
         if view_mode == "grid":
             if (
                 "enabled_module_indices" in session
-                and len(session.get("enabled_module_indices", [])) == 0 # TODO fix default value
+                and len(session.get("enabled_module_indices", []).get("JobContext")) == 0
             ):
-                flash("No modules are enabled.", "info")
+                flash("No modules for the JobContext are enabled.", "info")
             return render_template("jobs_grid.html", *args, **kwargs)
         elif view_mode == "list":
             return render_template("jobs_list.html", *args, **kwargs)
@@ -404,9 +404,9 @@ class Dashboard:
         session["context"] = "ProjectContext"
         if (
             "enabled_module_indices" in session
-            and len(session.get("enabled_module_indices", [])) == 0
+            and len(session.get("enabled_module_indices", []).get("ProjectContext")) == 0
         ):
-            flash("No modules are enabled.", "info")
+            flash("No modules for the ProjectContext are enabled.", "info")
         return render_template("project_info.html", *args, **kwargs)
 
     def _render_error(self, error):
