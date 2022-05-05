@@ -11,6 +11,7 @@ import shlex
 import sys
 import warnings
 from functools import lru_cache
+from itertools import groupby
 from numbers import Real
 
 import jinja2
@@ -85,6 +86,15 @@ class Dashboard:
 
         self.config = config
         self.modules = modules
+
+        keyfunc = lambda m: m.context
+        grouped = groupby(sorted(modules, key=keyfunc), key=keyfunc)
+        modules_by_context = dict()
+        for context_key, context_group in grouped:
+            modules_by_context[context_key] = [
+                m for i, m in enumerate(context_group) if m.enabled
+            ]
+        self.modules_by_context = modules_by_context
 
         self.event_handler = _FileSystemEventHandler(self)
         self.observer = Observer()
@@ -379,10 +389,11 @@ class Dashboard:
         view_mode = request.args.get("view", kwargs.get("default_view", "list"))
         if view_mode == "grid":
             if (
-                "enabled_modules" in session
-                and len(session.get("enabled_modules", [])) == 0
+                "enabled_module_indices" in session
+                and len(session.get("enabled_module_indices", []).get("JobContext"))
+                == 0
             ):
-                flash("No modules are enabled.", "info")
+                flash("No modules for the JobContext are enabled.", "info")
             return render_template("jobs_grid.html", *args, **kwargs)
         elif view_mode == "list":
             return render_template("jobs_list.html", *args, **kwargs)
@@ -393,10 +404,11 @@ class Dashboard:
         g.active_page = "project"
         session["context"] = "ProjectContext"
         if (
-            "enabled_modules" in session
-            and len(session.get("enabled_modules", [])) == 0
+            "enabled_module_indices" in session
+            and len(session.get("enabled_module_indices", []).get("ProjectContext"))
+            == 0
         ):
-            flash("No modules are enabled.", "info")
+            flash("No modules for the ProjectContext are enabled.", "info")
         return render_template("project_info.html", *args, **kwargs)
 
     def _render_error(self, error):
@@ -484,17 +496,22 @@ class Dashboard:
 
         @dashboard.app.context_processor
         def injections():
-            session.setdefault(
-                "enabled_modules",
-                [i for i in range(len(self.modules)) if self.modules[i].enabled],
-            )
+            keyfunc = lambda m: m.context
+            grouped_modules = groupby(sorted(self.modules, key=keyfunc), key=keyfunc)
+            enabled_module_indices = dict()
+            for context_key, context_group in grouped_modules:
+                enabled_module_indices[context_key] = [
+                    i for i, m in enumerate(context_group) if m.enabled
+                ]
+            session.setdefault("enabled_module_indices", enabled_module_indices)
             return {
                 "APP_NAME": "signac-dashboard",
                 "APP_VERSION": __version__,
                 "PROJECT_NAME": self.project.config["project"],
                 "PROJECT_DIR": self.project.config["project_dir"],
                 "modules": self.modules,
-                "enabled_modules": session["enabled_modules"],
+                "modules_by_context": self.modules_by_context,
+                "enabled_module_indices": session["enabled_module_indices"],
                 "module_assets": self._module_assets,
             }
 
