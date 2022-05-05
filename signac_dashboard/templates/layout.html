@@ -67,13 +67,14 @@
                         </div>
                         {% endblock view_options %}
                         {% block module_selector %}
+                        {% set context = {"jobs": "JobContext", "project": "ProjectContext"}[g.active_page] %}
                         <div class="box sidebar-box">
                             <h2 class="subtitle is-4">Modules</h2>
-                            {% if modules | length > 0 %}
+                            {% if modules_by_context[context] | length > 0 %}
                             {% if g.active_page == "jobs" and g.jobs | length > 0  or g.active_page == "project" %}
                             <form action="{{ url_for('change_modules') }}" method="POST">
                                 <input type="hidden" name="redirect" value="{{ request.url }}">
-                                {% for module in modules %}
+                                {% for module in modules_by_context[context] %}
                                 {% if module.context == {"jobs": "JobContext", "project": "ProjectContext"}[g.active_page] %}
                                 <div class="field is-horizontal">
                                     <div class="field-body">
@@ -81,7 +82,7 @@
                                             <div class="control">
                                                 <label class="checkbox">
                                                     <input type="checkbox" name="modules[{{ loop.index0 }}]"
-                                                        {%- if loop.index0 in enabled_modules -%}
+                                                        {%- if loop.index0 in enabled_modules[context] -%}
                                                         checked
                                                         {%- endif %}>
                                                     {{- module.name }}

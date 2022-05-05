@@ -5,12 +5,15 @@
 
 {% block panels %}
 
+{% set context = "ProjectContext" %}
+{% set num_enabled_modules = enabled_modules[context] | length %}
+
 {% set card_count = [] %}
-{% if enabled_modules | length > 1 %}
+{% if num_enabled_modules > 1 %}
 <div class="columns is-mobile is-multiline">
 {% endif %}
-{% for module in modules %} {# begin modules #}
-    {% if loop.index0 in enabled_modules and module.context == 'ProjectContext' %}
+{% for module in modules_by_context[context] %} {# begin modules #}
+    {% if loop.index0 in enabled_modules[context] and module.context == 'ProjectContext' %}
     {% for card in module.get_cards(g.project) %} {# begin cards #}
         {# jinja variables go out of scope after the loop unless this "list" hack is used #}
         {% if card_count.append(1) %}{% endif %}
@@ -30,7 +33,7 @@
     {% endif %} {# end if module should render #}
 {% endfor %} {# end modules #}
 
-{% if card_count | length == 0 and enabled_modules | length >= 1 %}
+{% if card_count | length == 0 and num_enabled_modules >= 1 %}
 <div class="column">
 <div class="message is-info">
 <h5 class="message-header">No cards to show.</h5>
@@ -38,7 +41,7 @@
 </div>
 {% endif %}
 
-{% if enabled_modules | length > 1 %}
+{% if num_enabled_modules > 1 %}
 </div>
 {% endif %}
 
