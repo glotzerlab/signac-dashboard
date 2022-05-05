@@ -1,8 +1,6 @@
 # Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
-from collections import OrderedDict
-
 from flask import render_template
 from markupsafe import escape
 

@@ -5,7 +5,6 @@ import glob
 import itertools
 import os
 
-import signac
 from flask import render_template
 
 from signac_dashboard.module import Module
