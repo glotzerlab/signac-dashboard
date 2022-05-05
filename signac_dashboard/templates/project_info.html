@@ -13,7 +13,7 @@
 <div class="columns is-mobile is-multiline">
 {% endif %}
 {% for module in modules_by_context[context] %} {# begin modules #}
-    {% if loop.index0 in enabled_modules[context] and module.context == 'ProjectContext' %}
+    {% if loop.index0 in enabled_modules[context] %}
     {% for card in module.get_cards(g.project) %} {# begin cards #}
         {# jinja variables go out of scope after the loop unless this "list" hack is used #}
         {% if card_count.append(1) %}{% endif %}

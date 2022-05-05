@@ -75,7 +75,6 @@
                             <form action="{{ url_for('change_modules') }}" method="POST">
                                 <input type="hidden" name="redirect" value="{{ request.url }}">
                                 {% for module in modules_by_context[context] %}
-                                {% if module.context == {"jobs": "JobContext", "project": "ProjectContext"}[g.active_page] %}
                                 <div class="field is-horizontal">
                                     <div class="field-body">
                                         <div class="field">
@@ -91,7 +90,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                {% endif %}
                                 {% endfor %}
                                 <input class="button is-primary" type="submit" value="Update">
                             </form>
