@@ -389,8 +389,8 @@ class Dashboard:
         view_mode = request.args.get("view", kwargs.get("default_view", "list"))
         if view_mode == "grid":
             if (
-                "enabled_modules" in session
-                and len(session.get("enabled_modules", [])) == 0
+                "enabled_module_indices" in session
+                and len(session.get("enabled_module_indices", [])) == 0 # TODO fix default value
             ):
                 flash("No modules are enabled.", "info")
             return render_template("jobs_grid.html", *args, **kwargs)
@@ -403,8 +403,8 @@ class Dashboard:
         g.active_page = "project"
         session["context"] = "ProjectContext"
         if (
-            "enabled_modules" in session
-            and len(session.get("enabled_modules", [])) == 0
+            "enabled_module_indices" in session
+            and len(session.get("enabled_module_indices", [])) == 0
         ):
             flash("No modules are enabled.", "info")
         return render_template("project_info.html", *args, **kwargs)
@@ -502,7 +502,6 @@ class Dashboard:
                     i for i, m in enumerate(context_group) if m.enabled
                 ]
             session.setdefault("enabled_module_indices", enabled_module_indices)
-            session.setdefault("enabled_modules", enabled_module_indices)
             return {
                 "APP_NAME": "signac-dashboard",
                 "APP_VERSION": __version__,
@@ -510,7 +509,7 @@ class Dashboard:
                 "PROJECT_DIR": self.project.config["project_dir"],
                 "modules": self.modules,
                 "modules_by_context": self.modules_by_context,
-                "enabled_modules": session["enabled_modules"],
+                "enabled_module_indices": session["enabled_module_indices"],
                 "module_assets": self._module_assets,
             }
 
