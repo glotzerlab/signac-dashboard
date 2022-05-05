@@ -91,7 +91,9 @@ class Dashboard:
         grouped = groupby(sorted(modules, key=keyfunc), key=keyfunc)
         modules_by_context = dict()
         for context_key, context_group in grouped:
-            modules_by_context[context_key] = [m for i,m in enumerate(context_group) if m.enabled]
+            modules_by_context[context_key] = [
+                m for i, m in enumerate(context_group) if m.enabled
+            ]
         self.modules_by_context = modules_by_context
 
         self.event_handler = _FileSystemEventHandler(self)
@@ -496,12 +498,11 @@ class Dashboard:
             grouped_modules = groupby(sorted(self.modules, key=keyfunc), key=keyfunc)
             enabled_module_indices = dict()
             for context_key, context_group in grouped_modules:
-                enabled_module_indices[context_key] = [i for i,m in enumerate(context_group) if m.enabled]
+                enabled_module_indices[context_key] = [
+                    i for i, m in enumerate(context_group) if m.enabled
+                ]
             session.setdefault("enabled_module_indices", enabled_module_indices)
-            session.setdefault(
-                "enabled_modules",
-                enabled_module_indices
-            )
+            session.setdefault("enabled_modules", enabled_module_indices)
             return {
                 "APP_NAME": "signac-dashboard",
                 "APP_VERSION": __version__,

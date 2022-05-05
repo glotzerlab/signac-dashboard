@@ -103,17 +103,23 @@ def get_file(dashboard, filename, jobid=None):
 
 
 def change_modules(dashboard):
-    enabled_modules = session.get("enabled_modules", dict(JobContext=[], ProjectContext=[])) # todo better default values
-    enabled_modules = {k: set(v) for k,v in enabled_modules.items()} # remove duplicates
+    enabled_modules = session.get(
+        "enabled_modules", dict(JobContext=[], ProjectContext=[])
+    )  # todo better default values
+    enabled_modules = {
+        k: set(v) for k, v in enabled_modules.items()
+    }  # remove duplicates
     context = session.get("context", "JobContext")
 
-    for i,module in enumerate(dashboard.modules_by_context[context]):
+    for i, module in enumerate(dashboard.modules_by_context[context]):
         if request.form.get(f"modules[{i}]") == "on":
             enabled_modules[context].add(i)
         else:
             enabled_modules[context].discard(i)
 
-    session["enabled_modules"] = {k: list(v) for k,v in enabled_modules.items()} # convert back to list
+    session["enabled_modules"] = {
+        k: list(v) for k, v in enabled_modules.items()
+    }  # convert back to list
     return redirect(request.form.get("redirect", url_for("home")))
 
 
