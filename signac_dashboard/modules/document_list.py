@@ -51,5 +51,8 @@ class DocumentList(Module):
         doc = escape_truncated_values(doc, self.max_chars)
 
         return [
-            {"name": self.name, "content": render_template(self.template, escaped_dict=doc)}
+            {
+                "name": self.name,
+                "content": render_template(self.template, escaped_dict=doc),
+            }
         ]

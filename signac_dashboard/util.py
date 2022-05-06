@@ -28,6 +28,7 @@ def ellipsis_string(string, length=60):
     else:
         return string[:half] + "..." + string[-half:]
 
+
 def escape_truncated_values(dic, max_chars):
     if max_chars is not None and int(max_chars) > 0:
         for key in dic:

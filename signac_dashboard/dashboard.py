@@ -125,7 +125,6 @@ class Dashboard:
             modules_by_context[context_key] = [m for m in context_group if m.enabled]
         self.modules_by_context = modules_by_context
 
-
     def _create_app(self, config={}):
         """Creates a Flask application.
 
