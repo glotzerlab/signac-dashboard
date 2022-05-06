@@ -386,8 +386,7 @@ class Dashboard:
         view_mode = request.args.get("view", kwargs.get("default_view", "list"))
         if view_mode == "grid":
             if (
-                "enabled_module_indices" in session
-                and len(session.get("enabled_module_indices", []).get("JobContext"))
+                len(session.get("enabled_module_indices", {}).get("JobContext", []))
                 == 0
             ):
                 flash("No modules for the JobContext are enabled.", "info")
@@ -402,7 +401,7 @@ class Dashboard:
         session["context"] = "ProjectContext"
         if (
             "enabled_module_indices" in session
-            and len(session.get("enabled_module_indices", []).get("ProjectContext"))
+            and len(session.get("enabled_module_indices", {}).get("ProjectContext", []))
             == 0
         ):
             flash("No modules for the ProjectContext are enabled.", "info")
@@ -493,10 +492,8 @@ class Dashboard:
 
         @dashboard.app.context_processor
         def injections():
-            keyfunc = lambda m: m.context
-            grouped_modules = groupby(sorted(self.modules, key=keyfunc), key=keyfunc)
-            enabled_module_indices = dict()
-            for context_key, context_group in grouped_modules:
+            enabled_module_indices = {}
+            for context_key, context_group in self.modules_by_context:
                 enabled_module_indices[context_key] = [
                     i for i, m in enumerate(context_group) if m.enabled
                 ]
