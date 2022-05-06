@@ -87,6 +87,37 @@ class Dashboard:
         self.config = config
         self.modules = modules
 
+        self.event_handler = _FileSystemEventHandler(self)
+        self.observer = Observer()
+        self.observer.schedule(self.event_handler, self.project.workspace())
+
+        # Prepare this dashboard instance to run.
+
+        # Set configuration defaults and save to the project document
+        self.config.setdefault("PAGINATION", True)
+        self.config.setdefault("PER_PAGE", 25)
+
+        # Create and configure the Flask application
+        self.app = self._create_app(self.config)
+
+        # Add assets and routes
+        self.assets = self._create_assets()
+        self._register_routes()
+
+        # Add module assets and routes
+        self._module_assets = []
+        for module in self.modules:
+            try:
+                module.register(self)
+            except Exception as e:
+                logger.error(f"Error while registering {module.name} module: {e}")
+                logger.error(f"Removing module {module.name} from dashboard.")
+                self.modules.remove(module)
+
+        # Clear dashboard and project caches.
+        self.update_cache()
+
+        # Group modules to track enabled state
         keyfunc = lambda m: m.context
         grouped = groupby(sorted(self.modules, key=keyfunc), key=keyfunc)
         modules_by_context = {}
@@ -94,11 +125,6 @@ class Dashboard:
             modules_by_context[context_key] = [m for m in context_group if m.enabled]
         self.modules_by_context = modules_by_context
 
-        self.event_handler = _FileSystemEventHandler(self)
-        self.observer = Observer()
-        self.observer.schedule(self.event_handler, self.project.workspace())
-
-        self._prepare()
 
     def _create_app(self, config={}):
         """Creates a Flask application.
@@ -178,33 +204,6 @@ class Dashboard:
         :type asset: dict
         """
         self._module_assets.append(asset)
-
-    def _prepare(self):
-        """Prepare this dashboard instance to run."""
-
-        # Set configuration defaults and save to the project document
-        self.config.setdefault("PAGINATION", True)
-        self.config.setdefault("PER_PAGE", 25)
-
-        # Create and configure the Flask application
-        self.app = self._create_app(self.config)
-
-        # Add assets and routes
-        self.assets = self._create_assets()
-        self._register_routes()
-
-        # Add module assets and routes
-        self._module_assets = []
-        for module in self.modules:
-            try:
-                module.register(self)
-            except Exception as e:
-                logger.error(f"Error while registering {module.name} module: {e}")
-                logger.error(f"Removing module {module.name} from dashboard.")
-                self.modules.remove(module)
-
-        # Clear dashboard and project caches.
-        self.update_cache()
 
     def run(self, *args, **kwargs):
         """Runs the dashboard webserver.
