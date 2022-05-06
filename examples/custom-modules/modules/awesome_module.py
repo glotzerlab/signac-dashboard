@@ -9,6 +9,8 @@ from signac_dashboard.module import Module
 class AwesomeModule(Module):
     """Displays the job's awesome factor."""
 
+    _supported_contexts = {"JobContext"}
+
     def __init__(
         self,
         name="Awesome Factor",
@@ -16,7 +18,6 @@ class AwesomeModule(Module):
         template="cards/awesome_module.html",
         **kwargs,
     ):
-        self._enabled_contexts = {"JobContext"}
         super().__init__(
             name=name,
             context=context,

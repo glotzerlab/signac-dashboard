@@ -21,6 +21,8 @@ class DocumentEditor(Module):
     :code:`_` are treated as private and are not displayed.
     """
 
+    _supported_contexts = {"JobContext"}
+
     def __init__(
         self,
         name="Document Editor",
@@ -28,7 +30,7 @@ class DocumentEditor(Module):
         template="cards/document_editor.html",
         **kwargs,
     ):
-        self._enabled_contexts = {"JobContext"}
+
         super().__init__(
             name=name,
             context=context,

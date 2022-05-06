@@ -46,6 +46,8 @@ class VideoViewer(Module):
 
     """
 
+    _supported_contexts = {"JobContext", "ProjectContext"}
+
     def __init__(
         self,
         name="Video Viewer",
@@ -56,7 +58,7 @@ class VideoViewer(Module):
         poster=None,
         **kwargs,
     ):
-        self._enabled_contexts = {"JobContext", "ProjectContext"}
+
         super().__init__(
             name=name,
             context=context,

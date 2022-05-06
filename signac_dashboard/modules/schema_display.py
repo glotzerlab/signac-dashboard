@@ -17,6 +17,8 @@ class SchemaView(Module):
     :type max_chars: int
     """
 
+    _supported_contexts = {"ProjectContext"}
+
     def __init__(
         self,
         name="Project Schema",
@@ -26,7 +28,7 @@ class SchemaView(Module):
         exclude_const=False,
         **kwargs,
     ):
-        self._enabled_contexts = {"ProjectContext"}
+
         super().__init__(
             name=name,
             context=context,

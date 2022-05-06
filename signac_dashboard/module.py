@@ -66,13 +66,13 @@ class Module:
         self._module = self.__module__
         self._moduletype = self.__class__.__name__
         self.name = name
-        if len(self._enabled_contexts) == 0:
+        if len(self._supported_contexts) == 0:
             raise NotImplementedError(
                 f"{self._moduletype} not enabled for any contexts."
             )
-        if context not in self._enabled_contexts:
+        if context not in self._supported_contexts:
             raise RuntimeError(
-                f"{self._moduletype} does not support the {context}, only {self._enabled_contexts}"
+                f"{self._moduletype} does not support the {context}, only {self._supported_contexts}"
             )
         self.context = context
         self.template = template

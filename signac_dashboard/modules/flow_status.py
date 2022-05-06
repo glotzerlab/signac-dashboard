@@ -26,6 +26,8 @@ class FlowStatus(Module):
             Dashboard(project=Project()).main()
     """
 
+    _supported_contexts = {"JobContext"}
+
     def __init__(
         self,
         name="Flow Status",
@@ -35,7 +37,7 @@ class FlowStatus(Module):
         project_class="Project",
         **kwargs,
     ):
-        self._enabled_contexts = {"JobContext"}
+
         super().__init__(
             name=name,
             context=context,

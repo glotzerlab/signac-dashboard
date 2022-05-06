@@ -18,6 +18,8 @@ class Notes(Module):
     :type key: str
     """
 
+    _supported_contexts = {"JobContext"}
+
     def __init__(
         self,
         name="Notes",
@@ -26,7 +28,7 @@ class Notes(Module):
         key="notes",
         **kwargs,
     ):
-        self._enabled_contexts = {"JobContext"}
+
         super().__init__(
             name=name,
             context=context,

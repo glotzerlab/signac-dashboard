@@ -11,6 +11,8 @@ from signac_dashboard.module import Module
 class StatepointList(Module):
     """Displays the job state point."""
 
+    _supported_contexts = {"JobContext"}
+
     def __init__(
         self,
         name="Statepoint Parameters",
@@ -18,7 +20,7 @@ class StatepointList(Module):
         template="cards/statepoint_list.html",
         **kwargs,
     ):
-        self._enabled_contexts = {"JobContext"}
+
         super().__init__(
             name=name,
             context=context,

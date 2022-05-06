@@ -16,6 +16,8 @@ class FileList(Module):
     :type prefix_jobid: bool
     """
 
+    _supported_contexts = {"JobContext"}
+
     def __init__(
         self,
         name="File List",
@@ -24,7 +26,7 @@ class FileList(Module):
         prefix_jobid=True,
         **kwargs,
     ):
-        self._enabled_contexts = {"JobContext"}
+
         super().__init__(
             name=name,
             context=context,

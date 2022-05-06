@@ -19,6 +19,8 @@ class DocumentList(Module):
     :type max_chars: int
     """
 
+    _supported_contexts = {"JobContext", "ProjectContext"}
+
     def __init__(
         self,
         name=None,
@@ -33,7 +35,7 @@ class DocumentList(Module):
                 name = "Job Document"
             elif context == "ProjectContext":
                 name = "Project Document"
-        self._enabled_contexts = {"JobContext", "ProjectContext"}
+
         super().__init__(
             name=name,
             context=context,

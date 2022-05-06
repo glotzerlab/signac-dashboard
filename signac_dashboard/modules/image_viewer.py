@@ -31,6 +31,8 @@ class ImageViewer(Module):
     :type img_globs: list
     """
 
+    _supported_contexts = {"JobContext", "ProjectContext"}
+
     def __init__(
         self,
         name="Image Viewer",
@@ -39,7 +41,7 @@ class ImageViewer(Module):
         img_globs=("*.png", "*.jpg", "*.gif"),
         **kwargs,
     ):
-        self._enabled_contexts = {"JobContext", "ProjectContext"}
+
         super().__init__(
             name=name,
             context=context,

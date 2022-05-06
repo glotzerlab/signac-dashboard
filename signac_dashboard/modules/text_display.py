@@ -37,6 +37,8 @@ class TextDisplay(Module):
     :type markdown: bool
     """
 
+    _supported_contexts = {"JobContext", "ProjectContext"}
+
     def __init__(
         self,
         name="Text Display",
@@ -45,7 +47,7 @@ class TextDisplay(Module):
         markdown=False,
         **kwargs,
     ):
-        self._enabled_contexts = {"JobContext", "ProjectContext"}
+
         super().__init__(
             name=name,
             context=context,
