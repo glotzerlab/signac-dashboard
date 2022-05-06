@@ -493,9 +493,9 @@ class Dashboard:
         @dashboard.app.context_processor
         def injections():
             enabled_module_indices = {}
-            for context_key, context_group in self.modules_by_context:
-                enabled_module_indices[context_key] = [
-                    i for i, m in enumerate(context_group) if m.enabled
+            for context_name, context_modules in self.modules_by_context.items():
+                enabled_module_indices[context_name] = [
+                    i for i, m in enumerate(context_modules) if m.enabled
                 ]
             session.setdefault("enabled_module_indices", enabled_module_indices)
             return {
