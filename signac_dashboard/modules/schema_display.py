@@ -2,10 +2,9 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from flask import render_template
-from markupsafe import escape
 
 from signac_dashboard.module import Module
-from signac_dashboard.util import ellipsis_string
+from signac_dashboard.util import escape_truncated_values
 
 
 class SchemaView(Module):
@@ -44,16 +43,7 @@ class SchemaView(Module):
         # We manually escape the schema contents since the field is marked
         # "safe" in the Jinja template. This is necessary because we added
         # custom HTML for "[Truncated]" fields
-        if self.max_chars is not None and int(self.max_chars) > 0:
-            for key in schema:
-                if len(str(schema[key])) > self.max_chars:
-                    schema[key] = (
-                        str(escape(ellipsis_string(schema[key], length=self.max_chars)))
-                        + " <em>[Truncated]</em>"
-                    )
-        else:
-            for key in schema:
-                schema[key] = escape(schema[key])
+        schema = escape_truncated_values(schema, self.max_chars)
 
         return [
             {

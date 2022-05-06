@@ -4,10 +4,9 @@
 from collections import OrderedDict
 
 from flask import render_template
-from markupsafe import escape
 
 from signac_dashboard.module import Module
-from signac_dashboard.util import ellipsis_string
+from signac_dashboard.util import escape_truncated_values
 
 
 class DocumentList(Module):
@@ -49,16 +48,7 @@ class DocumentList(Module):
         # We manually escape the document's contents since the field is marked
         # "safe" in the Jinja template. This is necessary because we added
         # custom HTML for "[Truncated]" fields
-        if self.max_chars is not None and int(self.max_chars) > 0:
-            for key in doc:
-                if len(str(doc[key])) > self.max_chars:
-                    doc[key] = (
-                        str(escape(ellipsis_string(doc[key], length=self.max_chars)))
-                        + " <em>[Truncated]</em>"
-                    )
-        else:
-            for key in doc:
-                doc[key] = escape(doc[key])
+        doc = escape_truncated_values(doc, self.max_chars)
 
         return [
             {"name": self.name, "content": render_template(self.template, escaped_dict=doc)}

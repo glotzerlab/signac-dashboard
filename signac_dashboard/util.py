@@ -2,6 +2,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
+from markupsafe import escape
 from werkzeug.utils import cached_property, import_string
 
 
@@ -26,6 +27,19 @@ def ellipsis_string(string, length=60):
         return string
     else:
         return string[:half] + "..." + string[-half:]
+
+def escape_truncated_values(dic, max_chars):
+    if max_chars is not None and int(max_chars) > 0:
+        for key in dic:
+            if len(str(dic[key])) > max_chars:
+                dic[key] = (
+                    str(escape(ellipsis_string(dic[key], length=max_chars)))
+                    + " <em>[Truncated]</em>"
+                )
+    else:
+        for key in dic:
+            dic[key] = escape(dic[key])
+    return dic
 
 
 class LazyView:
