@@ -24,7 +24,7 @@ class DocumentList(Module):
         self,
         name=None,
         context="JobContext",
-        template="cards/document_list.html",
+        template="cards/trusted_dict_display.html",
         max_chars=None,
         **kwargs,
     ):
@@ -61,5 +61,5 @@ class DocumentList(Module):
                 doc[key] = escape(doc[key])
 
         return [
-            {"name": self.name, "content": render_template(self.template, document=doc)}
+            {"name": self.name, "content": render_template(self.template, escaped_dict=doc)}
         ]

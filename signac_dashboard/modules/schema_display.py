@@ -22,7 +22,7 @@ class SchemaView(Module):
         self,
         name="Project Schema",
         context="ProjectContext",
-        template="cards/document_list.html",
+        template="cards/trusted_dict_display.html",
         max_chars=None,
         exclude_const=False,
         **kwargs,
@@ -58,6 +58,6 @@ class SchemaView(Module):
         return [
             {
                 "name": self.name,
-                "content": render_template(self.template, document=schema),
+                "content": render_template(self.template, escaped_dict=schema),
             }
         ]
