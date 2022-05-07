@@ -80,7 +80,7 @@ class VideoViewer(Module):
                 raise FileNotFoundError(
                     "The filename {} could not be found "
                     "for {}.".format(
-                        filename, "project" if jobid is None else f"job {jobid}"
+                        filename, "the project" if jobid is None else f"job {jobid}"
                     )
                 )
             return {
