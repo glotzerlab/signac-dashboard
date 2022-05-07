@@ -102,7 +102,7 @@ def get_file(dashboard, filename, jobid=None):
 
 def change_modules(dashboard):
     enabled_module_indices = session.get(
-        "enabled_module_indices", dict(JobContext=[], ProjectContext=[])
+        "enabled_module_indices", {"JobContext": [], "ProjectContext": []}
     )  # TODO: better default values
     enabled_module_indices = {
         k: set(v) for k, v in enabled_module_indices.items()
