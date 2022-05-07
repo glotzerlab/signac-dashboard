@@ -2,9 +2,9 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 import json
+import re
 import shutil
 import tempfile
-import re
 import unittest
 from urllib.parse import quote as urlquote
 
@@ -109,7 +109,7 @@ class DashboardTestCase(unittest.TestCase):
 
     def test_project_sidebar(self):
         response = self.get_response("/project/")
-        #assert "No modules. Add some!" in response
+        # assert "No modules. Add some!" in response
         assert "Views" not in response
 
 
@@ -153,7 +153,7 @@ class AllModulesTestCase(DashboardTestCase):
 
     def test_module_list(self):
         project_response = self.get_response("/project/")
-        #job_response = self.get_response("/jobs/&view=grid")
+        # job_response = self.get_response("/jobs/&view=grid")
         for m in self.modules:
             print(f"Checking for {m.name}")
             if m.context == "ProjectContext":
