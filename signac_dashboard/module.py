@@ -67,8 +67,8 @@ class Module:
         self._moduletype = self.__class__.__name__
         self.name = name
         if len(self._supported_contexts) == 0:
-            raise NotImplementedError(
-                f"{self._moduletype} not enabled for any contexts."
+            raise ValueError(
+                f"{self._moduletype} is not supported by any contexts."
             )
         if context not in self._supported_contexts:
             raise RuntimeError(
