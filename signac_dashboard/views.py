@@ -109,7 +109,7 @@ def change_modules(dashboard):
     }  # remove duplicates
     context = session.get("context", "JobContext")
 
-    for i, module in enumerate(dashboard.modules_by_context[context]):
+    for i, module in enumerate(dashboard._modules_by_context[context]):
         if request.form.get(f"modules[{i}]") == "on":
             enabled_module_indices[context].add(i)
         else:

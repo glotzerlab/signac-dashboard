@@ -123,7 +123,7 @@ class Dashboard:
         modules_by_context = {}
         for context_key, context_group in grouped:
             modules_by_context[context_key] = [m for m in context_group if m.enabled]
-        self.modules_by_context = modules_by_context
+        self._modules_by_context = modules_by_context
 
     def _create_app(self, config={}):
         """Creates a Flask application.
@@ -492,7 +492,7 @@ class Dashboard:
         @dashboard.app.context_processor
         def injections():
             enabled_module_indices = {}
-            for context_name, context_modules in self.modules_by_context.items():
+            for context_name, context_modules in self._modules_by_context.items():
                 enabled_module_indices[context_name] = [
                     i for i, m in enumerate(context_modules) if m.enabled
                 ]
@@ -503,7 +503,7 @@ class Dashboard:
                 "PROJECT_NAME": self.project.config["project"],
                 "PROJECT_DIR": self.project.config["project_dir"],
                 "modules": self.modules,
-                "modules_by_context": self.modules_by_context,
+                "modules_by_context": self._modules_by_context,
                 "enabled_module_indices": session["enabled_module_indices"],
                 "module_assets": self._module_assets,
             }
