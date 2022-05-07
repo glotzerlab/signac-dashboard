@@ -54,7 +54,7 @@ def jobs_list(dashboard):
 def project_info(dashboard):
     g.project = dashboard.project
     project_title = dashboard.project.config["project"]
-    g.title = f"{project_title}"
+    g.title = str(project_title)
     num_jobs = len(dashboard.project)
     g.subtitle = f"{num_jobs} jobs"
     return dashboard._render_project_view()
