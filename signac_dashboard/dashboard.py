@@ -118,7 +118,9 @@ class Dashboard:
         self.update_cache()
 
         # Group modules to track enabled state
-        keyfunc = lambda m: m.context
+        def keyfunc(module):
+            return module.context
+
         grouped = groupby(sorted(self.modules, key=keyfunc), key=keyfunc)
         modules_by_context = {}
         for context_key, context_group in grouped:

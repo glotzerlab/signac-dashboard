@@ -70,7 +70,8 @@ class Module:
             raise ValueError(f"{self._moduletype} is not supported by any contexts.")
         if context not in self._supported_contexts:
             raise RuntimeError(
-                f"{self._moduletype} does not support the {context}, only {self._supported_contexts}"
+                f"{self._moduletype} does not support {context}, only "
+                f"{self._supported_contexts}."
             )
         self.context = context
         self.template = template
