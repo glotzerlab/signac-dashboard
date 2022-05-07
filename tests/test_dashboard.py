@@ -145,7 +145,7 @@ class AllModulesTestCase(DashboardTestCase):
         self.addCleanup(shutil.rmtree, self._tmp_dir)
 
     def test_module_visible_mobile(self):
-        response = self.get_response("/jobs/&view=grid")
+        response = self.get_response("/jobs/?view=grid")
         # Check for two instances of Modules header
         pattern = re.compile("Modules</h")
         module_headers = re.findall(pattern, response)
