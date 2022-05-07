@@ -29,18 +29,19 @@ def ellipsis_string(string, length=60):
         return string[:half] + "..." + string[-half:]
 
 
-def escape_truncated_values(dic, max_chars):
+def escape_truncated_values(data, max_chars):
+    """Truncate values in a dict to a maximum number of characters."""
     if max_chars is not None and int(max_chars) > 0:
-        for key in dic:
-            if len(str(dic[key])) > max_chars:
-                dic[key] = (
-                    str(escape(ellipsis_string(dic[key], length=max_chars)))
+        for key in data:
+            if len(str(data[key])) > max_chars:
+                data[key] = (
+                    str(escape(ellipsis_string(data[key], length=max_chars)))
                     + " <em>[Truncated]</em>"
                 )
     else:
-        for key in dic:
-            dic[key] = escape(dic[key])
-    return dic
+        for key in data:
+            data[key] = escape(data[key])
+    return data
 
 
 class LazyView:
