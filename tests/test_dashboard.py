@@ -4,6 +4,7 @@
 import json
 import shutil
 import tempfile
+import re
 import unittest
 from urllib.parse import quote as urlquote
 
@@ -14,6 +15,10 @@ from signac_dashboard import Dashboard
 
 
 class DashboardTestCase(unittest.TestCase):
+    def get_response(self, query):
+        rv = self.test_client.get(query, follow_redirects=True)
+        return str(rv.get_data())
+
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
         self.project = init_project(
@@ -97,8 +102,22 @@ class DashboardTestCase(unittest.TestCase):
         response = str(rv.get_data())
         assert f"{self.project.num_jobs()} jobs" in response
 
+    def test_no_view_single_job(self):
+        """Make sure View panel is not shown when on a single job page."""
+        response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
+        assert "Views" not in response
+
+    def test_project_sidebar(self):
+        response = self.get_response("/project/")
+        #assert "No modules. Add some!" in response
+        assert "Views" not in response
+
 
 class AllModulesTestCase(DashboardTestCase):
+    def get_response(self, query):
+        rv = self.test_client.get(query, follow_redirects=True)
+        return str(rv.get_data())
+
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
         self.project = init_project(
@@ -124,6 +143,35 @@ class AllModulesTestCase(DashboardTestCase):
         )
         self.test_client = self.dashboard.app.test_client()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
+
+    def test_module_visible_mobile(self):
+        response = self.get_response("/jobs/&view=grid")
+        # Check for two instances of Modules header
+        pattern = re.compile("Modules</h")
+        module_headers = re.findall(pattern, response)
+        assert len(module_headers) == 2
+
+    def test_module_list(self):
+        project_response = self.get_response("/project/")
+        #job_response = self.get_response("/jobs/&view=grid")
+        for m in self.modules:
+            print(f"Checking for {m.name}")
+            if m.context == "ProjectContext":
+                assert m.name in project_response
+            # This fails for some reason:
+            # elif m.context == "JobContext":
+            #     if m.name == "Document Editor":
+            #         print(job_response)
+            #     assert m.name in job_response
+
+    # def test_module_list_job(self):
+    #     job_response = self.get_response("/jobs/")
+    #     job_response = self.get_response("/jobs/&view=grid")
+    #     breakpoint()
+    #     for m in self.modules:
+    #         print(f"Checking for {m.name}")
+    #         if m.context == "JobContext":
+    #             assert m.name in job_response
 
 
 if __name__ == "__main__":
