@@ -110,6 +110,7 @@ class DashboardTestCase(unittest.TestCase):
 
 class NoModulesTestCase(DashboardTestCase):
     """Test the inherited tests and cases without any modules."""
+
     def test_job_sidebar(self):
         response = self.get_response("/jobs/?view=grid")
         assert "No modules." in response
@@ -122,6 +123,7 @@ class NoModulesTestCase(DashboardTestCase):
 
 class AllModulesTestCase(DashboardTestCase):
     """Add all modules and contexts and test again."""
+
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
         self.project = init_project(
