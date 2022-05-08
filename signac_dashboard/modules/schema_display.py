@@ -12,9 +12,14 @@ class SchemaView(Module):
 
     Long values can be optionally truncated.
 
-    :param max_chars: Truncation length for document values (default:
+    :param max_chars: Truncation length for schema values (default:
         :code:`None`).
     :type max_chars: int
+    :param exclude_const: Exclude all state point parameters that are shared by all jobs
+        in this project (default: :code:`False`).
+    :type exclude_const: bool
+    :param subset: A sequence of jobs or job ids specifying a subset over which the state
+        point schema should be detected (default: :code:`None`).
     """
 
     _supported_contexts = {"ProjectContext"}
@@ -26,6 +31,7 @@ class SchemaView(Module):
         template="cards/trusted_dict_display.html",
         max_chars=None,
         exclude_const=False,
+        subset=False,
         **kwargs,
     ):
 
@@ -37,9 +43,11 @@ class SchemaView(Module):
         )
         self.max_chars = max_chars
         self.exclude_const = exclude_const
+        self.subset = subset
 
     def get_cards(self, project):
-        schema = project.detect_schema(exclude_const=self.exclude_const)
+        schema = project.detect_schema(exclude_const=self.exclude_const,
+                                       subset = self.subset)
         schema = dict(schema.items())
 
         # We manually escape the schema contents since the field is marked
