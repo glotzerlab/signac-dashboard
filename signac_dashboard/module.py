@@ -62,6 +62,8 @@ class Module:
     :type template: str
     """  # noqa: E501
 
+    _supported_contexts = {}
+
     def __init__(self, name, context, template, enabled=True):
         self._module = self.__module__
         self._moduletype = self.__class__.__name__
@@ -70,7 +72,7 @@ class Module:
             raise ValueError(f"{self._moduletype} is not supported by any contexts.")
         if context not in self._supported_contexts:
             raise RuntimeError(
-                f"{self._moduletype} does not support {context}, only "
+                f"{self._moduletype} does not support the {context}, only "
                 f"{self._supported_contexts}."
             )
         self.context = context
