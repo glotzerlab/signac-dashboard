@@ -68,7 +68,7 @@ class Dashboard:
     - **ALLOW_WHERE**: If True, search queries can include :code:`$where`
       statements, which potentially allows arbitrary code execution from user
       input. *Caution:* This should only be enabled in trusted environments,
-      never on a publicly-accessible server (default: False).
+      never on a publicly-accessible server (default: :code:`False`).
 
     :param config: Configuration dictionary (default: :code:`{}`).
     :type config: dict

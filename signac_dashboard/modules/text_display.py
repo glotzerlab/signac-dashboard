@@ -33,7 +33,7 @@ class TextDisplay(Module):
         :py:class:`signac.contrib.job.Job` or :py:class:`signac.Project`
         and returning text or Markdown content.
     :type message: callable
-    :param markdown: Enables Markdown rendering if True (default: False).
+    :param markdown: Enables Markdown rendering if True (default: :code:`False`).
     :type markdown: bool
     """
 
