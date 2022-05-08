@@ -25,7 +25,7 @@ class DocumentList(Module):
         self,
         name=None,
         context="JobContext",
-        template="cards/trusted_dict_display.html",
+        template="cards/escaped_dict_display.html",
         max_chars=None,
         **kwargs,
     ):

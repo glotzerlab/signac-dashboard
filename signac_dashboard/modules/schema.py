@@ -28,7 +28,7 @@ class Schema(Module):
         self,
         name="Project Schema",
         context="ProjectContext",
-        template="cards/trusted_dict_display.html",
+        template="cards/escaped_dict_display.html",
         max_chars=None,
         exclude_const=False,
         subset=False,
