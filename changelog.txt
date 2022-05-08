@@ -13,7 +13,7 @@ Version 0.3
 Added
 +++++
 
-- The project page displays modules with ``context="ProjectContext"`` (#110).
+- The Project page displays cards from modules with ``context="ProjectContext"`` (#27, #110).
 - Schema module for the ProjectContext (#110).
 - ProjectContext support for the DocumentList, ImageViewer, TextDisplay, and VideoViewer modules (#110).
 
