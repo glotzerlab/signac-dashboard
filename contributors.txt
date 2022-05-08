@@ -7,4 +7,4 @@
      1	Rohan Babbar <77425744+rohanbabbar04@users.noreply.github.com>
      1	Tim Moore <tcmoore3@gmail.com>
      1	Vyas Ramasubramani <vramasub@umich.edu>
-     1  Charlotte Shiqi Zhao <zshiqi@umich.edu>
+     1	Charlotte Shiqi Zhao <zshiqi@umich.edu>
