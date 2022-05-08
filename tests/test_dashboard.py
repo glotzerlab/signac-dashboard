@@ -151,28 +151,15 @@ class AllModulesTestCase(DashboardTestCase):
         module_headers = re.findall(pattern, response)
         assert len(module_headers) == 2
 
-    def test_module_list(self):
+    def test_module_selector(self):
         project_response = self.get_response("/project/")
-        # job_response = self.get_response("/jobs/&view=grid")
+        job_response = self.get_response("/jobs/?view=grid")
         for m in self.modules:
-            print(f"Checking for {m.name}")
+            print(f"Checking for {m.name} in {m.context}.")
             if m.context == "ProjectContext":
                 assert m.name in project_response
-            # This fails for some reason:
-            # elif m.context == "JobContext":
-            #     if m.name == "Document Editor":
-            #         print(job_response)
-            #     assert m.name in job_response
-
-    # def test_module_list_job(self):
-    #     job_response = self.get_response("/jobs/")
-    #     job_response = self.get_response("/jobs/&view=grid")
-    #     breakpoint()
-    #     for m in self.modules:
-    #         print(f"Checking for {m.name}")
-    #         if m.context == "JobContext":
-    #             assert m.name in job_response
-
+            elif m.context == "JobContext":
+                assert m.name in job_response
 
 if __name__ == "__main__":
     unittest.main()
