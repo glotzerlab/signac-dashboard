@@ -107,9 +107,14 @@ class DashboardTestCase(unittest.TestCase):
         response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
         assert "Views" not in response
 
+    def test_job_sidebar(self):
+        response = self.get_response("/jobs/?view=grid")
+        assert "No modules." in project_response
+        assert "Views" not in response
+
     def test_project_sidebar(self):
-        response = self.get_response("/project/")
-        # assert "No modules. Add some!" in response
+        project_response = self.get_response("/project/")
+        assert "No modules." in project_response
         assert "Views" not in response
 
 
