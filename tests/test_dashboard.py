@@ -107,10 +107,12 @@ class DashboardTestCase(unittest.TestCase):
         response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
         assert "Views" not in response
 
+
+class NoModulesTestCase(DashboardTestCase):
+    """Test the inherited tests and cases without any modules."""
     def test_job_sidebar(self):
         response = self.get_response("/jobs/?view=grid")
         assert "No modules." in response
-        assert "Views" not in response
 
     def test_project_sidebar(self):
         response = self.get_response("/project/")
@@ -119,10 +121,7 @@ class DashboardTestCase(unittest.TestCase):
 
 
 class AllModulesTestCase(DashboardTestCase):
-    def get_response(self, query):
-        rv = self.test_client.get(query, follow_redirects=True)
-        return str(rv.get_data())
-
+    """Add all modules and contexts and test again."""
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
         self.project = init_project(
