@@ -13,9 +13,10 @@ from signac_dashboard.module import Module
 class ImageViewer(Module):
     """Displays images that match a glob.
 
-    This module can display images in any format that works with a standard
-    ``<img>`` tag. The module defaults to showing all images of PNG, JPG, or
-    GIF types. A filename or glob can be defined to select specific filenames.
+    The ImageViewer module can display images in any format that works with a standard
+    ``<img>`` tag. The module defaults to showing all images of PNG, JPG, or GIF
+    types in the job or project root directory. A filename or glob can be
+    defined to select specific filenames. Each matching file yields a card.
 
     Multiple ImageViewer modules can be defined with different filenames or
     globs to enable/disable cards for each image or image group. Examples:
@@ -28,9 +29,11 @@ class ImageViewer(Module):
         img_mod = ImageViewer(context="ProjectContext",
                               img_globs=['/gallery/*.png']) # display from a subdirectory of the project root
 
-    :param img_globs: A list of glob expressions or exact filenames to be
-        displayed, one per card (default: :code:`['*.png', '*.jpg', '*.gif']`).
+    :param img_globs: A list of glob expressions or exact filenames,
+        relative to the job or project root directory, to be
+        displayed (default: :code:`['*.png', '*.jpg', '*.gif']`).
     :type img_globs: list
+
     """
 
     _supported_contexts = {"JobContext", "ProjectContext"}
