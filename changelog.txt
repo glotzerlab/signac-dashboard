@@ -12,7 +12,19 @@ Version 0.3
 Added
 +++++
 
-- Project overview page and modules with ProjectContext (#110).
+- The project page displays modules with ``context="ProjectContext"`` (#110).
+- Schema module for the ProjectContext (#110).
+- ProjectContext support for the DocumentList, ImageViewer, TextDisplay, and VideoViewer modules (#110).
+
+Changed
++++++++
+
+- Hide the list of modules in the sidebar when viewing the job list (#110).
+
+Fixed
++++++
+
+- Hide the list and grid view buttons when viewing a single job (#92, #110).
 
 Version 0.2
 ===========
