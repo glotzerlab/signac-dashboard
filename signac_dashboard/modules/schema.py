@@ -46,8 +46,9 @@ class Schema(Module):
         self.subset = subset
 
     def get_cards(self, project):
-        schema = project.detect_schema(exclude_const=self.exclude_const,
-                                       subset = self.subset)
+        schema = project.detect_schema(
+            exclude_const=self.exclude_const, subset=self.subset
+        )
         schema = dict(schema.items())
 
         # We manually escape the schema contents since the field is marked
