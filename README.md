@@ -59,7 +59,8 @@ from signac_dashboard import Dashboard
 from signac_dashboard.modules import StatepointList, DocumentList, ImageViewer, Schema
 
 if __name__ == '__main__':
-    modules = [StatepointList(), DocumentList(), ImageViewer(), Schema()]
+    modules = [StatepointList(), DocumentList(), ImageViewer(context="JobContext"),
+               ImageViewer(context="ProjectContext"), Schema()]
     Dashboard(modules=modules).main()
 ```
 
