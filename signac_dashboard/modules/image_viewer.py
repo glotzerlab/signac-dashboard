@@ -27,7 +27,7 @@ class ImageViewer(Module):
         img_mod = ImageViewer()  # Show all PNG/JPG/GIF images
         img_mod = ImageViewer(name='Bond Order Diagram', img_globs=['bod.png'])
         img_mod = ImageViewer(context="ProjectContext",
-                              img_globs=['/gallery/*.png']) # search a subdirectory of the project root
+                              img_globs=['/gallery/*.png'])  # search subdirectory of project root
 
     :param context: Supports :code:`'JobContext'` and :code:`'ProjectContext'`.
     :type context: str
