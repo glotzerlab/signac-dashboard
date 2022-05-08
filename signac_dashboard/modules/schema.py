@@ -31,7 +31,7 @@ class Schema(Module):
         template="cards/escaped_dict_display.html",
         max_chars=None,
         exclude_const=False,
-        subset=False,
+        subset=None,
         **kwargs,
     ):
 
