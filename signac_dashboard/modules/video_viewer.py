@@ -17,11 +17,15 @@ class VideoViewer(Module):
     videos using an HTML ``<video>`` tag. The module defaults to showing all
     videos of MP4 or M4V types. A filename or glob can be defined to select
     specific filenames, which may be of any format supported by your browser
-    with the ``<video>`` tag. A "poster" can be defined, which shows a
+    with the ``<video>`` tag.
+
+    A "poster" can be defined, which shows a
     thumbnail with that filename before the video is started. Videos do not
     preload by default, since file sizes can be large and there may be many
     videos on a page. To enable preloading, use the argument ``preload='auto'``
-    or ``preload='metadata'``. Multiple VideoViewer modules can be defined
+    or ``preload='metadata'``.
+
+    Multiple VideoViewer modules can be defined
     with different filenames or globs to enable/disable cards individually.
     Examples:
 
