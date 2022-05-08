@@ -9,7 +9,11 @@ from signac_dashboard.module import Module
 
 
 class StatepointList(Module):
-    """Displays the job state point."""
+    """Displays the job state point.
+
+    :param context: Supports :code:`'JobContext'`.
+    :type context: str
+    """
 
     _supported_contexts = {"JobContext"}
 

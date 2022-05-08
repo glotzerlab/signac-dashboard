@@ -14,6 +14,8 @@ class Notes(Module):
     The Notes module can be used to annotate a large data space with tags or
     human-readable descriptions for post-processing, parsing, or searching.
 
+    :param context: Supports :code:`'JobContext'`.
+    :type context: str
     :param key: Document key to display and update (default: :code:`'notes'`).
     :type key: str
     """

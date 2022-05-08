@@ -9,8 +9,10 @@ from signac_dashboard.module import Module
 
 
 class FileList(Module):
-    """Lists files in the job workspace with download links.
+    """Lists files in the job directory with download links.
 
+    :param context: Supports :code:`'JobContext'`.
+    :type context: str
     :param prefix_jobid: Whether filenames should be prefixed with the job id
         when being downloaded (default: :code:`True`).
     :type prefix_jobid: bool

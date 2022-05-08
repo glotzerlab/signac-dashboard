@@ -24,6 +24,9 @@ class FlowStatus(Module):
 
         if __name__ == '__main__':
             Dashboard(project=Project()).main()
+
+    :param context: Supports :code:`'JobContext'`.
+    :type context: str
     """
 
     _supported_contexts = {"JobContext"}

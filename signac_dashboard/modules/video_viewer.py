@@ -39,6 +39,8 @@ class VideoViewer(Module):
                                 poster='cool_science_thumbnail.jpg',
                                 preload='none')
 
+    :param context: Supports :code:`'JobContext'` and :code:`'ProjectContext'`.
+    :type context: str
     :param video_globs: A list of glob expressions or exact filenames,
         relative to the job or project root directory, to be
         displayed (default: :code:`['*.mp4', '*.m4v']`).
@@ -46,7 +48,7 @@ class VideoViewer(Module):
     :param preload: Option for preloading videos, one of :code:`'auto'`,
         :code:`'metadata'`, or :code:`'none'` (default: :code:`'none'`).
     :type preload: str
-    :param poster: A path in the job workspace or project directory for a
+    :param poster: A path in the job directory or project directory for a
         poster image to be shown before a video begins playback (default: :code:`None`).
     :type poster: str
 

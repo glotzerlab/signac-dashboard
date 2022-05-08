@@ -19,6 +19,9 @@ class DocumentEditor(Module):
     JSON-compatible Python data structures (e.g., :py:class:`list` and
     :py:class:`dict`). Job document keys beginning with an underscore
     :code:`_` are treated as private and are not displayed.
+
+    :param context: Supports :code:`'JobContext'`.
+    :type context: str
     """
 
     _supported_contexts = {"JobContext"}

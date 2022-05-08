@@ -14,6 +14,8 @@ class DocumentList(Module):
 
     Long values can be optionally truncated.
 
+    :param context: Supports :code:`'JobContext'` and :code:`'ProjectContext'`.
+    :type context: str
     :param max_chars: Truncation length for document values (default:
         :code:`None`).
     :type max_chars: int
