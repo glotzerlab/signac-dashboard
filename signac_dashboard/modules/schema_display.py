@@ -7,7 +7,7 @@ from signac_dashboard.module import Module
 from signac_dashboard.util import escape_truncated_values
 
 
-class SchemaView(Module):
+class Schema(Module):
     """Displays the project schema.
 
     Long values can be optionally truncated.
