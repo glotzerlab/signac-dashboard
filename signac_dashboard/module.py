@@ -5,17 +5,28 @@ from flask import render_template
 
 
 class Module:
-    """Base class for dashboard modules.
+    """Base class for modules, the building blocks of the dashboard.
 
-    Modules provide *cards* of content, for a specific *context*. Each module
-    must have a **name** which appears in its cards' titles, a **context**
-    (such as :code:`'JobContext'`) in which its contents will be displayed,
-    and a **template** file (written in HTML/Jinja-compatible syntax) for
-    rendering card content. Modules can be disabled by default, by setting
-    :code:`enabled=False` in the constructor.
+    A module turns select information from the job directory or project
+    directory into cards displayed on the dashboard. The cards pull content from
+    the job directory or project directory depending on whether the module
+    ``context`` is ``'JobContext'`` or ``'ProjectContext'``.
+
+    :param name: Name of the module for card titles.
+    :type name: str
+    :param context: Context in which this module's cards will be displayed, either
+        :code:`'JobContext'` *or* :code:`'ProjectContext'`.
+    :type context: str
+    :param template: Path to a template file for this module's cards (e.g.
+        :code:`cards/my_module.html`, without the template directory prefix
+        :code:`templates/`).
+    :type template: str
+    :param enabled: Whether the module's cards will be displayed. (default: :code:`True`)
+    :type enabled: bool
 
     **Custom modules:** User-defined module classes should be a subclass of
     :py:class:`~.Module` and define the function :py:meth:`~.Module.get_cards`.
+    Template files are written in HTML/Jinja-compatible syntax.
     See `this example <https://github.com/glotzerlab/signac-dashboard/tree/master/examples/custom-modules>`_.
 
     **Module assets:** If a module requires scripts or stylesheets to be
@@ -51,15 +62,6 @@ class Module:
                 # Perform update
                 return "Saved."
 
-    :param name: Name of this module (appears in card titles).
-    :type name: str
-    :param context: Context in which this module's cards should be displayed
-        (e.g. :code:`'JobContext'`).
-    :type context: str
-    :param template: Path to a template file for this module's cards (e.g.
-        :code:`cards/my_module.html`, without the template directory prefix
-        :code:`templates/`).
-    :type template: str
     """  # noqa: E501
 
     _supported_contexts = {}
