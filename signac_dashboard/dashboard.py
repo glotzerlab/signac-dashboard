@@ -401,8 +401,7 @@ class Dashboard:
         g.active_page = "project"
         session["context"] = "ProjectContext"
         if (
-            "enabled_module_indices" in session
-            and len(session.get("enabled_module_indices", {}).get("ProjectContext", []))
+            len(session.get("enabled_module_indices", {}).get("ProjectContext", []))
             == 0
         ):
             flash("No modules for the ProjectContext are enabled.", "info")
