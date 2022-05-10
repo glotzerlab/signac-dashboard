@@ -381,9 +381,18 @@ class Dashboard:
                 )
         return pagination
 
+    def _setup_enabled_module_indices(self):
+        enabled_module_indices = {}
+        for context_name, context_modules in self._modules_by_context.items():
+            enabled_module_indices[context_name] = [
+                i for i, m in enumerate(context_modules) if m.enabled
+            ]
+        return enabled_module_indices
+
     def _render_job_view(self, *args, **kwargs):
         g.active_page = "jobs"
         session["context"] = "JobContext"
+        session.setdefault("enabled_module_indices", self._setup_enabled_module_indices())
         view_mode = request.args.get("view", kwargs.get("default_view", "list"))
         if view_mode == "grid":
             if (
@@ -400,6 +409,7 @@ class Dashboard:
     def _render_project_view(self, *args, **kwargs):
         g.active_page = "project"
         session["context"] = "ProjectContext"
+        session.setdefault("enabled_module_indices", self._setup_enabled_module_indices())
         if (
             len(session.get("enabled_module_indices", {}).get("ProjectContext", []))
             == 0
@@ -492,12 +502,7 @@ class Dashboard:
 
         @dashboard.app.context_processor
         def injections():
-            enabled_module_indices = {}
-            for context_name, context_modules in self._modules_by_context.items():
-                enabled_module_indices[context_name] = [
-                    i for i, m in enumerate(context_modules) if m.enabled
-                ]
-            session.setdefault("enabled_module_indices", enabled_module_indices)
+            # inject new variables into the template context
             return {
                 "APP_NAME": "signac-dashboard",
                 "APP_VERSION": __version__,
