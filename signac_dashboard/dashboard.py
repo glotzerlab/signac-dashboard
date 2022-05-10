@@ -1,4 +1,4 @@
-# Copyright (c) 2019 The Regents of the University of Michigan
+# Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
@@ -11,6 +11,7 @@ import shlex
 import sys
 import warnings
 from functools import lru_cache
+from itertools import groupby
 from numbers import Real
 
 import jinja2
@@ -67,7 +68,7 @@ class Dashboard:
     - **ALLOW_WHERE**: If True, search queries can include :code:`$where`
       statements, which potentially allows arbitrary code execution from user
       input. *Caution:* This should only be enabled in trusted environments,
-      never on a publicly-accessible server (default: False).
+      never on a publicly-accessible server (default: :code:`False`).
 
     :param config: Configuration dictionary (default: :code:`{}`).
     :type config: dict
@@ -90,7 +91,41 @@ class Dashboard:
         self.observer = Observer()
         self.observer.schedule(self.event_handler, self.project.workspace())
 
-        self._prepare()
+        # Prepare this dashboard instance to run.
+
+        # Set configuration defaults and save to the project document
+        self.config.setdefault("PAGINATION", True)
+        self.config.setdefault("PER_PAGE", 25)
+
+        # Create and configure the Flask application
+        self.app = self._create_app(self.config)
+
+        # Add assets and routes
+        self.assets = self._create_assets()
+        self._register_routes()
+
+        # Add module assets and routes
+        self._module_assets = []
+        for module in self.modules:
+            try:
+                module.register(self)
+            except Exception as e:
+                logger.error(f"Error while registering {module.name} module: {e}")
+                logger.error(f"Removing module {module.name} from dashboard.")
+                self.modules.remove(module)
+
+        # Clear dashboard and project caches.
+        self.update_cache()
+
+        # Group modules to track enabled state
+        def keyfunc(module):
+            return module.context
+
+        grouped = groupby(sorted(self.modules, key=keyfunc), key=keyfunc)
+        modules_by_context = {}
+        for context_key, context_group in grouped:
+            modules_by_context[context_key] = [m for m in context_group if m.enabled]
+        self._modules_by_context = modules_by_context
 
     def _create_app(self, config={}):
         """Creates a Flask application.
@@ -170,33 +205,6 @@ class Dashboard:
         :type asset: dict
         """
         self._module_assets.append(asset)
-
-    def _prepare(self):
-        """Prepare this dashboard instance to run."""
-
-        # Set configuration defaults and save to the project document
-        self.config.setdefault("PAGINATION", True)
-        self.config.setdefault("PER_PAGE", 25)
-
-        # Create and configure the Flask application
-        self.app = self._create_app(self.config)
-
-        # Add assets and routes
-        self.assets = self._create_assets()
-        self._register_routes()
-
-        # Add module assets and routes
-        self._module_assets = []
-        for module in self.modules:
-            try:
-                module.register(self)
-            except Exception as e:
-                logger.error(f"Error while registering {module.name} module: {e}")
-                logger.error(f"Removing module {module.name} from dashboard.")
-                self.modules.remove(module)
-
-        # Clear dashboard and project caches.
-        self.update_cache()
 
     def run(self, *args, **kwargs):
         """Runs the dashboard webserver.
@@ -373,20 +381,45 @@ class Dashboard:
                 )
         return pagination
 
+    def _setup_enabled_module_indices(self):
+        enabled_module_indices = {}
+        for context_name, context_modules in self._modules_by_context.items():
+            enabled_module_indices[context_name] = [
+                i for i, m in enumerate(context_modules) if m.enabled
+            ]
+        return enabled_module_indices
+
     def _render_job_view(self, *args, **kwargs):
         g.active_page = "jobs"
+        session["context"] = "JobContext"
+        session.setdefault(
+            "enabled_module_indices", self._setup_enabled_module_indices()
+        )
         view_mode = request.args.get("view", kwargs.get("default_view", "list"))
         if view_mode == "grid":
             if (
-                "enabled_modules" in session
-                and len(session.get("enabled_modules", [])) == 0
+                len(session.get("enabled_module_indices", {}).get("JobContext", []))
+                == 0
             ):
-                flash("No modules are enabled.", "info")
+                flash("No modules for the JobContext are enabled.", "info")
             return render_template("jobs_grid.html", *args, **kwargs)
         elif view_mode == "list":
             return render_template("jobs_list.html", *args, **kwargs)
         else:
             return self._render_error(ValueError(f"Invalid view mode: {view_mode}"))
+
+    def _render_project_view(self, *args, **kwargs):
+        g.active_page = "project"
+        session["context"] = "ProjectContext"
+        session.setdefault(
+            "enabled_module_indices", self._setup_enabled_module_indices()
+        )
+        if (
+            len(session.get("enabled_module_indices", {}).get("ProjectContext", []))
+            == 0
+        ):
+            flash("No modules for the ProjectContext are enabled.", "info")
+        return render_template("project_info.html", *args, **kwargs)
 
     def _render_error(self, error):
         if isinstance(error, Exception):
@@ -473,9 +506,9 @@ class Dashboard:
 
         @dashboard.app.context_processor
         def injections():
+            # inject new variables into the template context
             session.setdefault(
-                "enabled_modules",
-                [i for i in range(len(self.modules)) if self.modules[i].enabled],
+                "enabled_module_indices", self._setup_enabled_module_indices()
             )
             return {
                 "APP_NAME": "signac-dashboard",
@@ -483,7 +516,8 @@ class Dashboard:
                 "PROJECT_NAME": self.project.config["project"],
                 "PROJECT_DIR": self.project.config["project_dir"],
                 "modules": self.modules,
-                "enabled_modules": session["enabled_modules"],
+                "modules_by_context": self._modules_by_context,
+                "enabled_module_indices": session["enabled_module_indices"],
                 "module_assets": self._module_assets,
             }
 
@@ -512,9 +546,13 @@ class Dashboard:
         self.add_url("views.home", ["/"])
         self.add_url("views.settings", ["/settings"])
         self.add_url("views.search", ["/search"])
+        self.add_url("views.project_info", ["/project/"])
         self.add_url("views.jobs_list", ["/jobs/"])
         self.add_url("views.show_job", ["/jobs/<jobid>"])
-        self.add_url("views.get_file", ["/jobs/<jobid>/file/<path:filename>"])
+        self.add_url(
+            "views.get_file",
+            ["/jobs/<jobid>/file/<path:filename>", "/project/file/<path:filename>"],
+        )
         self.add_url("views.change_modules", ["/modules"], methods=["POST"])
 
     def update_cache(self):

@@ -56,10 +56,11 @@ In an existing **signac** project directory, create a file `dashboard.py`:
 
 ```python
 from signac_dashboard import Dashboard
-from signac_dashboard.modules import StatepointList, DocumentList, ImageViewer
+from signac_dashboard.modules import StatepointList, DocumentList, ImageViewer, Schema
 
 if __name__ == '__main__':
-    modules = [StatepointList(), DocumentList(), ImageViewer()]
+    modules = [StatepointList(), DocumentList(), ImageViewer(context="JobContext"),
+               ImageViewer(context="ProjectContext"), Schema()]
     Dashboard(modules=modules).main()
 ```
 

@@ -1,4 +1,4 @@
-# Copyright (c) 2019 The Regents of the University of Michigan
+# Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 import logging
@@ -24,7 +24,12 @@ class FlowStatus(Module):
 
         if __name__ == '__main__':
             Dashboard(project=Project()).main()
+
+    :param context: Supports :code:`'JobContext'`.
+    :type context: str
     """
+
+    _supported_contexts = {"JobContext"}
 
     def __init__(
         self,
@@ -35,7 +40,13 @@ class FlowStatus(Module):
         project_class="Project",
         **kwargs,
     ):
-        super().__init__(name=name, context=context, template=template, **kwargs)
+
+        super().__init__(
+            name=name,
+            context=context,
+            template=template,
+            **kwargs,
+        )
 
     def register(self, dashboard):
         self.project = dashboard.project

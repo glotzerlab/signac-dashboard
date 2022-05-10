@@ -1,7 +1,8 @@
-# Copyright (c) 2019 The Regents of the University of Michigan
+# Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
+from markupsafe import escape
 from werkzeug.utils import cached_property, import_string
 
 
@@ -28,7 +29,23 @@ def ellipsis_string(string, length=60):
         return string[:half] + "..." + string[-half:]
 
 
+def escape_truncated_values(data, max_chars):
+    """Truncate values in a dict to a maximum number of characters."""
+    if max_chars is not None and int(max_chars) > 0:
+        for key in data:
+            if len(str(data[key])) > max_chars:
+                data[key] = (
+                    str(escape(ellipsis_string(data[key], length=max_chars)))
+                    + " <em>[Truncated]</em>"
+                )
+    else:
+        for key in data:
+            data[key] = escape(data[key])
+    return data
+
+
 class LazyView:
+    # See https://flask.palletsprojects.com/en/2.1.x/patterns/lazyloading/
     def __init__(self, dashboard, import_name):
         self.__module__, self.__name__ = import_name.rsplit(".", 1)
         self.import_name = import_name

@@ -1,4 +1,4 @@
-# Copyright (c) 2019 The Regents of the University of Michigan
+# Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from ast import literal_eval
@@ -19,7 +19,12 @@ class DocumentEditor(Module):
     JSON-compatible Python data structures (e.g., :py:class:`list` and
     :py:class:`dict`). Job document keys beginning with an underscore
     :code:`_` are treated as private and are not displayed.
+
+    :param context: Supports :code:`'JobContext'`.
+    :type context: str
     """
+
+    _supported_contexts = {"JobContext"}
 
     def __init__(
         self,
@@ -28,7 +33,13 @@ class DocumentEditor(Module):
         template="cards/document_editor.html",
         **kwargs,
     ):
-        super().__init__(name=name, context=context, template=template, **kwargs)
+
+        super().__init__(
+            name=name,
+            context=context,
+            template=template,
+            **kwargs,
+        )
 
     def get_cards(self, job):
         doc = OrderedDict(sorted(job.document.items(), key=lambda t: t[0]))

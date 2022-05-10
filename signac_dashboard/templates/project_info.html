@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ g.title }}{% endblock %}
+{% block subtitle %}{{ g.subtitle }}{% endblock %}
+
+{% block panels %}
+
+{% set context = "ProjectContext" %}
+{% set num_enabled_modules = enabled_module_indices[context] | length %}
+
+{% set card_count = [] %}
+{% if num_enabled_modules > 1 %}
+<div class="columns is-mobile is-multiline">
+{% endif %}
+{% for module in modules_by_context[context] %} {# begin modules #}
+    {% if loop.index0 in enabled_module_indices[context] %}
+    {% for card in module.get_cards(g.project) %} {# begin cards #}
+        {# jinja variables go out of scope after the loop unless this "list" hack is used #}
+        {% if card_count.append(1) %}{% endif %}
+        <div class="column is-4-desktop is-full-mobile">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header-title card-header-dashboard">
+                        {{ card.name }}
+                    </div>
+                </div>
+                <div class="card-content">
+                    {{ card.content | safe }}
+                </div>
+            </div>
+        </div>
+    {% endfor %} {# end cards #}
+    {% endif %} {# end if module should render #}
+{% endfor %} {# end modules #}
+
+{% if card_count | length == 0 and num_enabled_modules >= 1 %}
+<div class="column">
+<div class="message is-info">
+<h5 class="message-header">No cards to show.</h5>
+</div>
+</div>
+{% endif %}
+
+{% if num_enabled_modules > 1 %}
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block view_options %}{% endblock %}

@@ -1,4 +1,4 @@
-# Copyright (c) 2019 The Regents of the University of Michigan
+# Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from flask import abort, render_template, request
@@ -14,9 +14,13 @@ class Notes(Module):
     The Notes module can be used to annotate a large data space with tags or
     human-readable descriptions for post-processing, parsing, or searching.
 
+    :param context: Supports :code:`'JobContext'`.
+    :type context: str
     :param key: Document key to display and update (default: :code:`'notes'`).
     :type key: str
     """
+
+    _supported_contexts = {"JobContext"}
 
     def __init__(
         self,
@@ -26,7 +30,13 @@ class Notes(Module):
         key="notes",
         **kwargs,
     ):
-        super().__init__(name=name, context=context, template=template, **kwargs)
+
+        super().__init__(
+            name=name,
+            context=context,
+            template=template,
+            **kwargs,
+        )
         self.key = key
 
     def get_cards(self, job):

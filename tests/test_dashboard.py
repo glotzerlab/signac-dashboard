@@ -1,7 +1,8 @@
-# Copyright (c) 2019 The Regents of the University of Michigan
+# Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 import json
+import re
 import shutil
 import tempfile
 import unittest
@@ -14,6 +15,10 @@ from signac_dashboard import Dashboard
 
 
 class DashboardTestCase(unittest.TestCase):
+    def get_response(self, query):
+        rv = self.test_client.get(query, follow_redirects=True)
+        return str(rv.get_data())
+
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
         self.project = init_project(
@@ -30,17 +35,21 @@ class DashboardTestCase(unittest.TestCase):
         self.dashboard = Dashboard(
             config=self.config, project=self.project, modules=self.modules
         )
-        self.dashboard._prepare()
         self.test_client = self.dashboard.app.test_client()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
 
+    def test_get_project(self):
+        rv = self.test_client.get("/project/", follow_redirects=True)
+        response = str(rv.get_data())
+        assert "dashboard-test-project" in response
+
     def test_get_jobs(self):
-        rv = self.test_client.get("/jobs", follow_redirects=True)
+        rv = self.test_client.get("/jobs/", follow_redirects=True)
         response = str(rv.get_data())
         assert "dashboard-test-project" in response
 
     def test_job_count(self):
-        rv = self.test_client.get("/jobs", follow_redirects=True)
+        rv = self.test_client.get("/jobs/", follow_redirects=True)
         response = str(rv.get_data())
         assert f"{self.project.num_jobs()} jobs" in response
 
@@ -93,8 +102,28 @@ class DashboardTestCase(unittest.TestCase):
         response = str(rv.get_data())
         assert f"{self.project.num_jobs()} jobs" in response
 
+    def test_no_view_single_job(self):
+        """Make sure View panel is not shown when on a single job page."""
+        response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
+        assert "Views" not in response
+
+
+class NoModulesTestCase(DashboardTestCase):
+    """Test the inherited tests and cases without any modules."""
+
+    def test_job_sidebar(self):
+        response = self.get_response("/jobs/?view=grid")
+        assert "No modules." in response
+
+    def test_project_sidebar(self):
+        response = self.get_response("/project/")
+        assert "No modules." in response
+        assert "Views" not in response
+
 
 class AllModulesTestCase(DashboardTestCase):
+    """Add all modules and contexts and test again."""
+
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
         self.project = init_project(
@@ -109,14 +138,44 @@ class AllModulesTestCase(DashboardTestCase):
         self.config = {}
         modules = []
         for m in signac_dashboard.modules.__all__:
-            modules.append(getattr(signac_dashboard.modules, m)())
+            module = getattr(signac_dashboard.modules, m)
+            for c in module._supported_contexts:
+                modules.append(module(context=c))
+                with self.assertRaises(RuntimeError):
+                    module(context="BadContext")
         self.modules = modules
         self.dashboard = Dashboard(
             config=self.config, project=self.project, modules=self.modules
         )
-        self.dashboard._prepare()
         self.test_client = self.dashboard.app.test_client()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
+
+    def test_module_visible_mobile(self):
+        response = self.get_response("/jobs/?view=grid")
+        # Check for two instances of Modules header
+        pattern = re.compile("Modules</h")
+        module_headers = re.findall(pattern, response)
+        assert len(module_headers) == 2
+
+    def test_module_selector(self):
+        project_response = self.get_response("/project/")
+        job_response = self.get_response("/jobs/?view=grid")
+        for m in self.modules:
+            print(f"Checking for {m.name} in {m.context}.")
+            if m.context == "ProjectContext":
+                assert m.name in project_response
+            elif m.context == "JobContext":
+                assert m.name in job_response
+
+    def test_enabled_module_indices_project_session(self):
+        """Ensure that the message is not displayed when modules are actually enabled."""
+        project_response = self.get_response("/project/")
+        assert "No modules for the ProjectContext are enabled." not in project_response
+
+    def test_enabled_module_indices_job_session(self):
+        """Ensure that the message is not displayed when modules are actually enabled."""
+        job_response = self.get_response("/jobs/?view=grid")
+        assert "No modules for the JobContext are enabled." not in job_response
 
 
 if __name__ == "__main__":
