@@ -167,6 +167,16 @@ class AllModulesTestCase(DashboardTestCase):
             elif m.context == "JobContext":
                 assert m.name in job_response
 
+    def test_enabled_module_indices_project_session(self):
+        """Ensure that the message is not displayed when modules are actually enabled."""
+        project_response = self.get_response("/project/")
+        assert "No modules for the ProjectContext are enabled." not in project_response
+
+    def test_enabled_module_indices_job_session(self):
+        """Ensure that the message is not displayed when modules are actually enabled."""
+        job_response = self.get_response("/jobs/?view=grid")
+        assert "No modules for the JobContext are enabled." not in job_response
+
 
 if __name__ == "__main__":
     unittest.main()
