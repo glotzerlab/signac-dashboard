@@ -392,7 +392,9 @@ class Dashboard:
     def _render_job_view(self, *args, **kwargs):
         g.active_page = "jobs"
         session["context"] = "JobContext"
-        session.setdefault("enabled_module_indices", self._setup_enabled_module_indices())
+        session.setdefault(
+            "enabled_module_indices", self._setup_enabled_module_indices()
+        )
         view_mode = request.args.get("view", kwargs.get("default_view", "list"))
         if view_mode == "grid":
             if (
@@ -409,7 +411,9 @@ class Dashboard:
     def _render_project_view(self, *args, **kwargs):
         g.active_page = "project"
         session["context"] = "ProjectContext"
-        session.setdefault("enabled_module_indices", self._setup_enabled_module_indices())
+        session.setdefault(
+            "enabled_module_indices", self._setup_enabled_module_indices()
+        )
         if (
             len(session.get("enabled_module_indices", {}).get("ProjectContext", []))
             == 0
