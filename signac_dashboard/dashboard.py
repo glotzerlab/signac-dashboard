@@ -507,7 +507,9 @@ class Dashboard:
         @dashboard.app.context_processor
         def injections():
             # inject new variables into the template context
-            session.setdefault("enabled_module_indices", self._setup_enabled_module_indices())
+            session.setdefault(
+                "enabled_module_indices", self._setup_enabled_module_indices()
+            )
             return {
                 "APP_NAME": "signac-dashboard",
                 "APP_VERSION": __version__,
