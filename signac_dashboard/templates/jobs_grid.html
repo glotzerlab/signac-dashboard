@@ -13,6 +13,7 @@
 
 {% set context = "JobContext" %}
 {% set num_enabled_modules = enabled_module_indices[context] | length %}
+{% set columns_per_card = (12 / CARDS_PER_ROW) | int %}
 
 
 {% block panels %}
@@ -37,7 +38,7 @@
     {% for card in module.get_cards(job_details.job) %} {# begin cards #}
         {# jinja variables go out of scope after the loop unless this "list" hack is used #}
         {% if card_count.append(1) %}{% endif %}
-        <div class="column is-4-desktop is-full-mobile">
+        <div class="column is-{{ columns_per_card }}-desktop is-full-mobile">
             <div class="card">
                 <div class="card-header">
                     <div class="card-header-title card-header-dashboard">
@@ -57,7 +58,7 @@
     {% endif %} {# end if module is enabled #}
     {% endfor %} {# end modules #}
     {% if card_count | length == 0 and num_enabled_modules > 1 %} {# begin no cards message #}
-        <div class="column is-4-desktop is-full-mobile">
+        <div class="column is-{{ columns_per_card }}-desktop is-full-mobile">
             <h6 class="subtitle is-6">No cards to show.</h6>
         </div>
     {% endif %} {# end no cards message #}
