@@ -132,7 +132,7 @@ class Dashboard:
         grouped = groupby(sorted(self.modules, key=keyfunc), key=keyfunc)
         modules_by_context = {}
         for context_key, context_group in grouped:
-            modules_by_context[context_key] = [m for m in context_group if m.enabled]
+            modules_by_context[context_key] = [m for m in context_group]
         self._modules_by_context = modules_by_context
 
     def _create_app(self, config={}):
