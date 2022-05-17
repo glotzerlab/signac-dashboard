@@ -16,6 +16,7 @@ Added
 - The Project page displays cards from modules with ``context="ProjectContext"`` (#27, #110).
 - Schema module for the ProjectContext (#110).
 - ProjectContext support for the DocumentList, ImageViewer, TextDisplay, and VideoViewer modules (#110).
+- Dashboard config option ``CARDS_PER_ROW`` controls the number of cards per row in the desktop view (#133).
 
 Changed
 +++++++
