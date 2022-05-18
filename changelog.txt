@@ -27,6 +27,7 @@ Fixed
 +++++
 
 - Hide the list and grid view buttons when viewing a single job (#92, #110).
+- Fixed bug with disabled modules not showing a checkbox to enable them in the grid view (#134).
 
 Version 0.2
 ===========
