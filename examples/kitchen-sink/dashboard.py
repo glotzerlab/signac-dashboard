@@ -22,10 +22,9 @@ if __name__ == "__main__":
                 project.open_job({"a": a, "b": b}).init()
 
     modules = []
-    if "dashboard" not in project.document:
-        # Initialize a new Dashboard using all modules with default settings
-        for m in signac_dashboard.modules.__all__:
-            module = getattr(signac_dashboard.modules, m)
-            for c in module._supported_contexts:
-                modules.append(module(context=c))
+    # Initialize a new Dashboard using all modules with default settings
+    for m in signac_dashboard.modules.__all__:
+        module = getattr(signac_dashboard.modules, m)
+        for c in module._supported_contexts:
+            modules.append(module(context=c))
     Dashboard(modules=modules, project=Project.get_project()).main()
