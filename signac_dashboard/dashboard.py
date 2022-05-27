@@ -61,6 +61,8 @@ class Dashboard:
       :code:`True` (default: :code:`False`).
     - **PER_PAGE**: Maximum number of jobs to show per page
       (default: 25).
+    - **CARDS_PER_ROW**: Cards to show per row in the desktop view. Must be a
+      factor of 12 (default: 3).
     - **SECRET_KEY**: This must be specified to run via WSGI with multiple
       workers, so that sessions remain intact. See the
       `Flask docs <http://flask.pocoo.org/docs/1.0/config/#SECRET_KEY>`_
@@ -93,9 +95,15 @@ class Dashboard:
 
         # Prepare this dashboard instance to run.
 
-        # Set configuration defaults and save to the project document
+        # Set configuration defaults
         self.config.setdefault("PAGINATION", True)
         self.config.setdefault("PER_PAGE", 25)
+        self.config.setdefault("CARDS_PER_ROW", 3)
+        if 12 % self.config["CARDS_PER_ROW"] != 0:
+            raise ValueError(
+                "The value of CARDS_PER_ROW must be a factor of 12. Got "
+                f"{self.config['CARDS_PER_ROW']}."
+            )
 
         # Create and configure the Flask application
         self.app = self._create_app(self.config)
@@ -515,6 +523,7 @@ class Dashboard:
                 "APP_VERSION": __version__,
                 "PROJECT_NAME": self.project.config["project"],
                 "PROJECT_DIR": self.project.config["project_dir"],
+                "CARDS_PER_ROW": self.config["CARDS_PER_ROW"],
                 "modules": self.modules,
                 "modules_by_context": self._modules_by_context,
                 "enabled_module_indices": session["enabled_module_indices"],
