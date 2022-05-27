@@ -21,10 +21,14 @@ if __name__ == "__main__":
             for b in range(10):
                 project.open_job({"a": a, "b": b}).init()
 
+    config = {
+        "CARDS_PER_ROW": 4,
+    }
+
     modules = []
     # Initialize a new Dashboard using all modules with default settings
     for m in signac_dashboard.modules.__all__:
         module = getattr(signac_dashboard.modules, m)
         for c in module._supported_contexts:
             modules.append(module(context=c))
-    Dashboard(modules=modules, project=Project.get_project()).main()
+    Dashboard(config=config, modules=modules, project=Project.get_project()).main()
