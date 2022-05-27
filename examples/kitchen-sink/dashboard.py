@@ -25,5 +25,7 @@ if __name__ == "__main__":
     if "dashboard" not in project.document:
         # Initialize a new Dashboard using all modules with default settings
         for m in signac_dashboard.modules.__all__:
-            modules.append(getattr(signac_dashboard.modules, m).__call__())
+            module = getattr(signac_dashboard.modules, m)
+            for c in module._supported_contexts:
+                modules.append(module(context=c))
     Dashboard(modules=modules, project=Project.get_project()).main()
