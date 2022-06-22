@@ -7,7 +7,7 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.3
 ===========
 
-[0.3.0] -- 2022-xx-xx
+[0.3.0] -- 2022-06-22
 ---------------------
 
 Added
@@ -46,7 +46,7 @@ Version 0.2
 Added
 +++++
 
-- Ability to select modules and views on narrow screens (#114).
+- Ability to select modules and views on narrow screens (#93, #114).
 
 Fixed
 +++++
