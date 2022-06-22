@@ -38,7 +38,7 @@ setup(
     include_package_data=True,
     # Supported versions are determined according to NEP 29.
     # https://numpy.org/neps/nep-0029-deprecation_policy.html
-    python_requires=">=3.8,<4",
+    python_requires=">=3.8",
     install_requires=requirements,
     classifiers=[
         "Development Status :: 3 - Alpha",
