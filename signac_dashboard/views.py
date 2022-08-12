@@ -2,8 +2,6 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
-import flask
-import packaging.version
 from flask import (
     abort,
     flash,
@@ -15,10 +13,6 @@ from flask import (
     session,
     url_for,
 )
-
-flask_gte_2 = False
-if packaging.version.parse(flask.__version__) >= packaging.version.parse("2.0"):
-    flask_gte_2 = True
 
 
 def home(dashboard):
@@ -92,19 +86,16 @@ def get_file(dashboard, filename, jobid=None):
     if job_or_project.isfile(filename):
         directory = job_or_project.fn("")
         mimetype = None
-        cache_timeout = 0
+        max_age = 0
         download_name = request.args.get("download_name", filename)
-        send_args = dict(
+        return send_from_directory(
             directory=directory,
             path=filename,
             mimetype=mimetype,
-            cache_timeout=cache_timeout,
+            max_age=max_age,
             conditional=True,
             download_name=download_name,
         )
-        if flask_gte_2:
-            send_args["max_age"] = send_args.pop("cache_timeout")
-        return send_from_directory(**send_args)
     else:
         abort(404, "The file requested does not exist.")
 
