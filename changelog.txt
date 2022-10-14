@@ -9,6 +9,11 @@ Version 0.3
 
 [0.3.1] -- 2022-10-14
 
+Changed
++++++++
+
+- Updated CI to use GitHub Actions (#150).
+
 Fixed
 +++++
 
