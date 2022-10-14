@@ -1,4 +1,4 @@
-flask==2.0.0
+flask==2.1.0
 flask-assets==2.0.0
 flask-turbolinks
 jinja2==3.0.0
@@ -11,4 +11,4 @@ pytest-cov
 signac==1.0.0
 watchdog
 webassets==2.0.0
-werkzeug
+werkzeug==2.1.0
