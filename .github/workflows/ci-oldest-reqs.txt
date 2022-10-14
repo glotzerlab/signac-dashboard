@@ -6,6 +6,8 @@ jsmin
 libsass
 markupsafe==2.0.0
 natsort
+pytest==6.2.1
+pytest-cov==2.10.1
 signac==1.0.0
 watchdog
 webassets==2.0.0
