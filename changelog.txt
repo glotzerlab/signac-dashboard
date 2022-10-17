@@ -7,7 +7,7 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.3
 ===========
 
-[0.3.1] -- 2022-10-14
+[0.3.1] -- 2022-10-17
 
 Changed
 +++++++
@@ -17,7 +17,7 @@ Changed
 Fixed
 +++++
 
-- Rename ``cache_timeout`` to ``max_age`` in calls to flask.send_from_directory (#142, #143, #149).
+- Renamed ``cache_timeout`` to ``max_age`` in calls to flask.send_from_directory (#142, #143, #149).
 
 [0.3.0] -- 2022-06-22
 ---------------------
