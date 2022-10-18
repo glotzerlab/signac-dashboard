@@ -60,17 +60,17 @@ class DashboardTestCase(unittest.TestCase):
         assert f"{true_num_jobs} jobs" in response
 
     def test_doc_search(self):
-        dictquery = {"sum": 1}
-        true_num_jobs = len(list(self.project.find_jobs(doc_filter=dictquery)))
-        query = urlquote("doc:" + json.dumps(dictquery))
+        dictquery = {"doc.sum": 1}
+        true_num_jobs = len(list(self.project.find_jobs(dictquery)))
+        query = urlquote("doc." + json.dumps(dictquery))
         rv = self.test_client.get(f"/search?q={query}", follow_redirects=True)
         response = str(rv.get_data())
         assert f"{true_num_jobs} jobs" in response
 
     def test_allow_where_search(self):
-        dictquery = {"sum": 1}
-        true_num_jobs = len(list(self.project.find_jobs(doc_filter=dictquery)))
-        query = urlquote('doc:sum.$where "lambda x: x == 1"')
+        dictquery = {"doc.sum": 1}
+        true_num_jobs = len(list(self.project.find_jobs(dictquery)))
+        query = urlquote('doc.sum.$where "lambda x: x == 1"')
 
         self.dashboard.config["ALLOW_WHERE"] = False
         rv = self.test_client.get(f"/search?q={query}", follow_redirects=True)
