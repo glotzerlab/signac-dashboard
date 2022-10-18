@@ -51,7 +51,7 @@ class FileList(Module):
                     "jobid": job._id,
                     "download": self.download_name(job, filename),
                 }
-                for filename in os.listdir(job.workspace())
+                for filename in os.listdir(job.path)
             ),
             key=lambda filedata: filedata["name"],
         )
