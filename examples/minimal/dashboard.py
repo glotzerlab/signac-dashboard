@@ -7,7 +7,7 @@ from signac import init_project
 from signac_dashboard import Dashboard
 
 if __name__ == "__main__":
-    project = init_project("dashboard-test-project")
+    project = init_project()
     for a in range(10):
         for b in range(10):
             project.open_job({"a": a, "b": b}).init()

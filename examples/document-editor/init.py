@@ -5,7 +5,7 @@
 import signac
 
 if __name__ == "__main__":
-    project = signac.init_project("document_editor")
+    project = signac.init_project()
 
     job = project.open_job({"play": "Hamlet"})
     job.doc["plot"] = "Tragedy starring Prince Hamlet"
