@@ -65,7 +65,7 @@ class DashboardTestCase(unittest.TestCase):
     def test_doc_search(self):
         dictquery = {"doc.sum": 1}
         true_num_jobs = len(list(self.project.find_jobs(dictquery)))
-        query = urlquote("doc." + json.dumps(dictquery))
+        query = urlquote(json.dumps(dictquery))
         rv = self.test_client.get(f"/search?q={query}", follow_redirects=True)
         response = str(rv.get_data())
         assert f"{true_num_jobs} jobs" in response
