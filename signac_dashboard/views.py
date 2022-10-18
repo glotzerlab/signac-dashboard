@@ -2,6 +2,8 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
+from os.path import split
+
 from flask import (
     abort,
     flash,
@@ -13,7 +15,7 @@ from flask import (
     session,
     url_for,
 )
-from os.path import split
+
 
 def home(dashboard):
     return redirect(url_for("project_info"))
@@ -48,7 +50,7 @@ def jobs_list(dashboard):
     project_path = dashboard.project.config["project_dir"]
     _, project_folder = split(project_path)
     g.title = f"jobs of signac project in '{project_path}'"
-    #g.title = f"{project_title}: Jobs" if project_title else "Jobs"
+    # g.title = f"{project_title}: Jobs" if project_title else "Jobs"
     g.subtitle = g.pagination.item_counts()
     return dashboard._render_job_view(default_view="list")
 

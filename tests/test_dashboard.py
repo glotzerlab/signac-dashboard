@@ -6,10 +6,10 @@ import re
 import shutil
 import tempfile
 import unittest
+from os.path import split
 from urllib.parse import quote as urlquote
 
 from signac import init_project
-from os.path import split
 
 import signac_dashboard.modules
 from signac_dashboard import Dashboard
