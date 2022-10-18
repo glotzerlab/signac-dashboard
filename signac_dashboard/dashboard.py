@@ -228,7 +228,7 @@ class Dashboard:
 
         for _ in range(max_retries):
             try:
-                self.app.run(host=host, port=port, debug=debug, *args, **kwargs)
+                self.app.run(host, port, debug, *args, **kwargs)
                 break
             except OSError as e:
                 logger.warning(e)
