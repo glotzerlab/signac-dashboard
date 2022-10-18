@@ -223,11 +223,12 @@ class Dashboard:
         """
         host = self.config.get("HOST", "localhost")
         port = self.config.get("PORT", 8888)
+        debug = self.config.get("DEBUG", False)
         max_retries = 5
 
         for _ in range(max_retries):
             try:
-                self.app.run(host, port, *args, **kwargs)
+                self.app.run(host=host, port=port, debug=debug, *args, **kwargs)
                 break
             except OSError as e:
                 logger.warning(e)
