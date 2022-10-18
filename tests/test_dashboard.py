@@ -52,7 +52,7 @@ class DashboardTestCase(unittest.TestCase):
     def test_job_count(self):
         rv = self.test_client.get("/jobs/", follow_redirects=True)
         response = str(rv.get_data())
-        assert f"{self.project.num_jobs()} jobs" in response
+        assert f"{len(self.project)} jobs" in response
 
     def test_sp_search(self):
         dictquery = {"a": 0}
@@ -88,20 +88,20 @@ class DashboardTestCase(unittest.TestCase):
     def test_update_cache(self):
         rv = self.test_client.get("/jobs", follow_redirects=True)
         response = str(rv.get_data())
-        assert f"{self.project.num_jobs()} jobs" in response
+        assert f"{len(self.project)} jobs" in response
 
         # Create a new job. Because the project has been cached, the response
         # will be wrong until the cache is cleared.
         self.project.open_job({"a": "test-cache"}).init()
         rv = self.test_client.get("/jobs", follow_redirects=True)
         response = str(rv.get_data())
-        assert f"{self.project.num_jobs()} jobs" not in response
+        assert f"{len(self.project)} jobs" not in response
 
         # Clear cache and try again.
         self.dashboard.update_cache()
         rv = self.test_client.get("/jobs", follow_redirects=True)
         response = str(rv.get_data())
-        assert f"{self.project.num_jobs()} jobs" in response
+        assert f"{len(self.project)} jobs" in response
 
     def test_no_view_single_job(self):
         """Make sure View panel is not shown when on a single job page."""
