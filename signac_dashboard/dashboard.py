@@ -522,7 +522,6 @@ class Dashboard:
             return {
                 "APP_NAME": "signac-dashboard",
                 "APP_VERSION": __version__,
-                "PROJECT_NAME": self.project.config["project"],
                 "PROJECT_DIR": self.project.config["project_dir"],
                 "CARDS_PER_ROW": self.config["CARDS_PER_ROW"],
                 "modules": self.modules,
