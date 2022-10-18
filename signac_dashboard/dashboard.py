@@ -37,7 +37,7 @@ class _FileSystemEventHandler(FileSystemEventHandler):
 
     def on_modified(self, event):
         if os.path.realpath(event.src_path) == os.path.realpath(
-            self.dashboard.project.workspace()
+            self.dashboard.project.workspace
         ):
             self.dashboard.update_cache()
 
@@ -91,7 +91,7 @@ class Dashboard:
 
         self.event_handler = _FileSystemEventHandler(self)
         self.observer = Observer()
-        self.observer.schedule(self.event_handler, self.project.workspace())
+        self.observer.schedule(self.event_handler, self.project.workspace)
 
         # Prepare this dashboard instance to run.
 
