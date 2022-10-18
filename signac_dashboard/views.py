@@ -13,7 +13,7 @@ from flask import (
     session,
     url_for,
 )
-
+from os.path import split
 
 def home(dashboard):
     return redirect(url_for("project_info"))
@@ -45,16 +45,19 @@ def jobs_list(dashboard):
     if not jobs:
         flash("No jobs found.", "warning")
     g.jobs = dashboard._get_job_details(g.pagination.paginate(jobs))
-    project_title = dashboard.project.config.get("project", None)
-    g.title = f"{project_title}: Jobs" if project_title else "Jobs"
+    project_path = dashboard.project.config["project_dir"]
+    _, project_folder = split(project_path)
+    g.title = f"jobs of signac project in {project_path}"
+    #g.title = f"{project_title}: Jobs" if project_title else "Jobs"
     g.subtitle = g.pagination.item_counts()
     return dashboard._render_job_view(default_view="list")
 
 
 def project_info(dashboard):
     g.project = dashboard.project
-    project_title = dashboard.project.config["project"]
-    g.title = str(project_title)
+    project_path = dashboard.project.config["project_dir"]
+    _, project_folder = split(project_path)
+    g.title = f"signac project in {project_folder}"
     num_jobs = len(dashboard.project)
     g.subtitle = f"{num_jobs} jobs"
     return dashboard._render_project_view()

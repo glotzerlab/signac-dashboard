@@ -21,9 +21,7 @@ class DashboardTestCase(unittest.TestCase):
 
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
-        self.project = init_project(
-            "dashboard-test-project", root=self._tmp_dir, make_dir=False
-        )
+        self.project = init_project(root=self._tmp_dir, make_dir=False)
         # Set up some fake jobs
         for a in range(3):
             for b in range(2):
@@ -41,12 +39,12 @@ class DashboardTestCase(unittest.TestCase):
     def test_get_project(self):
         rv = self.test_client.get("/project/", follow_redirects=True)
         response = str(rv.get_data())
-        assert "dashboard-test-project" in response
+        assert self._tmp_dir in response
 
     def test_get_jobs(self):
         rv = self.test_client.get("/jobs/", follow_redirects=True)
         response = str(rv.get_data())
-        assert "dashboard-test-project" in response
+        assert self._tmp_dir in response
 
     def test_job_count(self):
         rv = self.test_client.get("/jobs/", follow_redirects=True)
@@ -126,9 +124,7 @@ class AllModulesTestCase(DashboardTestCase):
 
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
-        self.project = init_project(
-            "dashboard-test-project", root=self._tmp_dir, make_dir=False
-        )
+        self.project = init_project(root=self._tmp_dir, make_dir=False)
         # Set up some fake jobs
         for a in range(3):
             for b in range(2):
