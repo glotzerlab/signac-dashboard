@@ -9,6 +9,7 @@ import unittest
 from urllib.parse import quote as urlquote
 
 from signac import init_project
+from os.path import split
 
 import signac_dashboard.modules
 from signac_dashboard import Dashboard
@@ -39,12 +40,14 @@ class DashboardTestCase(unittest.TestCase):
     def test_get_project(self):
         rv = self.test_client.get("/project/", follow_redirects=True)
         response = str(rv.get_data())
-        assert self._tmp_dir in response
+        _, project_folder = split(self._tmp_dir)
+        assert project_folder in response
 
     def test_get_jobs(self):
         rv = self.test_client.get("/jobs/", follow_redirects=True)
         response = str(rv.get_data())
-        assert self._tmp_dir in response
+        _, project_folder = split(self._tmp_dir)
+        assert project_folder in response
 
     def test_job_count(self):
         rv = self.test_client.get("/jobs/", follow_redirects=True)
