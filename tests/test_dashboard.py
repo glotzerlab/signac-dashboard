@@ -178,5 +178,19 @@ class AllModulesTestCase(DashboardTestCase):
         assert "No modules for the JobContext are enabled." not in job_response
 
 
+class TestCommandLine(unittest.TestCase):
+    def setUp(self):
+        self._tmp_dir = tempfile.mkdtemp()
+        self.project = init_project(root=self._tmp_dir, make_dir=False)
+        self.config={}
+        self.modules=[]
+        self.dashboard = Dashboard(self.config, self.project, self.modules)
+        self.test_client = self.dashboard.app.test_client()
+
+    def test_debug_mode(self):
+        self.dashboard.main(['run', '--debug', '--port', '8765'])
+        assert self.dashboard.config.get("DEBUG")
+
+
 if __name__ == "__main__":
     unittest.main()
