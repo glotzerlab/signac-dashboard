@@ -42,29 +42,29 @@ class DashboardBaseTest(unittest.TestCase):
 class DashboardTestCase(DashboardBaseTest):
     def test_get_project(self):
         response = self.get_response("/project/")
-        self.assertTrue("dashboard-test-project" in response)
+        self.assertIn("dashboard-test-project", response)
 
     def test_get_jobs(self):
         response = self.get_response("/jobs/")
-        self.assertTrue("dashboard-test-project" in response)
+        self.assertIn("dashboard-test-project", response)
 
     def test_job_count(self):
         response = self.get_response("/jobs/")
-        self.assertTrue(f"{self.project.num_jobs()} jobs" in response)
+        self.assertIn(f"{self.project.num_jobs()} jobs", response)
 
     def test_sp_search(self):
         dictquery = {"a": 0}
         true_num_jobs = len(list(self.project.find_jobs(dictquery)))
         query = urlquote(json.dumps(dictquery))
         response = self.get_response(f"/search?q={query}")
-        self.assertTrue(f"{true_num_jobs} jobs" in response)
+        self.assertIn(f"{true_num_jobs} jobs", response)
 
     def test_doc_search(self):
         dictquery = {"sum": 1}
         true_num_jobs = len(list(self.project.find_jobs(doc_filter=dictquery)))
         query = urlquote("doc:" + json.dumps(dictquery))
         response = self.get_response(f"/search?q={query}")
-        self.assertTrue(f"{true_num_jobs} jobs" in response)
+        self.assertIn(f"{true_num_jobs} jobs", response)
 
     def test_allow_where_search(self):
         dictquery = {"sum": 1}
@@ -73,31 +73,31 @@ class DashboardTestCase(DashboardBaseTest):
 
         self.dashboard.config["ALLOW_WHERE"] = False
         response = self.get_response(f"/search?q={query}")
-        self.assertTrue("ALLOW_WHERE must be enabled for this query." in response)
+        self.assertIn("ALLOW_WHERE must be enabled for this query.", response)
 
         self.dashboard.config["ALLOW_WHERE"] = True
         response = self.get_response(f"/search?q={query}")
-        self.assertTrue(f"{true_num_jobs} jobs" in response)
+        self.assertIn(f"{true_num_jobs} jobs", response)
 
     def test_update_cache(self):
         response = self.get_response("/jobs")
-        self.assertTrue(f"{self.project.num_jobs()} jobs" in response)
+        self.assertIn(f"{self.project.num_jobs()} jobs", response)
 
         # Create a new job. Because the project has been cached, the response
         # will be wrong until the cache is cleared.
         self.project.open_job({"a": "test-cache"}).init()
         response = self.get_response("/jobs")
-        self.assertTrue(f"{self.project.num_jobs()} jobs" not in response)
+        self.assertNotIn(f"{self.project.num_jobs()} jobs", response)
 
         # Clear cache and try again.
         self.dashboard.update_cache()
         response = self.get_response("/jobs")
-        self.assertTrue(f"{self.project.num_jobs()} jobs" in response)
+        self.assertIn(f"{self.project.num_jobs()} jobs", response)
 
     def test_no_view_single_job(self):
         """Make sure View panel is not shown when on a single job page."""
         response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
-        self.assertTrue("Views" not in response)
+        self.assertNotIn("Views", response)
 
 
 class NoModulesTestCase(DashboardTestCase):
@@ -105,12 +105,12 @@ class NoModulesTestCase(DashboardTestCase):
 
     def test_job_sidebar(self):
         response = self.get_response("/jobs/?view=grid")
-        self.assertTrue("No modules." in response)
+        self.assertIn("No modules.", response)
 
     def test_project_sidebar(self):
         response = self.get_response("/project/")
-        self.assertTrue("No modules." in response)
-        self.assertTrue("Views" not in response)
+        self.assertIn("No modules.", response)
+        self.assertNotIn("Views", response)
 
 
 class AllModulesTestCase(DashboardTestCase):
@@ -148,7 +148,7 @@ class AllModulesTestCase(DashboardTestCase):
         # Check for two instances of Modules header
         pattern = re.compile("Modules</h")
         module_headers = re.findall(pattern, response)
-        self.assertTrue(len(module_headers) == 2)
+        self.assertEqual(len(module_headers), 2)
 
     def test_module_selector(self):
         project_response = self.get_response("/project/")
@@ -156,22 +156,22 @@ class AllModulesTestCase(DashboardTestCase):
         for m in self.modules:
             with self.subTest(module=f"{m.name} in {m.context}."):
                 if m.context == "ProjectContext":
-                    self.assertTrue(m.name in project_response)
+                    self.assertIn(m.name, project_response)
                 elif m.context == "JobContext":
-                    self.assertTrue(m.name in job_response)
+                    self.assertIn(m.name, job_response)
 
     def test_enabled_module_indices_project_session(self):
         """Ensure that the message is not displayed when modules are actually enabled."""
         project_response = self.get_response("/project/")
-        self.assertTrue(
-            "No modules for the ProjectContext are enabled." not in project_response
+        self.assertNotIn(
+            "No modules for the ProjectContext are enabled.", project_response
         )
 
     def test_enabled_module_indices_job_session(self):
         """Ensure that the message is not displayed when modules are actually enabled."""
         job_response = self.get_response("/jobs/?view=grid")
-        self.assertTrue(
-            "No modules for the JobContext are enabled." not in job_response
+        self.assertNotIn(
+            "No modules for the JobContext are enabled.", job_response
         )
 
 
