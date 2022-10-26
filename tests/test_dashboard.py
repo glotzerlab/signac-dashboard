@@ -170,9 +170,7 @@ class AllModulesTestCase(DashboardTestCase):
     def test_enabled_module_indices_job_session(self):
         """Ensure that the message is not displayed when modules are actually enabled."""
         job_response = self.get_response("/jobs/?view=grid")
-        self.assertNotIn(
-            "No modules for the JobContext are enabled.", job_response
-        )
+        self.assertNotIn("No modules for the JobContext are enabled.", job_response)
 
 
 if __name__ == "__main__":
