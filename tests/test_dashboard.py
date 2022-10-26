@@ -161,11 +161,11 @@ class AllModulesTestCase(DashboardTestCase):
         project_response = self.get_response("/project/")
         job_response = self.get_response("/jobs/?view=grid")
         for m in self.modules:
-            print(f"Checking for {m.name} in {m.context}.")
-            if m.context == "ProjectContext":
-                assert m.name in project_response
-            elif m.context == "JobContext":
-                assert m.name in job_response
+            with self.subTest(module=f"{m.name} in {m.context}."):
+                if m.context == "ProjectContext":
+                    self.assertTrue(m.name in project_response)
+                elif m.context == "JobContext":
+                    self.assertTrue(m.name in job_response)
 
     def test_enabled_module_indices_project_session(self):
         """Ensure that the message is not displayed when modules are actually enabled."""
