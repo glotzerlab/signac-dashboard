@@ -33,7 +33,7 @@ class ImageViewer(Module):
     :type context: str
     :param img_globs: A list of glob expressions or exact filenames,
         relative to the job or project root directory, to be
-        displayed (default: :code:`['*.png', '*.jpg', '*.gif']`).
+        displayed (default: :code:`['*.png', '*.jpg', '*.gif', '*.svg']`).
     :type img_globs: list
 
     """
@@ -45,7 +45,7 @@ class ImageViewer(Module):
         name="Image Viewer",
         context="JobContext",
         template="cards/image_viewer.html",
-        img_globs=("*.png", "*.jpg", "*.gif"),
+        img_globs=("*.png", "*.jpg", "*.gif", "*.svg"),
         **kwargs,
     ):
 
