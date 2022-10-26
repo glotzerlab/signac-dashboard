@@ -56,14 +56,14 @@ class DashboardTestCase(DashboardBaseTest):
         dictquery = {"a": 0}
         true_num_jobs = len(list(self.project.find_jobs(dictquery)))
         query = urlquote(json.dumps(dictquery))
-        response = self.get_response("/search?q={query}")
+        response = self.get_response(f"/search?q={query}")
         self.assertTrue(f"{true_num_jobs} jobs" in response)
 
     def test_doc_search(self):
         dictquery = {"sum": 1}
         true_num_jobs = len(list(self.project.find_jobs(doc_filter=dictquery)))
         query = urlquote("doc:" + json.dumps(dictquery))
-        response = self.get_response("/search?q={query}")
+        response = self.get_response(f"/search?q={query}")
         self.assertTrue(f"{true_num_jobs} jobs" in response)
 
     def test_allow_where_search(self):
@@ -72,11 +72,11 @@ class DashboardTestCase(DashboardBaseTest):
         query = urlquote('doc:sum.$where "lambda x: x == 1"')
 
         self.dashboard.config["ALLOW_WHERE"] = False
-        response = self.get_response("/search?q={query}")
+        response = self.get_response(f"/search?q={query}")
         self.assertTrue("ALLOW_WHERE must be enabled for this query." in response)
 
         self.dashboard.config["ALLOW_WHERE"] = True
-        response = self.get_response("/search?q={query}")
+        response = self.get_response(f"/search?q={query}")
         self.assertTrue(f"{true_num_jobs} jobs" in response)
 
     def test_update_cache(self):
