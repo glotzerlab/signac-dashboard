@@ -4,6 +4,7 @@
 
 from markupsafe import escape
 from werkzeug.utils import cached_property, import_string
+import flask_login
 
 
 def simplified_keys(project):
@@ -56,5 +57,8 @@ class LazyView:
         return import_string(self.import_name)
 
     def __call__(self, *args, **kwargs):
+        if not flask_login.current_user.is_authenticated:
+            return self.dashboard.login_manager.unauthorized(), 401
+
         kwargs.update({"dashboard": self.dashboard})
         return self.view(*args, **kwargs)
