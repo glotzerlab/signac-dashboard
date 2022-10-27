@@ -121,9 +121,7 @@ class Dashboard:
                 f"{self.config['CARDS_PER_ROW']}."
             )
 
-        if "ACCESS_TOKEN" not in config:
-            access_token = secrets.token_urlsafe()
-            self.config["ACCESS_TOKEN"] = access_token
+        self.config.setdefault("ACCESS_TOKEN", secrets.token_urlsafe())
 
         # Create and configure the Flask application
         self.app = self._create_app(self.config)

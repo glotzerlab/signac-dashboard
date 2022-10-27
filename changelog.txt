@@ -17,6 +17,7 @@ Changed
   must login with the token to view project and job data in the dashboard.
 
 [0.3.1] -- 2022-10-17
+---------------------
 
 Changed
 +++++++
