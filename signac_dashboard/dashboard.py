@@ -15,11 +15,11 @@ from functools import lru_cache
 from itertools import groupby
 from numbers import Real
 
+import flask_login
 import jinja2
 import natsort
 import signac
-import flask_login
-from flask import Flask, flash, g, render_template, redirect, request, session, url_for
+from flask import Flask, flash, g, redirect, render_template, request, session, url_for
 from flask_assets import Bundle, Environment
 from flask_turbolinks import turbolinks
 from watchdog.events import FileSystemEventHandler
@@ -121,9 +121,9 @@ class Dashboard:
                 f"{self.config['CARDS_PER_ROW']}."
             )
 
-        if 'ACCESS_TOKEN' not in config:
+        if "ACCESS_TOKEN" not in config:
             access_token = secrets.token_urlsafe()
-            self.config['ACCESS_TOKEN'] = access_token
+            self.config["ACCESS_TOKEN"] = access_token
 
         # Create and configure the Flask application
         self.app = self._create_app(self.config)
@@ -134,7 +134,7 @@ class Dashboard:
 
         @self.login_manager.user_loader
         def user_loader(identifier):
-            if secrets.compare_digest(identifier, self.config['ACCESS_TOKEN']):
+            if secrets.compare_digest(identifier, self.config["ACCESS_TOKEN"]):
                 return User(identifier)
 
             return None
@@ -581,17 +581,17 @@ class Dashboard:
 
         @dashboard.login_manager.unauthorized_handler
         def unauthorized_handler():
-            return self._render_error(str('Unauthorized'))
+            return self._render_error("Unauthorized")
 
-        @dashboard.app.route('/login')
+        @dashboard.app.route("/login")
         def login():
-            provided_token = request.args.get('token')
-            if provided_token == self.config['ACCESS_TOKEN']:
+            provided_token = request.args.get("token")
+            if provided_token == self.config["ACCESS_TOKEN"]:
                 user = User(provided_token)
                 flask_login.login_user(user)
                 return redirect("/")
 
-            return self._render_error(str('Invalid token'))
+            return self._render_error("Invalid token")
 
         @dashboard.app.route("/favicon.ico")
         @flask_login.login_required
@@ -668,9 +668,11 @@ class Dashboard:
             self.config["PROFILE"] = kwargs.pop("profile")
             self.config["DEBUG"] = kwargs.pop("debug")
 
-            print(f"To access this server, connect to: "
-                  f"http://{self.config['HOST']}:{self.config['PORT']}/"
-                  f"login?token={self.config['ACCESS_TOKEN']}")
+            print(
+                f"To access this server, connect to: "
+                f"http://{self.config['HOST']}:{self.config['PORT']}/"
+                f"login?token={self.config['ACCESS_TOKEN']}"
+            )
 
             self.run()
 

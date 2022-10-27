@@ -2,9 +2,9 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
+import flask_login
 from markupsafe import escape
 from werkzeug.utils import cached_property, import_string
-import flask_login
 
 
 def simplified_keys(project):
