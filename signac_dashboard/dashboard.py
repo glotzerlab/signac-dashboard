@@ -144,7 +144,6 @@ class Dashboard:
 
         @self.login_manager.request_loader
         def load_user_from_request(request):
-            print("Handling request")
             if self.config["ACCESS_TOKEN"] is None:
                 return User("None")
 
