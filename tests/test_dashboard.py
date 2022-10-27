@@ -163,6 +163,11 @@ class AllModulesTestCase(DashboardTestCase):
         self.test_client = self.dashboard.app.test_client()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
 
+    def test_login(self):
+        rv = self.test_client.get("/login", follow_redirects=True)
+        response = str(rv.get_data())
+        assert "dashboard-test-project" in response
+
     def test_module_visible_mobile(self):
         response = self.get_response("/jobs/?view=grid")
         # Check for two instances of Modules header
