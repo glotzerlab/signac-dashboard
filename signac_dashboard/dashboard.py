@@ -77,6 +77,8 @@ class Dashboard:
     - **CARDS_PER_ROW**: Cards to show per row in the desktop view. Must be a
       factor of 12 (default: 3).
     - **ACCESS_TOKEN**: The access token required to login to the dashboard.
+      Set to `None` to disable authentication (not recommended on multi-user
+      systems).
     - **SECRET_KEY**: This must be specified to run via WSGI with multiple
       workers, so that sessions remain intact. See the
       `Flask docs <http://flask.pocoo.org/docs/1.0/config/#SECRET_KEY>`_
@@ -132,8 +134,19 @@ class Dashboard:
 
         @self.login_manager.user_loader
         def user_loader(identifier):
+            if self.config["ACCESS_TOKEN"] is None:
+                return User("None")
+
             if secrets.compare_digest(identifier, self.config["ACCESS_TOKEN"]):
                 return User(identifier)
+
+            return None
+
+        @self.login_manager.request_loader
+        def load_user_from_request(request):
+            print("Handling request")
+            if self.config["ACCESS_TOKEN"] is None:
+                return User("None")
 
             return None
 
@@ -666,11 +679,12 @@ class Dashboard:
             self.config["PROFILE"] = kwargs.pop("profile")
             self.config["DEBUG"] = kwargs.pop("debug")
 
-            print(
-                f"To access this server, connect to: "
-                f"http://{self.config['HOST']}:{self.config['PORT']}/"
-                f"login?token={self.config['ACCESS_TOKEN']}"
-            )
+            if self.config['ACCESS_TOKEN'] is not None:
+                print(
+                    f"To access this server, connect to: "
+                    f"http://{self.config['HOST']}:{self.config['PORT']}/"
+                    f"login?token={self.config['ACCESS_TOKEN']}"
+                )
 
             self.run()
 
