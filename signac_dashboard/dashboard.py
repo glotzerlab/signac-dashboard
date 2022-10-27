@@ -679,7 +679,7 @@ class Dashboard:
             self.config["PROFILE"] = kwargs.pop("profile")
             self.config["DEBUG"] = kwargs.pop("debug")
 
-            if self.config['ACCESS_TOKEN'] is not None:
+            if self.config["ACCESS_TOKEN"] is not None:
                 print(
                     f"To access this server, connect to: "
                     f"http://{self.config['HOST']}:{self.config['PORT']}/"
