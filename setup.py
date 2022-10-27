@@ -18,6 +18,7 @@ requirements = [
     "watchdog",
     "webassets>=2.0.0",
     "werkzeug>=2.1.0",
+    "flask-login>=0.6.0",
 ]
 
 description = "Visualize data spaces in a web browser."
