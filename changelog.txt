@@ -4,17 +4,20 @@ Changes
 
 The **signac-dashboard** package follows `semantic versioning <https://semver.org/>`_.
 
-Version 0.3
+Version 0.4
 ===========
 
 [next release] -- YYYY-MM-DD
 ----------------------------
 
-Changed
-+++++++
+Added
++++++
 
 - Improve security on multi-user systems. Dashboard now generates a login token when started. Users
   must login with the token to view project and job data in the dashboard.
+
+Version 0.3
+===========
 
 [0.3.1] -- 2022-10-17
 ---------------------

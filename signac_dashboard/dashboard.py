@@ -579,7 +579,7 @@ class Dashboard:
 
         @dashboard.login_manager.unauthorized_handler
         def unauthorized_handler():
-            return self._render_error("Unauthorized")
+            return self._render_error("Access token is required.")
 
         @dashboard.app.route("/login")
         def login():
