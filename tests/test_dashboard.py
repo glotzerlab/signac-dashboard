@@ -138,7 +138,7 @@ class AllModulesTestCase(DashboardTestCase):
                 job = self.project.open_job({"a": a, "b": b})
                 with job:
                     job.document["sum"] = a + b
-        self.config = {"ACCESS_TOKEN": "test"}
+        self.config = {"ACCESS_TOKEN": None}
         modules = []
         for m in signac_dashboard.modules.__all__:
             module = getattr(signac_dashboard.modules, m)
@@ -152,9 +152,6 @@ class AllModulesTestCase(DashboardTestCase):
         )
         self.test_client = self.dashboard.app.test_client()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
-
-        # login
-        self.test_client.get("/login?token=test", follow_redirects=True)
 
     def test_module_visible_mobile(self):
         response = self.get_response("/jobs/?view=grid")
