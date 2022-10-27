@@ -593,11 +593,6 @@ class Dashboard:
 
             return self._render_error(str('Invalid token'))
 
-        @dashboard.app.route('/protected')
-        @flask_login.login_required
-        def protected():
-            return 'Logged in as: ' + flask_login.current_user.id
-
         @dashboard.app.route("/favicon.ico")
         @flask_login.login_required
         def favicon():
