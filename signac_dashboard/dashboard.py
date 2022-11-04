@@ -608,6 +608,7 @@ class Dashboard:
         def favicon():
             return url_for("static", filename="favicon.ico")
 
+        # These routes are protected within the LazyView utility class
         self.add_url("views.home", ["/"])
         self.add_url("views.settings", ["/settings"])
         self.add_url("views.search", ["/search"])
