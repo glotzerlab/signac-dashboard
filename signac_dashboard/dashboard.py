@@ -77,7 +77,7 @@ class Dashboard:
     - **CARDS_PER_ROW**: Cards to show per row in the desktop view. Must be a
       factor of 12 (default: 3).
     - **ACCESS_TOKEN**: The access token required to login to the dashboard.
-      Set to `None` to disable authentication (not recommended on multi-user
+      Set to :code:`None` to disable authentication (not recommended on multi-user
       systems).
     - **SECRET_KEY**: This must be specified to run via WSGI with multiple
       workers, so that sessions remain intact. See the

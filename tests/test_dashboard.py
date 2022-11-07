@@ -163,7 +163,7 @@ class AllModulesTestCase(DashboardTestCase):
         self.test_client = self.dashboard.app.test_client()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
 
-    def test_login(self):
+    def test_login_with_None_token(self):
         rv = self.test_client.get("/login", follow_redirects=True)
         response = str(rv.get_data())
         assert "dashboard-test-project" in response
