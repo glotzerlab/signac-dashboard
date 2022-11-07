@@ -8,6 +8,7 @@ from setuptools import find_packages, setup
 requirements = [
     "flask>=2.1.0",
     "flask-assets>=2.0.0",
+    "flask-login>=0.6.0",
     "flask-turbolinks",
     "jinja2>=3.0.0",
     "jsmin",
