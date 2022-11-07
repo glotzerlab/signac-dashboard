@@ -58,6 +58,7 @@ class Module:
 
         def register(self, dashboard):
             @dashboard.app.route('/module/my-module/update', methods=['POST'])
+            @flask_login.login_required
             def my_module_update():
                 # Perform update
                 return "Saved."
