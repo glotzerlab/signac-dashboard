@@ -1,6 +1,7 @@
-# Request bdice and one committer and one contributor per PR.
-* @bdice @glotzerlab/signac-developers
-# Request bdice for changes in requirements
-requirements.txt @bdice
-requirements-test.txt @bdice
-.pre-commit-config.yaml @bdice
+# Request one committer and one contributor per PR.
+* @glotzerlab/signac-committers @glotzerlab/signac-contributors
+# Request maintainers for changes in requirements
+requirements/* @glotzerlab/signac-maintainers
+requirements.txt @glotzerlab/signac-maintainers
+doc/requirements.txt @glotzerlab/signac-maintainers
+.pre-commit-config.yaml @glotzerlab/signac-maintainers
