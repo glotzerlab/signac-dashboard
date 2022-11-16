@@ -86,13 +86,13 @@ def get_file(dashboard, filename, jobid=None):
     if job_or_project.isfile(filename):
         directory = job_or_project.fn("")
         mimetype = None
-        cache_timeout = 0
+        max_age = 0
         download_name = request.args.get("download_name", filename)
         return send_from_directory(
             directory=directory,
             path=filename,
             mimetype=mimetype,
-            cache_timeout=cache_timeout,
+            max_age=max_age,
             conditional=True,
             download_name=download_name,
         )

@@ -1,6 +1,7 @@
 # Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
+import flask_login
 from flask import abort, render_template, request
 from jinja2.exceptions import TemplateNotFound
 
@@ -53,6 +54,7 @@ class Notes(Module):
     def register(self, dashboard):
         # Register routes
         @dashboard.app.route("/module/notes/update", methods=["POST"])
+        @flask_login.login_required
         def notes_update():
             note_text = request.form.get("note_text")
             jobid = request.form.get("jobid")
@@ -61,6 +63,7 @@ class Notes(Module):
             return "Saved."
 
         @dashboard.app.route("/module/notes/<path:filename>")
+        @flask_login.login_required
         def notes_asset(filename):
             path = f"notes/{filename}"
             try:
