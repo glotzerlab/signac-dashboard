@@ -35,7 +35,7 @@ jobs:
             . venv/bin/activate
             ${PYTHON} -m pip install --progress-bar off -U pip>=20.3
             ${PYTHON} -m pip install --progress-bar off -U codecov
-            ${PYTHON} -m pip install --progress-bar off -U -r requirements-test.txt
+            ${PYTHON} -m pip install --progress-bar off -U -r requirements/requirements-test.txt
             ${PYTHON} -m pip install --progress-bar off -e .
 
       - run:

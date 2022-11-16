@@ -3,7 +3,7 @@
 set -e
 set -u
 
-python -m pip install --progress-bar off --user -U -r requirements-test.txt
+python -m pip install --progress-bar off --user -U -r requirements/requirements-test.txt
 python -m pip install --progress-bar off --user -U twine wheel setuptools
 
 # PYPI_API_TOKEN - (Required, Secret) Token for the publisher's account on PyPI
