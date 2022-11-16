@@ -16,6 +16,11 @@ Added
 - Improve security on multi-user systems. Dashboard now generates a login token when started. Users
   must login with the token to view project and job data in the dashboard.
 
+Changed
++++++++
+
+- ``ImageViewer`` searches for ``*.svg`` files by default.
+
 Version 0.3
 ===========
 
