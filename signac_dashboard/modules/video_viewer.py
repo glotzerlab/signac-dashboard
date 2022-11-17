@@ -66,7 +66,7 @@ class VideoViewer(Module):
         video_globs=("*.mp4", "*.m4v"),
         preload="none",  # auto|metadata|none
         poster=None,
-        sort_key = None,
+        sort_key=None,
         **kwargs,
     ):
 
@@ -112,6 +112,6 @@ class VideoViewer(Module):
             glob.iglob(job_or_project.fn(video_glob)) for video_glob in self.video_globs
         ]
         video_files = itertools.chain(*video_globs)
-        video_files = sorted(video_files, key = self.sort_key)
+        video_files = sorted(video_files, key=self.sort_key)
         for filepath in video_files:
             yield make_card(os.path.relpath(filepath, job_or_project.fn("")))
