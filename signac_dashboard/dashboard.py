@@ -7,6 +7,7 @@ import inspect
 import json
 import logging
 import os
+import secrets
 import shlex
 import sys
 import warnings
@@ -14,10 +15,11 @@ from functools import lru_cache
 from itertools import groupby
 from numbers import Real
 
+import flask_login
 import jinja2
 import natsort
 import signac
-from flask import Flask, flash, g, render_template, request, session, url_for
+from flask import Flask, flash, g, redirect, render_template, request, session, url_for
 from flask_assets import Bundle, Environment
 from flask_turbolinks import turbolinks
 from watchdog.events import FileSystemEventHandler
@@ -42,6 +44,17 @@ class _FileSystemEventHandler(FileSystemEventHandler):
             self.dashboard.update_cache()
 
 
+class User(flask_login.UserMixin):
+    """User class for flask_login.
+
+    The default implementation of `UserMixin` assumes that all instantiated User
+    classes are active and logged in.
+    """
+
+    def __init__(self, id):
+        self.id = id
+
+
 class Dashboard:
     """A dashboard application to display a :py:class:`signac.Project`.
 
@@ -63,6 +76,9 @@ class Dashboard:
       (default: 25).
     - **CARDS_PER_ROW**: Cards to show per row in the desktop view. Must be a
       factor of 12 (default: 3).
+    - **ACCESS_TOKEN**: The access token required to login to the dashboard.
+      Set to :code:`None` to disable authentication (not recommended on multi-user
+      systems).
     - **SECRET_KEY**: This must be specified to run via WSGI with multiple
       workers, so that sessions remain intact. See the
       `Flask docs <http://flask.pocoo.org/docs/1.0/config/#SECRET_KEY>`_
@@ -96,6 +112,8 @@ class Dashboard:
         # Prepare this dashboard instance to run.
 
         # Set configuration defaults
+        self.config.setdefault("HOST", "localhost")
+        self.config.setdefault("PORT", 8888)
         self.config.setdefault("PAGINATION", True)
         self.config.setdefault("PER_PAGE", 25)
         self.config.setdefault("CARDS_PER_ROW", 3)
@@ -105,8 +123,31 @@ class Dashboard:
                 f"{self.config['CARDS_PER_ROW']}."
             )
 
+        self.config.setdefault("ACCESS_TOKEN", secrets.token_urlsafe())
+
         # Create and configure the Flask application
         self.app = self._create_app(self.config)
+
+        # Initialize the login manager
+        self.login_manager = flask_login.LoginManager()
+        self.login_manager.init_app(self.app)
+
+        @self.login_manager.user_loader
+        def user_loader(identifier):
+            if self.config["ACCESS_TOKEN"] is None:
+                return User("None")
+
+            if secrets.compare_digest(identifier, self.config["ACCESS_TOKEN"]):
+                return User(identifier)
+
+            return None
+
+        @self.login_manager.request_loader
+        def load_user_from_request(request):
+            if self.config["ACCESS_TOKEN"] is None:
+                return User("None")
+
+            return None
 
         # Add assets and routes
         self.assets = self._create_assets()
@@ -221,8 +262,8 @@ class Dashboard:
         interface. Arguments to this function are passed directly to
         :py:meth:`flask.Flask.run`.
         """
-        host = self.config.get("HOST", "localhost")
-        port = self.config.get("PORT", 8888)
+        host = self.config["HOST"]
+        port = self.config["PORT"]
         max_retries = 5
 
         for _ in range(max_retries):
@@ -548,10 +589,26 @@ class Dashboard:
         def page_not_found(error):
             return self._render_error(str(error))
 
+        @dashboard.login_manager.unauthorized_handler
+        def unauthorized_handler():
+            return self._render_error("Access token is required.")
+
+        @dashboard.app.route("/login")
+        def login():
+            provided_token = request.args.get("token")
+            if provided_token == self.config["ACCESS_TOKEN"]:
+                user = User(provided_token)
+                flask_login.login_user(user)
+                return redirect("/")
+
+            return self._render_error("Invalid token")
+
         @dashboard.app.route("/favicon.ico")
+        @flask_login.login_required
         def favicon():
             return url_for("static", filename="favicon.ico")
 
+        # These routes are protected within the LazyView utility class
         self.add_url("views.home", ["/"])
         self.add_url("views.settings", ["/settings"])
         self.add_url("views.search", ["/search"])
@@ -621,6 +678,14 @@ class Dashboard:
                 self.config["PORT"] = kwargs.pop("port")
             self.config["PROFILE"] = kwargs.pop("profile")
             self.config["DEBUG"] = kwargs.pop("debug")
+
+            if self.config["ACCESS_TOKEN"] is not None:
+                print(
+                    f"To access this server, connect to: "
+                    f"http://{self.config['HOST']}:{self.config['PORT']}/"
+                    f"login?token={self.config['ACCESS_TOKEN']}"
+                )
+
             self.run()
 
         parser = argparse.ArgumentParser(

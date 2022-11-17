@@ -2,6 +2,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
+import flask_login
 from markupsafe import escape
 from werkzeug.utils import cached_property, import_string
 
@@ -56,5 +57,9 @@ class LazyView:
         return import_string(self.import_name)
 
     def __call__(self, *args, **kwargs):
+        # Protect routes added in the format self.add_url("views.home", ["/"])
+        if not flask_login.current_user.is_authenticated:
+            return self.dashboard.login_manager.unauthorized(), 401
+
         kwargs.update({"dashboard": self.dashboard})
         return self.view(*args, **kwargs)
