@@ -51,6 +51,8 @@ class VideoViewer(Module):
     :param poster: A path in the job directory or project directory for a
         poster image to be shown before a video begins playback (default: :code:`None`).
     :type poster: str
+    :type sort_key: callable
+    :param sort_key: Key to sort the video files, passed internally to :code:`sorted`.
 
     """
 
@@ -64,6 +66,7 @@ class VideoViewer(Module):
         video_globs=("*.mp4", "*.m4v"),
         preload="none",  # auto|metadata|none
         poster=None,
+        sort_key = None,
         **kwargs,
     ):
 
@@ -76,6 +79,7 @@ class VideoViewer(Module):
         self.preload = preload
         self.poster = poster
         self.video_globs = video_globs
+        self.sort_key = sort_key
 
     def get_cards(self, job_or_project):
         if self.context == "JobContext":
@@ -108,5 +112,6 @@ class VideoViewer(Module):
             glob.iglob(job_or_project.fn(video_glob)) for video_glob in self.video_globs
         ]
         video_files = itertools.chain(*video_globs)
+        video_files = sorted(video_files, key = self.sort_key)
         for filepath in video_files:
             yield make_card(os.path.relpath(filepath, job_or_project.fn("")))
