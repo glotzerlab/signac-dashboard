@@ -13,7 +13,7 @@ repos:
         exclude: 'setup.cfg'
       - id: debug-statements
   - repo: https://github.com/asottile/pyupgrade
-    rev: 'v3.1.0'
+    rev: 'v3.2.2'
     hooks:
       - id: pyupgrade
         args:
