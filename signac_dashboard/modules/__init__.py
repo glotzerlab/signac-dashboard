@@ -4,6 +4,7 @@ from .file_list import FileList
 from .flow_status import FlowStatus
 from .image_viewer import ImageViewer
 from .notes import Notes
+from .plot_viewer import PlotViewer
 from .schema import Schema
 from .statepoint_list import StatepointList
 from .text_display import TextDisplay
@@ -20,4 +21,5 @@ __all__ = [
     "StatepointList",
     "TextDisplay",
     "VideoViewer",
+    "PlotViewer",
 ]
