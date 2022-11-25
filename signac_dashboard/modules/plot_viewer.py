@@ -21,14 +21,28 @@ def plot_viewer_asset(filename):
 
 
 class PlotViewer(Module):
-    """Displays a plot associated with the job"""
+    """Displays a plot associated with the job
+
+    The PlotViewer module can display an interactive plot by using the
+    Plotly JavaScript library.
+
+    :param name: Default name for the card. Ignored if the :code:`plotly_args`
+        callable provides one for each card.
+    :type name: str
+    :param plotly_args: A callable that accepts a job (in the :code:`'JobContext'`)
+        or a project (in the :code:`'ProjectContext'`) and returns an iterable. Each
+        element will constitute a new card and will be composed of a tuple of three
+        elements: the card title, the plotly data and the plotly layout specification.
+    :type plotly_args: callable
+    :param context: Supports :code:`'JobContext'` and :code:`'ProjectContext'`.
+    :type context: str
+    """
 
     _supported_contexts = {"JobContext", "ProjectContext"}
 
     def __init__(
         self,
         name="Plot Viewer",
-        necessary_key: Callable[[Job], bool] = lambda _: True,
         plotly_args: Callable[
             [Union[Job, Project]], Iterable[Tuple[str, List[Dict], Dict]]
         ] = lambda _: list(),
@@ -43,13 +57,9 @@ class PlotViewer(Module):
             template=template,
             **kwargs,
         )
-        self.necessary_key = necessary_key
         self.plotly_args = plotly_args
 
     def get_cards(self, job_or_project):
-        if not self.necessary_key(job_or_project):
-            return []
-
         return [
             {
                 "name": title if title else self.name,

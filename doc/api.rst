@@ -45,6 +45,7 @@ Dashboard Modules
     modules.StatepointList
     modules.TextDisplay
     modules.VideoViewer
+    modules.PlotViewer
 
 .. autoclass:: signac_dashboard.Module
     :members:
