@@ -78,7 +78,7 @@ class PlotViewer(Module):
         dashboard.app.route("/module/plot_viewer/<path:filename>")(plot_viewer_asset)
 
         # Register assets
-        assets = ["js/plot_viewer.js"]
+        assets = ["js/plot_viewer.js", "js/plotly-2.16.1.min.js"]
         for assetfile in assets:
             dashboard.register_module_asset(
                 {

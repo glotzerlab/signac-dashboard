@@ -227,14 +227,11 @@ class Dashboard:
         assets = Environment(self.app)
         # jQuery is served as a standalone file
         jquery = Bundle("js/jquery-*.min.js", output="gen/jquery.min.js")
-        # plotly is served as a standalone file
-        plotly = Bundle("js/plotly-*.min.js", output="gen/plotly.min.js")
         # JavaScript is combined into one file and minified
         js_all = Bundle("js/js_all/*.js", filters="jsmin", output="gen/app.min.js")
         # SCSS (Sassy CSS) is compiled to CSS
         scss_all = Bundle("scss/app.scss", filters="libsass", output="gen/app.css")
         assets.register("jquery", jquery)
-        assets.register("plotly", plotly)
         assets.register("js_all", js_all)
         assets.register("scss_all", scss_all)
         return assets
