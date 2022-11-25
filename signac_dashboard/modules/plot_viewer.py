@@ -24,7 +24,29 @@ class PlotViewer(Module):
     """Displays a plot associated with the job
 
     The PlotViewer module can display an interactive plot by using the
-    Plotly JavaScript library.
+    Plotly JavaScript library. For information on the different accepted
+    parameters for the data and layout, refer to the `Plotly JS documentation
+    <https://plotly.com/javascript/>`_.
+
+    Example:
+
+    .. code-block:: python
+
+        from signac_dashboard.modules import PlotViewer
+
+        def plotly_args_function(project):
+            return [
+                ("Card title",  # if empty, the "name" parameter will be used
+                 # each element on the data list is a different trace
+                 [{
+                    "x": [1, 2, 3, 4, 5],  # x coordinates of the trace
+                    "y": [1, 2, 4, 8, 16]  # y coordinates of the trace
+                 }],
+                 {"margin": { "t": 0 } }  # layout specification for the whole plot
+                )
+            ]
+
+        plot_module = PlotViewer(plotly_args=plotly_args_function, context="ProjectContext")
 
     :param name: Default name for the card. Ignored if the :code:`plotly_args`
         callable provides one for each card.
