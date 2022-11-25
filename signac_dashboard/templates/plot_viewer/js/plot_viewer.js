@@ -1,5 +1,4 @@
 function draw_plot(element) {
-    console.log("plotting " + element.id);
     data = JSON.parse(element.getAttribute("data-plotlydata"));
     layout = JSON.parse(element.getAttribute("data-plotlylayout"));
 
