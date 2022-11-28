@@ -6,7 +6,7 @@ function draw_plot(element) {
 }
 
 $(document).on('turbolinks:load', function() {
-    $('.plot_viewer').each((index, element) => {
+    $('.plotly_viewer').each((index, element) => {
         draw_plot(element);
     });
 })

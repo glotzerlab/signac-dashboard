@@ -5,7 +5,7 @@
 from signac_dashboard import Dashboard
 from signac_dashboard.modules import (
     ImageViewer,
-    PlotViewer,
+    PlotlyViewer,
     StatepointList,
     TextDisplay,
 )
@@ -73,6 +73,6 @@ if __name__ == "__main__":
     modules = []
     modules.append(StatepointList())
     modules.append(ImageViewer())
-    modules.append(PlotViewer(plotly_args=plotly_args))
+    modules.append(PlotlyViewer(plotly_args=plotly_args))
     modules.append(TextDisplay(name="Correlation", message=correlation_text))
     PlotDashboard(modules=modules).main()

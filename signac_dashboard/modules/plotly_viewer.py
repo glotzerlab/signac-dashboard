@@ -13,10 +13,10 @@ from signac_dashboard.dashboard import Dashboard
 from signac_dashboard.module import Module
 
 
-class PlotViewer(Module):
+class PlotlyViewer(Module):
     """Displays a plot associated with the job.
 
-    The PlotViewer module can display an interactive plot by using the
+    The PlotlyViewer module can display an interactive plot by using the
     Plotly JavaScript library. For information on the different accepted
     parameters for the data and layout, refer to the `Plotly JS documentation
     <https://plotly.com/javascript/>`_.
@@ -25,7 +25,7 @@ class PlotViewer(Module):
 
     .. code-block:: python
 
-        from signac_dashboard.modules import PlotViewer
+        from signac_dashboard.modules import PlotlyViewer
 
         def plotly_args_function(project):
             return [
@@ -39,7 +39,7 @@ class PlotViewer(Module):
                 )
             ]
 
-        plot_module = PlotViewer(plotly_args=plotly_args_function, context="ProjectContext")
+        plot_module = PlotlyViewer(plotly_args=plotly_args_function, context="ProjectContext")
 
     :param name: Default name for the card. Ignored if the :code:`plotly_args`
         callable provides one for each card.
@@ -57,12 +57,12 @@ class PlotViewer(Module):
 
     def __init__(
         self,
-        name="Plot Viewer",
+        name="Plotly Viewer",
         plotly_args: Callable[
             [Union[Job, Project]], Iterable[Tuple[str, List[Dict], Dict]]
         ] = lambda _: [],
         context="JobContext",
-        template="cards/plot_viewer.html",
+        template="cards/plotly_viewer.html",
         **kwargs,
     ):
 
@@ -90,20 +90,20 @@ class PlotViewer(Module):
 
     def register(self, dashboard: Dashboard):
         # Register routes
-        @dashboard.app.route("/module/plot_viewer/<path:filename>")
+        @dashboard.app.route("/module/plotly_viewer/<path:filename>")
         @flask_login.login_required
-        def plot_viewer_asset(filename):
+        def plotly_viewer_asset(filename):
             try:
-                return render_template(f"plot_viewer/{filename}")
+                return render_template(f"plotly_viewer/{filename}")
             except TemplateNotFound:
                 abort(404, "The file requested does not exist.")
 
         # Register assets
-        assets = ["js/plot_viewer.js"]
+        assets = ["js/plotly_viewer.js"]
         for assetfile in assets:
             dashboard.register_module_asset(
                 {
-                    "url": f"/module/plot_viewer/{assetfile}",
+                    "url": f"/module/plotly_viewer/{assetfile}",
                 }
             )
 
