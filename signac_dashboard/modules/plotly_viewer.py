@@ -99,14 +99,9 @@ class PlotlyViewer(Module):
                 abort(404, "The file requested does not exist.")
 
         # Register assets
-        assets = ["js/plotly_viewer.js"]
-        for assetfile in assets:
-            dashboard.register_module_asset(
-                {
-                    "url": f"/module/plotly_viewer/{assetfile}",
-                }
-            )
-
-        cdn_assets = ["https://cdn.plot.ly/plotly-2.16.1.min.js"]
-        for asseturl in cdn_assets:
+        assets = [
+            "/module/plotly_viewer/js/plotly_viewer.js",
+            "https://cdn.plot.ly/plotly-2.16.1.min.js",
+        ]
+        for asseturl in assets:
             dashboard.register_module_asset({"url": asseturl})
