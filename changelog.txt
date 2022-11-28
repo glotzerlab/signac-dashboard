@@ -15,7 +15,7 @@ Added
 
 - Improve security on multi-user systems. Dashboard now generates a login token when started. Users
   must login with the token to view project and job data in the dashboard.
-- PlotViewer module for showing interactive plots in the dashboard.
+- PlotViewer module for showing interactive plots in the dashboard (#162, #163).
 
 Changed
 +++++++

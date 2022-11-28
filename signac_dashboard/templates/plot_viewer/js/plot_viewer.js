@@ -1,6 +1,6 @@
 function draw_plot(element) {
-    data = JSON.parse(element.getAttribute("data-plotlydata"));
-    layout = JSON.parse(element.getAttribute("data-plotlylayout"));
+    data = JSON.parse(element.getAttribute("data-plotly-data"));
+    layout = JSON.parse(element.getAttribute("data-plotly-layout"));
 
     Plotly.newPlot(element, data, layout);
 }

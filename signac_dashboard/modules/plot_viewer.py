@@ -13,15 +13,14 @@ from signac_dashboard.module import Module
 
 
 def plot_viewer_asset(filename):
-    path = f"plot_viewer/{filename}"
     try:
-        return render_template(path)
+        return render_template(f"plot_viewer/{filename}")
     except TemplateNotFound:
         abort(404, "The file requested does not exist.")
 
 
 class PlotViewer(Module):
-    """Displays a plot associated with the job
+    """Displays a plot associated with the job.
 
     The PlotViewer module can display an interactive plot by using the
     Plotly JavaScript library. For information on the different accepted
@@ -42,7 +41,7 @@ class PlotViewer(Module):
                     "x": [1, 2, 3, 4, 5],  # x coordinates of the trace
                     "y": [1, 2, 4, 8, 16]  # y coordinates of the trace
                  }],
-                 {"margin": { "t": 0 } }  # layout specification for the whole plot
+                 {"margin": {"t": 0}}  # layout specification for the whole plot
                 )
             ]
 
@@ -67,7 +66,7 @@ class PlotViewer(Module):
         name="Plot Viewer",
         plotly_args: Callable[
             [Union[Job, Project]], Iterable[Tuple[str, List[Dict], Dict]]
-        ] = lambda _: list(),
+        ] = lambda _: [],
         context="JobContext",
         template="cards/plot_viewer.html",
         **kwargs,
@@ -88,8 +87,8 @@ class PlotViewer(Module):
                 "content": render_template(
                     self.template,
                     jobid=job_or_project.id,
-                    plotlydata=data,
-                    plotlylayout=layout,
+                    plotly_data=data,
+                    plotly_layout=layout,
                 ),
             }
             for title, data, layout in self.plotly_args(job_or_project)
