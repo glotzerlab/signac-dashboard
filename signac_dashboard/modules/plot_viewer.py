@@ -3,6 +3,7 @@
 # This software is licensed under the BSD 3-Clause License.
 from typing import Callable, Dict, Iterable, List, Tuple, Union
 
+import flask_login
 from flask import abort, render_template
 from jinja2.exceptions import TemplateNotFound
 from signac import Project
@@ -10,13 +11,6 @@ from signac.contrib.job import Job
 
 from signac_dashboard.dashboard import Dashboard
 from signac_dashboard.module import Module
-
-
-def plot_viewer_asset(filename):
-    try:
-        return render_template(f"plot_viewer/{filename}")
-    except TemplateNotFound:
-        abort(404, "The file requested does not exist.")
 
 
 class PlotViewer(Module):
@@ -96,7 +90,13 @@ class PlotViewer(Module):
 
     def register(self, dashboard: Dashboard):
         # Register routes
-        dashboard.app.route("/module/plot_viewer/<path:filename>")(plot_viewer_asset)
+        @dashboard.app.route("/module/plot_viewer/<path:filename>")
+        @flask_login.login_required
+        def plot_viewer_asset(filename):
+            try:
+                return render_template(f"plot_viewer/{filename}")
+            except TemplateNotFound:
+                abort(404, "The file requested does not exist.")
 
         # Register assets
         assets = ["js/plot_viewer.js"]
