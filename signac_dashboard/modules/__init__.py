@@ -17,9 +17,9 @@ __all__ = [
     "FlowStatus",
     "ImageViewer",
     "Notes",
+    "PlotViewer",
     "Schema",
     "StatepointList",
     "TextDisplay",
     "VideoViewer",
-    "PlotViewer",
 ]

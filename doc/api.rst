@@ -41,11 +41,11 @@ Dashboard Modules
     modules.FlowStatus
     modules.ImageViewer
     modules.Notes
+    modules.PlotViewer
     modules.Schema
     modules.StatepointList
     modules.TextDisplay
     modules.VideoViewer
-    modules.PlotViewer
 
 .. autoclass:: signac_dashboard.Module
     :members:
