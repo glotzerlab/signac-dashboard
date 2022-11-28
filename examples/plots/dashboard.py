@@ -2,10 +2,13 @@
 # Copyright (c) 2019 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
-from scipy.signal import coherence
-
 from signac_dashboard import Dashboard
-from signac_dashboard.modules import PlotViewer, StatepointList, TextDisplay
+from signac_dashboard.modules import (
+    ImageViewer,
+    PlotViewer,
+    StatepointList,
+    TextDisplay,
+)
 
 
 class PlotDashboard(Dashboard):
@@ -47,14 +50,10 @@ def plotly_args(job):
         "margin": dict(t=30, b=40, l=40, r=0),
     }
 
-    dt = job.doc["t"][1] - job.doc["t"][0]
-    coherence_x, coherence_y = coherence(
-        job.doc["s1"], job.doc["s2"], nfft=256, fs=1.0 / dt
-    )
     coherence_traces = [
         {
-            "x": coherence_x.tolist(),
-            "y": coherence_y.tolist(),
+            "x": list(job.doc["f"]),
+            "y": list(job.doc["cxy"]),
         }
     ]
     coherence_layout = {
@@ -73,6 +72,7 @@ def plotly_args(job):
 if __name__ == "__main__":
     modules = []
     modules.append(StatepointList())
+    modules.append(ImageViewer())
     modules.append(PlotViewer(plotly_args=plotly_args))
     modules.append(TextDisplay(name="Correlation", message=correlation_text))
     PlotDashboard(modules=modules).main()
