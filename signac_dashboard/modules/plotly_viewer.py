@@ -102,7 +102,7 @@ class PlotlyViewer(Module):
                 "name": self.name,
                 "content": render_template(
                     self.template,
-                    jobid=job_or_project.id,
+                    jobid=job_or_project.get_id(),
                     endpoint=self.arguments_endpoint(),
                 ),
             }
