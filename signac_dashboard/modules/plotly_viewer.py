@@ -66,9 +66,8 @@ class PlotlyViewer(Module):
         callable provides one for each card.
     :type name: str
     :param plotly_args: A callable that accepts a job (in the :code:`'JobContext'`)
-        or a project (in the :code:`'ProjectContext'`) and returns an iterable. Each
-        element will constitute a new card and will be composed of a tuple of three
-        elements: the card title, the plotly data and the plotly layout specification.
+        or a project (in the :code:`'ProjectContext'`) and returns a tuple of two
+        elements: the plotly data and the plotly layout specification, respectively.
     :type plotly_args: callable
     :param context: Supports :code:`'JobContext'` and :code:`'ProjectContext'`.
     :type context: str
