@@ -1,16 +1,38 @@
 # Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
-from typing import Callable, Dict, Iterable, List, Tuple, Union
+import hashlib
+from typing import Callable, Dict, List, Tuple, Union
 
 import flask_login
-from flask import abort, render_template
+from flask import abort, jsonify, render_template, request
+from flask.views import View
 from jinja2.exceptions import TemplateNotFound
 from signac import Project
 from signac.contrib.job import Job
 
 from signac_dashboard.dashboard import Dashboard
 from signac_dashboard.module import Module
+
+
+class PlotlyView(View):
+    decorators = [flask_login.login_required]
+
+    def __init__(self, dashboard, args_function, context):
+        self.dashboard = dashboard
+        self.args_function = args_function
+        self.context = context
+
+    def dispatch_request(self):
+        if self.context == "JobContext":
+            jobid = request.args.get("jobid")
+            job = self.dashboard.project.open_job(id=jobid)
+            traces, layout = self.args_function(job)
+        elif self.context == "ProjectContext":
+            traces, layout = self.args_function(self.dashboard.project)
+        else:
+            raise NotImplementedError()
+        return jsonify({"traces": traces, "layout": layout})
 
 
 class PlotlyViewer(Module):
@@ -29,8 +51,7 @@ class PlotlyViewer(Module):
 
         def plotly_args_function(project):
             return [
-                ("Card title",  # if empty, the "name" parameter will be used
-                 # each element on the data list is a different trace
+                (# each element on the data list is a different trace
                  [{
                     "x": [1, 2, 3, 4, 5],  # x coordinates of the trace
                     "y": [1, 2, 4, 8, 16]  # y coordinates of the trace
@@ -54,13 +75,14 @@ class PlotlyViewer(Module):
     """
 
     _supported_contexts = {"JobContext", "ProjectContext"}
+    _assets_url_registered = False
 
     def __init__(
         self,
         name="Plotly Viewer",
         plotly_args: Callable[
-            [Union[Job, Project]], Iterable[Tuple[str, List[Dict], Dict]]
-        ] = lambda _: [],
+            [Union[Job, Project]], Tuple[List[Dict], Dict]
+        ] = lambda _: ([{}], {}),
         context="JobContext",
         template="cards/plotly_viewer.html",
         **kwargs,
@@ -73,35 +95,48 @@ class PlotlyViewer(Module):
             **kwargs,
         )
         self.plotly_args = plotly_args
+        self.card_id = hashlib.sha1(str(id(self)).encode("utf-8")).hexdigest()
 
     def get_cards(self, job_or_project):
         return [
             {
-                "name": title if title else self.name,
+                "name": self.name,
                 "content": render_template(
                     self.template,
                     jobid=job_or_project.id,
-                    plotly_data=data,
-                    plotly_layout=layout,
+                    endpoint=self.arguments_endpoint(),
                 ),
             }
-            for title, data, layout in self.plotly_args(job_or_project)
         ]
 
     def register(self, dashboard: Dashboard):
         # Register routes
-        @dashboard.app.route("/module/plotly_viewer/<path:filename>")
-        @flask_login.login_required
-        def plotly_viewer_asset(filename):
-            try:
-                return render_template(f"plotly_viewer/{filename}")
-            except TemplateNotFound:
-                abort(404, "The file requested does not exist.")
+        if not PlotlyViewer._assets_url_registered:
 
-        # Register assets
-        assets = [
-            "/module/plotly_viewer/js/plotly_viewer.js",
-            "https://cdn.plot.ly/plotly-2.16.1.min.js",
-        ]
-        for asseturl in assets:
-            dashboard.register_module_asset({"url": asseturl})
+            @dashboard.app.route("/module/plotly_viewer/<path:filename>")
+            @flask_login.login_required
+            def plotly_viewer_asset(filename):
+                try:
+                    return render_template(f"plotly_viewer/{filename}")
+                except TemplateNotFound:
+                    abort(404, "The file requested does not exist.")
+
+            # Register assets
+            assets = [
+                "/module/plotly_viewer/js/plotly_viewer.js",
+                "https://cdn.plot.ly/plotly-2.16.1.min.js",
+            ]
+            for asseturl in assets:
+                dashboard.register_module_asset({"url": asseturl})
+
+            PlotlyViewer._assets_url_registered = True
+
+        dashboard.app.add_url_rule(
+            self.arguments_endpoint(),
+            view_func=PlotlyView.as_view(
+                f"plotly-{self.card_id}", dashboard, self.plotly_args, self.context
+            ),
+        )
+
+    def arguments_endpoint(self):
+        return f"/module/plotly_viewer/{self.card_id}/arguments"

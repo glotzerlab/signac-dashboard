@@ -1,12 +1,11 @@
-function draw_plot(element) {
-    data = JSON.parse(element.getAttribute("data-plotly-data"));
-    layout = JSON.parse(element.getAttribute("data-plotly-layout"));
-
-    Plotly.newPlot(element, data, layout);
-}
-
 $(document).on('turbolinks:load', function() {
     $('.plotly_viewer').each((index, element) => {
-        draw_plot(element);
+        let endpoint = element.getAttribute("data-endpoint")
+        let jobid = element.getAttribute("data-jobid")
+        jQuery.get(endpoint, {jobid: jobid}, (data, textStatus, response) => {
+            let traces = data["traces"]
+            let layout = data["layout"]
+            Plotly.newPlot(element, traces, layout)
+        })
     });
 })
