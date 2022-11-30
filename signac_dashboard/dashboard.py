@@ -649,7 +649,7 @@ class Dashboard:
         """Call the dashboard as a WSGI application."""
         return self.app(environ, start_response)
 
-    def main(self, test_args=None):
+    def main(self, *command_args):
         """Runs the command line interface.
 
         Call this function to use signac-dashboard from its command line
@@ -671,6 +671,9 @@ class Dashboard:
 
             python dashboard.py run
         """
+
+        if len(command_args) == 0:
+            command_args = None
 
         def _run(args):
             kwargs = vars(args)
@@ -731,7 +734,7 @@ class Dashboard:
             print("signac-dashboard", __version__)
             sys.exit(0)
 
-        args = parser.parse_args(test_args)
+        args = parser.parse_args(command_args[0])
 
         if args.debug:
             logger.setLevel(logging.DEBUG)
