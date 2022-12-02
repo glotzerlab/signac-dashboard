@@ -53,14 +53,12 @@ class DashboardTestCase(unittest.TestCase):
     def test_get_project(self):
         rv = self.test_client.get("/project/", follow_redirects=True)
         response = str(rv.get_data())
-        _, project_folder = split(self._tmp_dir)
-        assert project_folder in response
+        assert "signac-dashboard" in response
 
     def test_get_jobs(self):
         rv = self.test_client.get("/jobs/", follow_redirects=True)
         response = str(rv.get_data())
-        _, project_folder = split(self._tmp_dir)
-        assert project_folder in response
+        assert "signac-dashboard: jobs" in response
 
     def test_job_count(self):
         rv = self.test_client.get("/jobs/", follow_redirects=True)
@@ -165,7 +163,7 @@ class AllModulesTestCase(DashboardTestCase):
     def test_login_with_None_token(self):
         rv = self.test_client.get("/login", follow_redirects=True)
         response = str(rv.get_data())
-        assert "dashboard-test-project" in response
+        assert "signac-dashboard" in response
 
     def test_module_visible_mobile(self):
         response = self.get_response("/jobs/?view=grid")
