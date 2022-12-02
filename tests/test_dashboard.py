@@ -29,13 +29,26 @@ class DashboardTestCase(unittest.TestCase):
                 job = self.project.open_job({"a": a, "b": b})
                 with job:
                     job.document["sum"] = a + b
-        self.config = {}
+        self.config = {"ACCESS_TOKEN": "test"}
         self.modules = []
         self.dashboard = Dashboard(
             config=self.config, project=self.project, modules=self.modules
         )
         self.test_client = self.dashboard.app.test_client()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
+
+        # Test logged out content
+        rv = self.test_client.get("/", follow_redirects=True)
+        response = str(rv.get_data())
+        assert "Access token is required." in response
+
+        # login
+        self.test_client.get("/login?token=test", follow_redirects=True)
+
+    def test_invalid_token(self):
+        rv = self.test_client.get("/login?token=error", follow_redirects=True)
+        response = str(rv.get_data())
+        assert "Invalid token" in response
 
     def test_get_project(self):
         rv = self.test_client.get("/project/", follow_redirects=True)
@@ -134,7 +147,7 @@ class AllModulesTestCase(DashboardTestCase):
                 job = self.project.open_job({"a": a, "b": b})
                 with job:
                     job.document["sum"] = a + b
-        self.config = {}
+        self.config = {"ACCESS_TOKEN": None}
         modules = []
         for m in signac_dashboard.modules.__all__:
             module = getattr(signac_dashboard.modules, m)
@@ -148,6 +161,11 @@ class AllModulesTestCase(DashboardTestCase):
         )
         self.test_client = self.dashboard.app.test_client()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
+
+    def test_login_with_None_token(self):
+        rv = self.test_client.get("/login", follow_redirects=True)
+        response = str(rv.get_data())
+        assert "dashboard-test-project" in response
 
     def test_module_visible_mobile(self):
         response = self.get_response("/jobs/?view=grid")

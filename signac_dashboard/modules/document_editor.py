@@ -4,6 +4,7 @@
 from ast import literal_eval
 from collections import OrderedDict
 
+import flask_login
 from flask import abort, render_template, request
 from jinja2.exceptions import TemplateNotFound
 from markupsafe import escape
@@ -60,6 +61,7 @@ class DocumentEditor(Module):
     def register(self, dashboard):
         # Register routes
         @dashboard.app.route("/module/document_editor/update", methods=["POST"])
+        @flask_login.login_required
         def document_editor_update():
             jobid = request.form.get("jobid")
             job = dashboard.project.open_job(id=jobid)
@@ -76,6 +78,7 @@ class DocumentEditor(Module):
             return "Saved."
 
         @dashboard.app.route("/module/document_editor/<path:filename>")
+        @flask_login.login_required
         def document_editor_asset(filename):
             path = f"document_editor/{filename}"
             try:
