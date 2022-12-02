@@ -264,6 +264,7 @@ class Dashboard:
         """
         host = self.config["HOST"]
         port = self.config["PORT"]
+        debug = self.config["DEBUG"]
         max_retries = 5
 
         for _ in range(max_retries):

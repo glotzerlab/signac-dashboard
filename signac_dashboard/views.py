@@ -2,8 +2,6 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
-from os.path import split
-
 from flask import (
     abort,
     flash,
