@@ -379,7 +379,7 @@ class Dashboard:
                     query = shlex.split(query)
                     f = signac.contrib.filterparse.parse_filter_arg(query)
                     flash(f"Search string interpreted as '{json.dumps(f)}'.")
-                jobs = self.project.find_jobs(filter=f)
+            jobs = self.project.find_jobs(filter=f)
             return sorted(jobs, key=lambda job: self.job_sorter(job))
         except json.JSONDecodeError as error:
             flash(
