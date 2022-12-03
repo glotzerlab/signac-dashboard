@@ -21,6 +21,11 @@ Changed
 
 - ``ImageViewer`` searches for ``*.svg`` files by default.
 
+Fixed
++++++
+
+- Fixed handling of ``--debug`` command line option (#152).
+
 Version 0.3
 ===========
 
