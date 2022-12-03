@@ -6,7 +6,6 @@ import re
 import shutil
 import tempfile
 import unittest
-from os.path import split
 from urllib.parse import quote as urlquote
 
 from signac import init_project
