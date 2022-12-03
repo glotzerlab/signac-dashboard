@@ -21,7 +21,7 @@ class DashboardTestCase(unittest.TestCase):
 
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
-        self.project = init_project(root=self._tmp_dir, make_dir=False)
+        self.project = init_project(self._tmp_dir)
         # Set up some fake jobs
         for a in range(3):
             for b in range(2):
@@ -137,7 +137,7 @@ class AllModulesTestCase(DashboardTestCase):
 
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
-        self.project = init_project(root=self._tmp_dir, make_dir=False)
+        self.project = init_project(self._tmp_dir)
         # Set up some fake jobs
         for a in range(3):
             for b in range(2):
