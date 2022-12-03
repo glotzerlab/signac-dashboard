@@ -15,7 +15,7 @@ requirements = [
     "libsass",
     "markupsafe>=2.0.0",
     "natsort",
-    "signac>=1.0.0",
+    "signac>=1.8.0",
     "watchdog",
     "webassets>=2.0.0",
     "werkzeug>=2.1.0",
