@@ -58,7 +58,7 @@ class DashboardTestCase(unittest.TestCase):
     def test_get_jobs(self):
         rv = self.test_client.get("/jobs/", follow_redirects=True)
         response = str(rv.get_data())
-        assert "signac-dashboard: jobs" in response
+        assert "signac-dashboard: Jobs" in response
 
     def test_job_count(self):
         rv = self.test_client.get("/jobs/", follow_redirects=True)
