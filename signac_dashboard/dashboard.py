@@ -649,7 +649,7 @@ class Dashboard:
         """Call the dashboard as a WSGI application."""
         return self.app(environ, start_response)
 
-    def main(self, *command_args):
+    def main(self, command_args=None):
         """Runs the command line interface.
 
         Call this function to use signac-dashboard from its command line
@@ -670,9 +670,13 @@ class Dashboard:
         .. code-block:: bash
 
             python dashboard.py run
+
+        :param command_args: List of CLI arguments to pass, e.g.
+            ``["--debug", "--port", "8889"]`` (default: None).
+        :type command_args: list
         """
 
-        if len(command_args) == 0:
+        if command_args is not None and len(command_args) == 0:
             command_args = None
 
         def _run(args):
@@ -734,7 +738,7 @@ class Dashboard:
             print("signac-dashboard", __version__)
             sys.exit(0)
 
-        args = parser.parse_args(command_args[0])
+        args = parser.parse_args(command_args)
 
         if args.debug:
             logger.setLevel(logging.DEBUG)
