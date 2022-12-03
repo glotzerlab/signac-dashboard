@@ -39,7 +39,7 @@ class _FileSystemEventHandler(FileSystemEventHandler):
 
     def on_modified(self, event):
         if os.path.realpath(event.src_path) == os.path.realpath(
-            self.dashboard.project.workspace()
+            self.dashboard.project.workspace
         ):
             self.dashboard.update_cache()
 
@@ -107,7 +107,7 @@ class Dashboard:
 
         self.event_handler = _FileSystemEventHandler(self)
         self.observer = Observer()
-        self.observer.schedule(self.event_handler, self.project.workspace())
+        self.observer.schedule(self.event_handler, self.project.workspace)
 
         # Prepare this dashboard instance to run.
 
@@ -270,7 +270,7 @@ class Dashboard:
 
         for _ in range(max_retries):
             try:
-                self.app.run(host, port, debug, *args, **kwargs)
+                self.app.run(host=host, port=port, debug=debug, *args, **kwargs)
                 break
             except OSError as e:
                 logger.warning(e)
@@ -369,11 +369,6 @@ class Dashboard:
             )
             raise RuntimeError("ALLOW_WHERE must be enabled for this query.")
 
-        querytype = "statepoint"
-        if query[:4] == "doc:":
-            query = query[4:]
-            querytype = "document"
-
         try:
             if query is None:
                 f = None
@@ -384,10 +379,7 @@ class Dashboard:
                     query = shlex.split(query)
                     f = signac.contrib.filterparse.parse_filter_arg(query)
                     flash(f"Search string interpreted as '{json.dumps(f)}'.")
-            if querytype == "document":
-                jobs = self.project.find_jobs(doc_filter=f)
-            else:
-                jobs = self.project.find_jobs(filter=f)
+            jobs = self.project.find_jobs(filter=f)
             return sorted(jobs, key=lambda job: self.job_sorter(job))
         except json.JSONDecodeError as error:
             flash(
@@ -564,8 +556,6 @@ class Dashboard:
             return {
                 "APP_NAME": "signac-dashboard",
                 "APP_VERSION": __version__,
-                "PROJECT_NAME": self.project.config["project"],
-                "PROJECT_DIR": self.project.config["project_dir"],
                 "CARDS_PER_ROW": self.config["CARDS_PER_ROW"],
                 "modules": self.modules,
                 "modules_by_context": self._modules_by_context,

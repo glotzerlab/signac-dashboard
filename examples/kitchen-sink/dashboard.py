@@ -14,7 +14,7 @@ class Project(FlowProject):
 
 
 if __name__ == "__main__":
-    project = signac.init_project("dashboard-test-project")
+    project = signac.init_project()
 
     if len(project) == 0:
         for a in range(10):
