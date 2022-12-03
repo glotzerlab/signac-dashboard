@@ -26,6 +26,9 @@ Fixed
 
 - Fixed handling of ``--debug`` command line option (#152).
 
+Version 0.3
+===========
+
 [0.3.1] -- 2022-10-17
 ---------------------
 
