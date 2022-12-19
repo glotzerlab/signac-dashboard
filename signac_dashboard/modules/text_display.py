@@ -1,4 +1,4 @@
-# Copyright (c) 2019 The Regents of the University of Michigan
+# Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 from flask import Markup, render_template
@@ -29,32 +29,38 @@ class TextDisplay(Module):
 
         modules = [TextDisplay(message=my_text)]
 
+    :param context: Supports :code:`'JobContext'` and :code:`'ProjectContext'`.
+    :type context: str
     :param message: A callable accepting one argument of type
-        :py:class:`signac.contrib.job.Job` and returning text or Markdown
-        content.
+        :py:class:`signac.contrib.job.Job` or :py:class:`signac.Project`
+        and returning text or Markdown content.
     :type message: callable
-    :param markdown: Enables Markdown rendering if True (default: False).
+    :param markdown: Enables Markdown rendering if True (default: :code:`False`).
     :type markdown: bool
     """
+
+    _supported_contexts = {"JobContext", "ProjectContext"}
 
     def __init__(
         self,
         name="Text Display",
-        message=lambda job: "No message provided.",
+        context="JobContext",
+        message=lambda job_or_project: "No message provided.",
         markdown=False,
         **kwargs,
     ):
+
         super().__init__(
             name=name,
-            context="JobContext",
+            context=context,
             template="cards/text_display.html",
             **kwargs,
         )
         self.message = message
         self.markdown = markdown
 
-    def get_cards(self, job):
-        msg = self.message(job)
+    def get_cards(self, job_or_project):
+        msg = self.message(job_or_project)
         if self.markdown:
             if MARKDOWN:
                 msg = Markup(

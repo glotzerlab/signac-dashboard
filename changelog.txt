@@ -4,16 +4,95 @@ Changes
 
 The **signac-dashboard** package follows `semantic versioning <https://semver.org/>`_.
 
+Version 0.4
+===========
+
+[0.4.0] -- 2022-12-12
+---------------------
+
+Added
++++++
+
+- Improve security on multi-user systems. Dashboard now generates a login token when started. Users
+  must login with the token to view project and job data in the dashboard (#122, #158).
+
+Changed
++++++++
+
+- ``ImageViewer`` searches for ``*.svg`` files by default (#157).
+
+Fixed
++++++
+
+- Fixed handling of ``--debug`` command line option (#152).
+- Addressed deprecation warnings from signac 1.8.0 (#132, #153).
+
+Version 0.3
+===========
+
+[0.3.1] -- 2022-10-17
+---------------------
+
+Changed
++++++++
+
+- Updated CI to use GitHub Actions (#150).
+
+Fixed
++++++
+
+- Renamed ``cache_timeout`` to ``max_age`` in calls to flask.send_from_directory (#142, #143, #149).
+
+[0.3.0] -- 2022-06-22
+---------------------
+
+Added
++++++
+
+- The Project page displays cards from modules with ``context="ProjectContext"`` (#27, #110).
+- Schema module for the ProjectContext (#110).
+- ProjectContext support for the DocumentList, ImageViewer, TextDisplay, and VideoViewer modules (#110).
+- Dashboard config option ``CARDS_PER_ROW`` controls the number of cards per row in the desktop view (#133).
+- The endpoint ``views.get_file`` now reads the ``download_name`` request argument (#127).
+
+Changed
++++++++
+
+- Hide the list of modules in the sidebar when viewing the job list (#110).
+
+Fixed
++++++
+
+- Hide the list and grid view buttons when viewing a single job (#92, #110).
+- Fixed bug with disabled modules not showing a checkbox to enable them in the grid view (#134).
+- FileList module now respects prefix_jobid option (#127, #128).
+- Endpoints added via ``Dashboard.add_url`` can be used with multiple routes (#130).
+
+Removed
++++++++
+
+- Removed upper bound on ``python_requires`` (#137).
+
 Version 0.2
 ===========
 
-[0.2.10] -- 2022-xx-xx
+[0.2.10] -- 2022-04-05
 ----------------------
 
 Added
 +++++
 
-- Ability to select modules and views on narrow screens (#114)
+- Ability to select modules and views on narrow screens (#93, #114).
+
+Fixed
++++++
+
+- Jinja2 and markupsafe are now dependencies (#123, #125).
+
+Removed
++++++++
+
+- Dropped support for Python 3.7 following the recommended support schedules of `NEP 29 <https://numpy.org/neps/nep-0029-deprecation_policy.html>`__.
 
 [0.2.9] -- 2022-02-08
 ---------------------

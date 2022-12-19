@@ -33,7 +33,7 @@ The **signac-dashboard** package allows users to rapidly visualize and analyze d
 ## Installation
 
 The recommended installation method for **signac-dashboard** is through **conda** or **pip**.
-The software is tested for Python 3.7+ and is built for all major platforms.
+The software is tested for Python 3.8+ and is built for all major platforms.
 
 To install **signac-dashboard** *via* the [conda-forge](https://conda-forge.github.io/) channel, execute:
 
@@ -56,10 +56,11 @@ In an existing **signac** project directory, create a file `dashboard.py`:
 
 ```python
 from signac_dashboard import Dashboard
-from signac_dashboard.modules import StatepointList, DocumentList, ImageViewer
+from signac_dashboard.modules import StatepointList, DocumentList, ImageViewer, Schema
 
 if __name__ == '__main__':
-    modules = [StatepointList(), DocumentList(), ImageViewer()]
+    modules = [StatepointList(), DocumentList(), ImageViewer(context="JobContext"),
+               ImageViewer(context="ProjectContext"), Schema()]
     Dashboard(modules=modules).main()
 ```
 

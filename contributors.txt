@@ -1,8 +1,10 @@
-   398	Bradley Dice <bdice@bradleydice.com>
+   402	Bradley Dice <bdice@bradleydice.com>
     33	Carl Simon Adorf <csadorf@umich.edu>
-     6	dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+     9	dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
      5	Jens Glaser <jsglaser@umich.edu>
-     3	pre-commit-ci[bot] <66853113+pre-commit-ci[bot]@users.noreply.github.com>
+     4	pre-commit-ci[bot] <66853113+pre-commit-ci[bot]@users.noreply.github.com>
+     1	Corwin Kerr <corwin.kerr@gmail.com>
+     1	Rohan Babbar <77425744+rohanbabbar04@users.noreply.github.com>
      1	Tim Moore <tcmoore3@gmail.com>
      1	Vyas Ramasubramani <vramasub@umich.edu>
-     1  Corwin Kerr <cbkerr@umich.edu>
+     1	Charlotte Shiqi Zhao <zshiqi@umich.edu>

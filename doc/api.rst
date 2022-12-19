@@ -41,6 +41,7 @@ Dashboard Modules
     modules.FlowStatus
     modules.ImageViewer
     modules.Notes
+    modules.Schema
     modules.StatepointList
     modules.TextDisplay
     modules.VideoViewer

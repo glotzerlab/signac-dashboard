@@ -1,4 +1,4 @@
-# Copyright (c) 2019 The Regents of the University of Michigan
+# Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 import os
@@ -6,16 +6,19 @@ import os
 from setuptools import find_packages, setup
 
 requirements = [
-    "flask>=1.0",
-    "flask-assets>=2.0",
+    "flask>=2.1.0",
+    "flask-assets>=2.0.0",
+    "flask-login>=0.6.0",
     "flask-turbolinks",
+    "jinja2>=3.0.0",
     "jsmin",
     "libsass",
+    "markupsafe>=2.0.0",
     "natsort",
-    "signac>=1.0",
+    "signac>=1.8.0",
     "watchdog",
-    "webassets>=2.0",
-    "werkzeug>=1.0",
+    "webassets>=2.0.0",
+    "werkzeug>=2.1.0",
 ]
 
 description = "Visualize data spaces in a web browser."
@@ -31,15 +34,16 @@ except OSError:
 
 setup(
     name="signac-dashboard",
-    version="0.2.9",
+    version="0.4.0",
     packages=find_packages(),
     include_package_data=True,
-    python_requires=">=3.7,<4",
+    # Supported versions are determined according to NEP 29.
+    # https://numpy.org/neps/nep-0029-deprecation_policy.html
+    python_requires=">=3.8",
     install_requires=requirements,
     classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: BSD License",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",

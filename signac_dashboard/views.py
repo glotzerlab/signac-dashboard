@@ -1,8 +1,6 @@
-# Copyright (c) 2019 The Regents of the University of Michigan
+# Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
-
-import re
 
 from flask import (
     abort,
@@ -18,7 +16,7 @@ from flask import (
 
 
 def home(dashboard):
-    return redirect(url_for("jobs_list"))
+    return redirect(url_for("project_info"))
 
 
 def search(dashboard):
@@ -47,10 +45,17 @@ def jobs_list(dashboard):
     if not jobs:
         flash("No jobs found.", "warning")
     g.jobs = dashboard._get_job_details(g.pagination.paginate(jobs))
-    project_title = dashboard.project.config.get("project", None)
-    g.title = f"{project_title}: Jobs" if project_title else "Jobs"
+    g.title = "signac-dashboard: Jobs"
     g.subtitle = g.pagination.item_counts()
     return dashboard._render_job_view(default_view="list")
+
+
+def project_info(dashboard):
+    g.project = dashboard.project
+    g.title = "signac-dashboard"
+    num_jobs = len(dashboard.project)
+    g.subtitle = f"{num_jobs} jobs"
+    return dashboard._render_project_view()
 
 
 def show_job(dashboard, jobid):
@@ -65,39 +70,52 @@ def show_job(dashboard, jobid):
         return dashboard._render_job_view(default_view="grid")
 
 
-def get_file(dashboard, jobid, filename):
-    try:
-        job = dashboard.project.open_job(id=jobid)
-    except KeyError:
-        abort(404, "The job id requested could not be found.")
+def get_file(dashboard, filename, jobid=None):
+    if jobid is not None:
+        try:
+            job_or_project = dashboard.project.open_job(id=jobid)
+        except KeyError:
+            abort(404, "The job id requested could not be found.")
+        except LookupError:
+            dashboard.project.find_jobs()
+            abort(404, "Multiple jobs match the requested job id.")
     else:
-        if job.isfile(filename):
-            mimetype = None
-            cache_timeout = 0
-            # Return logs as plaintext
-            textfile_regexes = ["job-.*\\.[oe][0-9]*", ".*\\.log", ".*\\.dat"]
-            for regex in textfile_regexes:
-                if re.match(regex, filename) is not None:
-                    mimetype = "text/plain"
-            return send_from_directory(
-                job.workspace(),
-                filename,
-                mimetype=mimetype,
-                cache_timeout=cache_timeout,
-                conditional=True,
-            )
-        else:
-            abort(404, "The file requested does not exist.")
+        job_or_project = dashboard.project
+    if job_or_project.isfile(filename):
+        directory = job_or_project.fn("")
+        mimetype = None
+        max_age = 0
+        download_name = request.args.get("download_name", filename)
+        return send_from_directory(
+            directory=directory,
+            path=filename,
+            mimetype=mimetype,
+            max_age=max_age,
+            conditional=True,
+            download_name=download_name,
+        )
+    else:
+        abort(404, "The file requested does not exist.")
 
 
 def change_modules(dashboard):
-    enabled_modules = set(session.get("enabled_modules", []))
-    for i, module in enumerate(dashboard.modules):
+    enabled_module_indices = session.get(
+        "enabled_module_indices", dashboard._setup_enabled_module_indices()
+    )
+    enabled_module_indices = {
+        k: set(v) for k, v in enabled_module_indices.items()
+    }  # remove duplicates
+    context = session.get("context", "JobContext")
+
+    for i, module in enumerate(dashboard._modules_by_context[context]):
         if request.form.get(f"modules[{i}]") == "on":
-            enabled_modules.add(i)
+            enabled_module_indices[context].add(i)
         else:
-            enabled_modules.discard(i)
-    session["enabled_modules"] = list(enabled_modules)
+            enabled_module_indices[context].discard(i)
+
+    session["enabled_module_indices"] = {
+        k: list(v) for k, v in enabled_module_indices.items()
+    }
     return redirect(request.form.get("redirect", url_for("home")))
 
 

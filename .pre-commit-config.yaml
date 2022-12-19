@@ -5,7 +5,7 @@ exclude: (?:signac_dashboard/static/.*)
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: 'v4.1.0'
+    rev: 'v4.4.0'
     hooks:
       - id: end-of-file-fixer
         exclude: 'setup.cfg'
@@ -13,21 +13,21 @@ repos:
         exclude: 'setup.cfg'
       - id: debug-statements
   - repo: https://github.com/asottile/pyupgrade
-    rev: 'v2.31.0'
+    rev: 'v3.3.0'
     hooks:
       - id: pyupgrade
         args:
-          - --py36-plus
+          - --py38-plus
   - repo: https://github.com/PyCQA/isort
     rev: '5.10.1'
     hooks:
       - id: isort
   - repo: https://github.com/psf/black
-    rev: '21.12b0'
+    rev: '22.10.0'
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/flake8
-    rev: '4.0.1'
+    rev: '6.0.0'
     hooks:
       - id: flake8
 #  - repo: https://github.com/PyCQA/pydocstyle

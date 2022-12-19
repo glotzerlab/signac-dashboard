@@ -4,7 +4,7 @@
 # This software is licensed under the BSD 3-Clause License.
 from signac import init_project
 
-project = init_project("dashboard-test-project")
+project = init_project()
 
 for a in range(10):
     for b in range(10):

@@ -3,33 +3,46 @@
 {% block title %}{{ g.title }}{% endblock %}
 {% block subtitle %}{{ g.subtitle }}{% endblock %}
 
+{# Hides the view options when showing 1 job so users don't click on 'list' view. #}
+{% block view_options %}
+    {% if g.jobs | length == 1 %}
+    {% else %}
+        {{ super() }}
+    {% endif %}
+{% endblock view_options %}
+
+{% set context = "JobContext" %}
+{% set num_enabled_modules = enabled_module_indices[context] | length %}
+{% set columns_per_card = (12 / CARDS_PER_ROW) | int %}
+
+
 {% block panels %}
-{% if enabled_modules | length <= 1 %}
+{% if num_enabled_modules <= 1 %}
 <section class="section panel">
     <div class="columns is-mobile is-multiline">
 {% endif %}
 {% for job_details in g.jobs %}
 {% set card_count = [] %}
-{% if enabled_modules | length > 1 %}
+{% if num_enabled_modules > 1 %}
 <section class="section panel" id="{{ job_details.job._id }}">
 {% endif %}
-    {% if ( enabled_modules | length > 1 and g.jobs | length > 1 ) or ( g.jobs | length == 1 and query is defined ) %}
+    {% if ( num_enabled_modules > 1 and g.jobs | length > 1 ) or ( g.jobs | length == 1 and query is defined ) %}
     <h4 class="title is-4">{{ job_details.title }}</h4>
     <h5 class="subtitle is-5"><a href="{{ url_for('show_job', jobid=job_details.job._id) }}">{{ job_details.job | string }}</a></h5>
     {% endif %}
-    {% if enabled_modules | length > 1 %}
+    {% if num_enabled_modules > 1 %}
     <div class="columns is-mobile is-multiline">
     {% endif %}
-    {% for module in modules %} {# begin modules #}
-    {% if loop.index0 in enabled_modules and module.context == 'JobContext' %} {# if module should render #}
+    {% for module in modules_by_context[context] %} {# begin modules #}
+    {% if loop.index0 in enabled_module_indices[context] %} {# if module is enabled #}
     {% for card in module.get_cards(job_details.job) %} {# begin cards #}
         {# jinja variables go out of scope after the loop unless this "list" hack is used #}
         {% if card_count.append(1) %}{% endif %}
-        <div class="column is-4-desktop is-full-mobile">
+        <div class="column is-{{ columns_per_card }}-desktop is-full-mobile">
             <div class="card">
                 <div class="card-header">
                     <div class="card-header-title card-header-dashboard">
-                        {% if enabled_modules | length <= 1 and g.jobs | length > 1 %}
+                        {% if num_enabled_modules <= 1 and g.jobs | length > 1 %}
                         <h5 class="title is-5">{{ job_details.title }}</h5>
                         <h6 class="subtitle is-6"><a href="{{ url_for('show_job', jobid=job_details.job._id) }}">{{ job_details.job | string }}</a></h6>
                         {% endif %}
@@ -42,14 +55,14 @@
             </div>
         </div>
     {% endfor %} {# end cards #}
-    {% endif %} {# end if module should render #}
+    {% endif %} {# end if module is enabled #}
     {% endfor %} {# end modules #}
-    {% if card_count | length == 0 and enabled_modules | length > 1 %} {# begin no cards message #}
-        <div class="column is-4-desktop is-full-mobile">
+    {% if card_count | length == 0 and num_enabled_modules > 1 %} {# begin no cards message #}
+        <div class="column is-{{ columns_per_card }}-desktop is-full-mobile">
             <h6 class="subtitle is-6">No cards to show.</h6>
         </div>
     {% endif %} {# end no cards message #}
-{% if enabled_modules | length > 1 %}
+{% if num_enabled_modules > 1 %}
     </div>
 </section>
 {% if not loop.last %}
@@ -57,7 +70,7 @@
 {% endif %}
 {% endif %}
 {% endfor %} {# end jobs #}
-{% if enabled_modules | length <= 1 %}
+{% if num_enabled_modules <= 1 %}
     </div>
 </section>
 {% endif %}
