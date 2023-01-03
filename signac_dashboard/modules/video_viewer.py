@@ -76,9 +76,9 @@ class VideoViewer(Module):
             template=template,
             **kwargs,
         )
+        self.video_globs = video_globs
         self.preload = preload
         self.poster = poster
-        self.video_globs = video_globs
         self.sort_key = sort_key
 
     def get_cards(self, job_or_project):

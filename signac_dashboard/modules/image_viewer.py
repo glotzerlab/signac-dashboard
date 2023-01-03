@@ -35,6 +35,8 @@ class ImageViewer(Module):
         relative to the job or project root directory, to be
         displayed (default: :code:`['*.png', '*.jpg', '*.gif', '*.svg']`).
     :type img_globs: list
+    :type sort_key: callable
+    :param sort_key: Key to sort the image files, passed internally to :code:`sorted`.
 
     """
 
