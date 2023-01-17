@@ -7,7 +7,7 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.4
 ===========
 
-[0.4.0] -- xxxx-xx-xx
+[0.4.1] -- xxxx-xx-xx
 ---------------------
 
 Changed
