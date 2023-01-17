@@ -73,7 +73,7 @@ class Dashboard:
       :py:class:`werkzeug.middleware.profiler.ProfilerMiddleware` if
       :code:`True` (default: :code:`False`).
     - **PER_PAGE**: Maximum number of jobs to show per page
-      (default: 25).
+      (default: 24).
     - **CARDS_PER_ROW**: Cards to show per row in the desktop view. Must be a
       factor of 12 (default: 3).
     - **ACCESS_TOKEN**: The access token required to login to the dashboard.
@@ -116,7 +116,7 @@ class Dashboard:
         self.config.setdefault("DEBUG", False)
         self.config.setdefault("PORT", 8888)
         self.config.setdefault("PAGINATION", True)
-        self.config.setdefault("PER_PAGE", 25)
+        self.config.setdefault("PER_PAGE", 24)
         self.config.setdefault("CARDS_PER_ROW", 3)
         if 12 % self.config["CARDS_PER_ROW"] != 0:
             raise ValueError(
