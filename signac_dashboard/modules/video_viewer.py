@@ -66,7 +66,6 @@ class VideoViewer(Module):
         poster=None,
         **kwargs,
     ):
-
         super().__init__(
             name=name,
             context=context,
