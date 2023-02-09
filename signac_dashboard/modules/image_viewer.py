@@ -48,7 +48,6 @@ class ImageViewer(Module):
         img_globs=("*.png", "*.jpg", "*.gif", "*.svg"),
         **kwargs,
     ):
-
         super().__init__(
             name=name,
             context=context,
