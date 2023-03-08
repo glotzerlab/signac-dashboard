@@ -16,7 +16,7 @@ requirements = [
     "markupsafe>=2.0.0",
     "natsort",
     # TODO: Test against the released 2.0.0 once available.
-    #"signac>=2.0.0",
+    # "signac>=2.0.0",
     "signac @ git+https://github.com/glotzerlab/signac@master",
     "watchdog",
     "webassets>=2.0.0",
