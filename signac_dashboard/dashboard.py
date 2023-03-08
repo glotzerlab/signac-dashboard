@@ -294,7 +294,7 @@ class Dashboard:
         (but verbose) form of the job state point, based on the project schema.
 
         :param job: The job being titled.
-        :type job: :py:class:`signac.contrib.job.Job`
+        :type job: :py:class:`signac.job.Job`
         :returns: Title to be displayed.
         :rtype: str
         """
@@ -332,7 +332,7 @@ class Dashboard:
         minimal unique substring of the job id.
 
         :param job: The job being subtitled.
-        :type job: :py:class:`signac.contrib.job.Job`
+        :type job: :py:class:`signac.job.Job`
         :returns: Subtitle to be displayed.
         :rtype: str
         """
@@ -347,7 +347,7 @@ class Dashboard:
         strings or tuples of properties that should be used to sort.
 
         :param job: The job being sorted.
-        :type job: :py:class:`signac.contrib.job.Job`
+        :type job: :py:class:`signac.job.Job`
         :returns: Key for sorting.
         :rtype: any comparable type
         """
@@ -377,7 +377,7 @@ class Dashboard:
                     f = json.loads(query)
                 except json.JSONDecodeError:
                     query = shlex.split(query)
-                    f = signac.contrib.filterparse.parse_filter_arg(query)
+                    f = signac.filterparse.parse_filter_arg(query)
                     flash(f"Search string interpreted as '{json.dumps(f)}'.")
             jobs = self.project.find_jobs(filter=f)
             return sorted(jobs, key=lambda job: self.job_sorter(job))
