@@ -15,7 +15,9 @@ requirements = [
     "libsass",
     "markupsafe>=2.0.0",
     "natsort",
-    "signac>=1.8.0",
+    # TODO: Test against the released 2.0.0 once available.
+    #"signac>=2.0.0",
+    "signac @ git+https://github.com/glotzerlab/signac@master",
     "watchdog",
     "webassets>=2.0.0",
     "werkzeug>=2.1.0",
