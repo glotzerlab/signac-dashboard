@@ -24,7 +24,8 @@ jobs:
         config: [ {python: '3.8', dependencies: 'newest'},
                   {python: '3.9', dependencies: 'newest'},
                   {python: '3.10', dependencies: 'newest'},
-                  {python: '3.10', dependencies: 'minimal'},
+                  {python: '3.11', dependencies: 'newest'},
+                  {python: '3.11', dependencies: 'minimal'},
                   {python: '3.8', dependencies: 'oldest'} ]
     steps:
     - uses: actions/checkout@v3
@@ -55,5 +56,5 @@ jobs:
         pip install -e .
     - name: Test with pytest
       run: |
-        pytest --cov=signac_dashboard --cov-config=setup.cfg --cov-report=xml tests/ -v
-    - uses: codecov/codecov-action@v2
+        pytest --cov=signac_dashboard --cov-config=pyproject.toml --cov-report=xml tests/ -v
+    - uses: codecov/codecov-action@v3

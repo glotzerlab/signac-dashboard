@@ -53,11 +53,11 @@ To upgrade the package, simply execute the same command with the ``--upgrade`` o
 Source Code Installation
 ========================
 
-Alternatively you can clone the `git repository <https://github.com/glotzerlab/signac-dashboard>`_ and execute the ``setup.py`` script to install the package.
+Alternatively you can clone the `git repository <https://github.com/glotzerlab/signac-dashboard>`_ and pip install it directly.
 
 .. code:: bash
 
   git clone https://github.com/glotzerlab/signac-dashboard.git
   cd signac-dashboard
   git submodule update --init  # This step is required!
-  python setup.py install --user
+  pip install .

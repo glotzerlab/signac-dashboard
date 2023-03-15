@@ -10,11 +10,17 @@ Version 0.4
 [0.4.1] -- xxxx-xx-xx
 ---------------------
 
+Added
++++++
+
+- Official Python 3.11 support (#176).
+
 Changed
 +++++++
 
 - Default value of ``PER_PAGE`` is now 24 (#168).
 - Minor visual updates (#175).
+- Switched to a pyproject.toml based build (#176).
 
 [0.4.0] -- 2022-12-12
 ---------------------
