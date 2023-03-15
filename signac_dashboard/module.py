@@ -1,6 +1,8 @@
 # Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
+from typing import Set
+
 from flask import render_template
 
 
@@ -65,7 +67,7 @@ class Module:
 
     """  # noqa: E501
 
-    _supported_contexts = {}
+    _supported_contexts: Set[str] = set()
 
     def __init__(self, name, context, template, enabled=True):
         self._module = self.__module__
@@ -83,7 +85,7 @@ class Module:
         self.enabled = enabled
 
     def get_cards(self):
-        """Returns this module's cards for rendering.
+        """Return this module's cards for rendering.
 
         The cards are returned as a list of dictionaries with keys
         :code:`'name'` and :code:`'content'`.
@@ -106,10 +108,10 @@ class Module:
         self.enabled = not self.enabled
 
     def register(self, dashboard):
-        """Callback to register this module with the dashboard.
+        """Register this module with the dashboard.
 
-        This callback should register assets and routes, as well as any other
-        initialization that accesses or modifies the dashboard.
+        This method is a callback used to register assets and routes, as well
+        as any other initialization that accesses or modifies the dashboard.
 
         :param dashboard: The dashboard invoking this callback method.
         :type dashboard: :py:class:`signac_dashboard.Dashboard`

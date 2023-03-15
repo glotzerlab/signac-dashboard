@@ -5,7 +5,9 @@ from math import ceil
 
 
 class Pagination:
-    """Pagination adapted from http://flask.pocoo.org/snippets/44/
+    """Paginate a set of items.
+
+    Adapted from http://flask.pocoo.org/snippets/44/.
 
     :param int page: Current page number.
     :param int per_page: Number of items per page. If 0 or `None`, all items

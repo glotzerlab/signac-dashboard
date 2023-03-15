@@ -178,7 +178,7 @@ class Dashboard:
         self._modules_by_context = modules_by_context
 
     def _create_app(self, config={}):
-        """Creates a Flask application.
+        """Create a Flask application.
 
         :param config: Dictionary of configuration parameters.
         """
@@ -224,7 +224,6 @@ class Dashboard:
 
     def _create_assets(self):
         """Add assets for inclusion in the dashboard HTML."""
-
         assets = Environment(self.app)
         # jQuery is served as a standalone file
         jquery = Bundle("js/jquery-*.min.js", output="gen/jquery.min.js")
@@ -257,7 +256,7 @@ class Dashboard:
         self._module_assets.append(asset)
 
     def run(self, *args, **kwargs):
-        """Runs the dashboard webserver.
+        """Run the dashboard webserver.
 
         Use :py:meth:`~.main` instead of this method for the command-line
         interface. Arguments to this function are passed directly to
@@ -479,7 +478,7 @@ class Dashboard:
     def add_url(
         self, import_name, url_rules=[], import_file="signac_dashboard", **kwargs
     ):
-        """Add a route to the dashboard.
+        r"""Add a route to the dashboard.
 
         This method allows custom view functions to be triggered for specified
         routes. These view functions are imported lazily, when their route
@@ -533,7 +532,7 @@ class Dashboard:
             )
 
     def _register_routes(self):
-        """Registers routes with the Flask application.
+        """Register routes with the Flask application.
 
         This method configures context processors, templates, and sets up
         routes for a basic Dashboard instance. Additionally, routes declared by
@@ -640,7 +639,7 @@ class Dashboard:
         return self.app(environ, start_response)
 
     def main(self, command_args=None):
-        """Runs the command line interface.
+        """Run the command line interface.
 
         Call this function to use signac-dashboard from its command line
         interface. For example, save this script as :code:`dashboard.py`:
@@ -665,7 +664,6 @@ class Dashboard:
             ``["--debug", "--port", "8889"]`` (default: None).
         :type command_args: list
         """
-
         if command_args is not None and len(command_args) == 0:
             command_args = None
 
