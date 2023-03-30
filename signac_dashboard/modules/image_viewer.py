@@ -15,7 +15,7 @@ class ImageViewer(Module):
 
     The ImageViewer module can display images in any format that works with a standard
     ``<img>`` tag. The module defaults to showing all images of PNG, JPG, GIF, and SVG
-    types in the job or project root directory. A filename or glob can be
+    types in the job or project directory. A filename or glob can be
     defined to select specific filenames. Each matching file yields a card.
 
     Multiple ImageViewer modules can be defined with different filenames or
@@ -29,13 +29,13 @@ class ImageViewer(Module):
         img_mod = ImageViewer()  # Show all PNG/JPG/GIF/SVG images
         img_mod = ImageViewer(name='Bond Order Diagram', img_globs=['bod.png'])
         img_mod = ImageViewer(context="ProjectContext",
-                              img_globs=['/gallery/*.png'])  # search subdirectory of project root
+                              img_globs=['/gallery/*.png'])  # search subdirectory of project path
 
     :param context: Supports :code:`'JobContext'` and :code:`'ProjectContext'`.
     :type context: str
     :param img_globs: A list of glob expressions or exact filenames,
-        relative to the job or project root directory, to be
-        displayed (default: :code:`['*.png', '*.jpg', '*.gif', '*.svg']`).
+        relative to the job or project directory, to be displayed
+        (default: :code:`['*.png', '*.jpg', '*.gif', '*.svg']`).
     :type img_globs: list
     :type sort_key: callable
     :param sort_key: Key to sort the image files, passed internally to :code:`sorted`.

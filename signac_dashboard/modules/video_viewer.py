@@ -15,7 +15,7 @@ class VideoViewer(Module):
 
     The VideoViewer module displays videos using an HTML ``<video>`` tag. The
     module defaults to showing all videos of MP4 or M4V types in the job or
-    project root directory. A filename or glob can be defined to select specific
+    project directory. A filename or glob can be defined to select specific
     filenames, which may be of any format supported by your browser with the
     ``<video>`` tag. Each matching file yields a card.
 
@@ -43,8 +43,8 @@ class VideoViewer(Module):
     :param context: Supports :code:`'JobContext'` and :code:`'ProjectContext'`.
     :type context: str
     :param video_globs: A list of glob expressions or exact filenames,
-        relative to the job or project root directory, to be
-        displayed (default: :code:`['*.mp4', '*.m4v']`).
+        relative to the job or project directory, to be displayed
+        (default: :code:`['*.mp4', '*.m4v']`).
     :type video_globs: list
     :param preload: Option for preloading videos, one of :code:`'auto'`,
         :code:`'metadata'`, or :code:`'none'` (default: :code:`'none'`).
