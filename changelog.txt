@@ -4,10 +4,10 @@ Changes
 
 The **signac-dashboard** package follows `semantic versioning <https://semver.org/>`_.
 
-Version 0.4
+Version 0.5
 ===========
 
-[0.4.1] -- xxxx-xx-xx
+[0.5.0] -- 2023-03-30
 ---------------------
 
 Added
@@ -19,9 +19,13 @@ Added
 Changed
 +++++++
 
+- Require signac 2.0.0 (#166).
 - Default value of ``PER_PAGE`` is now 24 (#168).
 - Minor visual updates (#175).
 - Switched to a pyproject.toml based build (#176).
+
+Version 0.4
+===========
 
 [0.4.0] -- 2022-12-12
 ---------------------
