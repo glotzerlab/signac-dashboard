@@ -29,7 +29,7 @@ class Module:
     **Custom modules:** User-defined module classes should be a subclass of
     :py:class:`~.Module` and define the function :py:meth:`~.Module.get_cards`.
     Template files are written in HTML/Jinja-compatible syntax.
-    See `this example <https://github.com/glotzerlab/signac-dashboard/tree/master/examples/custom-modules>`_.
+    See `this example <https://github.com/glotzerlab/signac-dashboard/tree/main/examples/custom-modules>`_.
 
     **Module assets:** If a module requires scripts or stylesheets to be
     included for its content to be rendered, they must be handled by the
