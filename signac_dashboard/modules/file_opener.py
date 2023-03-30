@@ -24,6 +24,8 @@ class FileOpener(Module):
     dashboard publicly accessible.
     """
 
+    _supported_contexts = {"JobContext", "ProjectContext"}
+
     def __init__(
         self,
         name="File opener",
