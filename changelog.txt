@@ -7,14 +7,21 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.4
 ===========
 
-[0.4.1] -- YYYY-MM-DD
+[0.4.1] -- xxxx-xx-xx
 ---------------------
 
 Added
 +++++
 
+- Official Python 3.11 support (#176).
 - Ability to sort ``ImageViewer`` and ``VideoViewer`` cards (#155).
 
+Changed
++++++++
+
+- Default value of ``PER_PAGE`` is now 24 (#168).
+- Minor visual updates (#175).
+- Switched to a pyproject.toml based build (#176).
 
 [0.4.0] -- 2022-12-12
 ---------------------
@@ -23,12 +30,18 @@ Added
 +++++
 
 - Improve security on multi-user systems. Dashboard now generates a login token when started. Users
-  must login with the token to view project and job data in the dashboard.
+  must login with the token to view project and job data in the dashboard (#122, #158).
 
 Changed
 +++++++
 
-- ``ImageViewer`` searches for ``*.svg`` files by default.
+- ``ImageViewer`` searches for ``*.svg`` files by default (#157).
+
+Fixed
++++++
+
+- Fixed handling of ``--debug`` command line option (#152).
+- Addressed deprecation warnings from signac 1.8.0 (#132, #153).
 
 Version 0.3
 ===========

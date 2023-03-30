@@ -27,7 +27,8 @@ class VideoViewer(Module):
 
     Multiple VideoViewer modules can be defined
     with different filenames or globs to enable/disable cards individually.
-    Examples:
+
+    :Example:
 
     .. code-block:: python
 
@@ -69,7 +70,6 @@ class VideoViewer(Module):
         sort_key=None,
         **kwargs,
     ):
-
         super().__init__(
             name=name,
             context=context,

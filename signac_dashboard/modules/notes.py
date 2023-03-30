@@ -31,7 +31,6 @@ class Notes(Module):
         key="notes",
         **kwargs,
     ):
-
         super().__init__(
             name=name,
             context=context,

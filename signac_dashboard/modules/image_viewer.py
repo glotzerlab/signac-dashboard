@@ -19,7 +19,9 @@ class ImageViewer(Module):
     defined to select specific filenames. Each matching file yields a card.
 
     Multiple ImageViewer modules can be defined with different filenames or
-    globs to enable/disable cards for each image or image group. Examples:
+    globs to enable/disable cards for each image or image group.
+
+    :Example:
 
     .. code-block:: python
 
@@ -51,7 +53,6 @@ class ImageViewer(Module):
         sort_key=None,
         **kwargs,
     ):
-
         super().__init__(
             name=name,
             context=context,

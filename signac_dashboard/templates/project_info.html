@@ -11,7 +11,8 @@
 
 {% set card_count = [] %}
 {% if num_enabled_modules > 1 %}
-<div class="columns is-mobile is-multiline">
+<section class="section">
+    <div class="columns is-mobile is-multiline">
 {% endif %}
 {% for module in modules_by_context[context] %} {# begin modules #}
     {% if loop.index0 in enabled_module_indices[context] %}
@@ -43,7 +44,8 @@
 {% endif %}
 
 {% if num_enabled_modules > 1 %}
-</div>
+    </div>
+</section>
 {% endif %}
 
 {% endblock %}

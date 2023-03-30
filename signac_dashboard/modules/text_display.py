@@ -49,7 +49,6 @@ class TextDisplay(Module):
         markdown=False,
         **kwargs,
     ):
-
         super().__init__(
             name=name,
             context=context,
