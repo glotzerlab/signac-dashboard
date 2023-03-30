@@ -81,10 +81,8 @@
                                             <div class="control">
                                                 <label class="checkbox">
                                                     <input type="checkbox" name="modules[{{ loop.index0 }}]"
-                                                        {%- if loop.index0 in enabled_module_indices[context] -%}
-                                                        checked
-                                                        {%- endif %}>
-                                                    {{- module.name }}
+                                                       {%- if loop.index0 in enabled_module_indices[context] %} checked{% endif -%}
+                                                    > {{ module.name }}
                                                 </label>
                                             </div>
                                         </div>
@@ -191,7 +189,7 @@
                     <p>
                         <a href="https://docs.signac.io/projects/dashboard/en/latest/">documentation</a> |
                         <a href="https://github.com/glotzerlab/signac-dashboard/">source</a> |
-                        <a href="https://github.com/glotzerlab/signac-dashboard/blob/master/LICENSE.txt">license</a>
+                        <a href="https://github.com/glotzerlab/signac-dashboard/blob/main/LICENSE.txt">license</a>
                     </p>
                 </div>
             </div>

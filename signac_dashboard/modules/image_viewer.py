@@ -19,7 +19,9 @@ class ImageViewer(Module):
     defined to select specific filenames. Each matching file yields a card.
 
     Multiple ImageViewer modules can be defined with different filenames or
-    globs to enable/disable cards for each image or image group. Examples:
+    globs to enable/disable cards for each image or image group.
+
+    :Example:
 
     .. code-block:: python
 
@@ -35,6 +37,8 @@ class ImageViewer(Module):
         relative to the job or project directory, to be displayed
         (default: :code:`['*.png', '*.jpg', '*.gif', '*.svg']`).
     :type img_globs: list
+    :type sort_key: callable
+    :param sort_key: Key to sort the image files, passed internally to :code:`sorted`.
 
     """
 
@@ -46,6 +50,7 @@ class ImageViewer(Module):
         context="JobContext",
         template="cards/image_viewer.html",
         img_globs=("*.png", "*.jpg", "*.gif", "*.svg"),
+        sort_key=None,
         **kwargs,
     ):
         super().__init__(
@@ -55,6 +60,7 @@ class ImageViewer(Module):
             **kwargs,
         )
         self.img_globs = img_globs
+        self.sort_key = sort_key
 
     def get_cards(self, job_or_project):
         if self.context == "JobContext":
@@ -79,5 +85,6 @@ class ImageViewer(Module):
             glob.iglob(job_or_project.fn(image_glob)) for image_glob in self.img_globs
         ]
         image_files = itertools.chain(*image_globs)
+        image_files = sorted(image_files, key=self.sort_key)
         for filepath in image_files:
             yield make_card(os.path.relpath(filepath, job_or_project.fn("")))
