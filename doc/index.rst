@@ -1,4 +1,4 @@
-Signac-dashboard package documentation
+signac-dashboard package documentation
 ======================================
 
 .. note::

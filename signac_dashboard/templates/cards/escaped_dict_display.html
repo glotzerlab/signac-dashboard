@@ -1,0 +1,5 @@
+<ul>
+  {% for key in escaped_dict %}
+  <li><strong>{{ key }}:</strong> {{ escaped_dict[key] | safe }}</li>
+  {% endfor %}
+</ul>

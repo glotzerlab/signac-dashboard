@@ -1,5 +1,65 @@
+# Copyright (c) 2022 The Regents of the University of Michigan
+# All rights reserved.
+# This software is licensed under the BSD 3-Clause License.
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=64.0.0"]
+
+[project]
+name = "signac-dashboard"
+version = "0.5.0"
+description = "Visualize data spaces in a web browser."
+readme = "README.md"
+# Supported versions are determined according to NEP 29.
+# https://numpy.org/neps/nep-0029-deprecation_policy.html
+requires-python = ">=3.8"
+license = { file = "LICENSE.txt" }
+maintainers = [{ name = "signac Developers", email = "signac-support@umich.edu" }]
+authors = [{ name = "Bradley Dice et al.", email = "bdice@bradleydice.com" }]
+keywords = ["visualization", "dashboard", "signac", "framework"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Topic :: Database",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+    "flask>=2.1.0",
+    "flask-assets>=2.0.0",
+    "flask-login>=0.6.0",
+    "flask-turbolinks",
+    "jinja2>=3.0.0",
+    "jsmin",
+    "libsass",
+    "markupsafe>=2.0.0",
+    "natsort",
+    "signac>=2.0.0",
+    "watchdog",
+    "webassets>=2.0.0",
+    "werkzeug>=2.1.0",
+]
+
+[project.scripts]
+signac-dashboard = "signac_dashboard.__main__:main"
+
+[project.urls]
+Homepage = "https://signac.io"
+Documentation = "https://docs.signac.io"
+Download = "https://pypi.org/project/signac-dashboard/"
+Source = "https://github.com/glotzerlab/signac-dashboard"
+Issues = "https://github.com/glotzerlab/signac-dashboard/issues"
+
+[tools.setuptools.packages.find]
+namespaces = false
+exclude = ["examples*", "tests*"]
+
 [tool.black]
-target-version = ['py36']
+target-version = ['py38']
 include = '\.pyi?$'
 exclude = '''
 (
@@ -19,3 +79,35 @@ exclude = '''
 [tool.isort]
 profile = 'black'
 skip_glob = 'signac_dashboard/static/*'
+
+[tool.pydocstyle]
+convention = "numpy"
+match = "^((?!\\.sync-zenodo-metadata|setup).)*\\.py$"
+match-dir = "^((?!\\.|tests|_vendor).)*$"
+ignore-decorators = "deprecated"
+# For now, we're skipping "missing docstrings" and just enforcing that existing
+# docstrings are high-quality.
+add-ignore = "D100, D101, D102, D103, D104, D105, D107, D203, D204, D213"
+
+[tool.mypy]
+ignore_missing_imports = true
+scripts_are_modules = true
+exclude = [
+    'examples/',
+    'signac_dashboard/static/',
+    'tests/',
+]
+
+[tool.pytest.ini_options]
+xfail_strict = true
+filterwarnings = [
+        "ignore:.*SimpleKeyring is deprecated.*:DeprecationWarning",
+        "ignore:.*The doc_filter argument was deprecated.*:DeprecationWarning"
+]
+
+[tool.coverage.run]
+branch = true
+concurrency = ["thread", "multiprocessing"]
+parallel = true
+source = [ "signac" ]
+omit = [ "*/signac_dashboard/static/*" ]

@@ -5,7 +5,9 @@ from math import ceil
 
 
 class Pagination:
-    """Pagination adapted from http://flask.pocoo.org/snippets/44/
+    """Paginate a set of items.
+
+    Adapted from http://flask.pocoo.org/snippets/44/.
 
     :param int page: Current page number.
     :param int per_page: Number of items per page. If 0 or `None`, all items
@@ -66,10 +68,7 @@ class Pagination:
         for num in range(1, self.pages + 1):
             if (
                 num <= left_edge
-                or (
-                    num > self.page - left_current - 1
-                    and num < self.page + right_current
-                )
+                or (self.page - left_current - 1 < num < self.page + right_current)
                 or num > self.pages - right_edge
             ):
                 if last + 1 != num:

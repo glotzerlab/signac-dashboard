@@ -1,22 +1,35 @@
-# Copyright (c) 2019 The Regents of the University of Michigan
+# Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
+from typing import Set
+
 from flask import render_template
 
 
 class Module:
-    """Base class for dashboard modules.
+    """Base class for modules, the building blocks of the dashboard.
 
-    Modules provide *cards* of content, for a specific *context*. Each module
-    must have a **name** which appears in its cards' titles, a **context**
-    (such as :code:`'JobContext'`) in which its contents will be displayed,
-    and a **template** file (written in HTML/Jinja-compatible syntax) for
-    rendering card content. Modules can be disabled by default, by setting
-    :code:`enabled=False` in the constructor.
+    A module turns select information from the job directory or project
+    directory into cards displayed on the dashboard. The cards pull content from
+    the job directory or project directory depending on whether the module
+    ``context`` is ``'JobContext'`` or ``'ProjectContext'``.
+
+    :param name: Name of the module for card titles.
+    :type name: str
+    :param context: Context in which this module's cards will be displayed, either
+        :code:`'JobContext'` *or* :code:`'ProjectContext'`.
+    :type context: str
+    :param template: Path to a template file for this module's cards (e.g.
+        :code:`cards/my_module.html`, without the template directory prefix
+        :code:`templates/`).
+    :type template: str
+    :param enabled: Whether the module's cards will be displayed. (default: :code:`True`)
+    :type enabled: bool
 
     **Custom modules:** User-defined module classes should be a subclass of
     :py:class:`~.Module` and define the function :py:meth:`~.Module.get_cards`.
-    See `this example <https://github.com/glotzerlab/signac-dashboard/tree/master/examples/custom-modules>`_.
+    Template files are written in HTML/Jinja-compatible syntax.
+    See `this example <https://github.com/glotzerlab/signac-dashboard/tree/main/examples/custom-modules>`_.
 
     **Module assets:** If a module requires scripts or stylesheets to be
     included for its content to be rendered, they must be handled by the
@@ -47,31 +60,32 @@ class Module:
 
         def register(self, dashboard):
             @dashboard.app.route('/module/my-module/update', methods=['POST'])
+            @flask_login.login_required
             def my_module_update():
                 # Perform update
                 return "Saved."
 
-    :param name: Name of this module (appears in card titles).
-    :type name: str
-    :param context: Context in which this module's cards should be displayed
-        (e.g. :code:`'JobContext'`).
-    :type context: str
-    :param template: Path to a template file for this module's cards (e.g.
-        :code:`cards/my_module.html`, without the template directory prefix
-        :code:`templates/`).
-    :type template: str
     """  # noqa: E501
+
+    _supported_contexts: Set[str] = set()
 
     def __init__(self, name, context, template, enabled=True):
         self._module = self.__module__
         self._moduletype = self.__class__.__name__
         self.name = name
+        if len(self._supported_contexts) == 0:
+            raise ValueError(f"{self._moduletype} is not supported by any contexts.")
+        if context not in self._supported_contexts:
+            raise RuntimeError(
+                f"{self._moduletype} does not support the {context}, only "
+                f"{self._supported_contexts}."
+            )
         self.context = context
         self.template = template
         self.enabled = enabled
 
     def get_cards(self):
-        """Returns this module's cards for rendering.
+        """Return this module's cards for rendering.
 
         The cards are returned as a list of dictionaries with keys
         :code:`'name'` and :code:`'content'`.
@@ -94,10 +108,10 @@ class Module:
         self.enabled = not self.enabled
 
     def register(self, dashboard):
-        """Callback to register this module with the dashboard.
+        """Register this module with the dashboard.
 
-        This callback should register assets and routes, as well as any other
-        initialization that accesses or modifies the dashboard.
+        This method is a callback used to register assets and routes, as well
+        as any other initialization that accesses or modifies the dashboard.
 
         :param dashboard: The dashboard invoking this callback method.
         :type dashboard: :py:class:`signac_dashboard.Dashboard`

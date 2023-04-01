@@ -47,9 +47,11 @@
                         {% endfor %}
                     </div>
                     <div class="sidebar-content">
-                        {% if self.sidebar() %}{% block sidebar %}{% endblock %}{% endif %}
-                        {% if modules | length > 0 and g.jobs is defined and g.jobs | length > 0 %}
+                        {% if self.sidebar() %}
+                        {% block sidebar %}
+                        {% block view_options %}
                         <div class="box sidebar-box">
+                            <h2 class="subtitle is-4">Views</h2>
                             <p class="field">
                                 <a class="button" href="{{ modify_query(view='list') }}" title="List View">
                                     <span class="icon is-small">
@@ -62,25 +64,42 @@
                                     </span>
                                 </a>
                             </p>
+                        </div>
+                        {% endblock view_options %}
+                        {% block module_selector %}
+                        {% set context = {"jobs": "JobContext", "project": "ProjectContext"}[g.active_page] %}
+                        <div class="box sidebar-box">
                             <h2 class="subtitle is-4">Modules</h2>
+                            {% if modules_by_context[context] | length > 0 %}
+                            {% if g.active_page == "jobs" and g.jobs | length > 0  or g.active_page == "project" %}
                             <form action="{{ url_for('change_modules') }}" method="POST">
-                            <input type="hidden" name="redirect" value="{{ request.url }}">
-                            {% for module in modules %}
-                            <div class="field is-horizontal">
-                                <div class="field-body">
-                                    <div class="field">
-                                        <div class="control">
-                                            <label class="checkbox">
-                                                <input type="checkbox" name="modules[{{ loop.index0 }}]"{% if loop.index0 in enabled_modules %} checked{% endif %}>{{ module.name }}
-                                            </label>
+                                <input type="hidden" name="redirect" value="{{ request.url }}">
+                                {% for module in modules_by_context[context] %}
+                                <div class="field is-horizontal">
+                                    <div class="field-body">
+                                        <div class="field">
+                                            <div class="control">
+                                                <label class="checkbox">
+                                                    <input type="checkbox" name="modules[{{ loop.index0 }}]"
+                                                       {%- if loop.index0 in enabled_module_indices[context] %} checked{% endif -%}
+                                                    > {{ module.name }}
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            {% endfor %}
-                            <input class="button is-primary" type="submit" value="Update">
+                                {% endfor %}
+                                <input class="button is-primary" type="submit" value="Update">
                             </form>
                         </div>
+                        {% endif %}
+                        {% else %}
+                        <a href="https://docs.signac.io/projects/dashboard/en/latest/api.html#dashboard-modules">
+                            No modules. Add some!
+                        </a>
+                        {% endif %}
+                        {% endblock module_selector %}
+                        {% endblock sidebar %}
                         {% endif %}
                     </div>
                 </div>
@@ -88,9 +107,9 @@
             <div class="column is-10">
                 <nav class="navbar is-light" role="navigation" aria-label="main navigation" id="top">
                     <div class="navbar-brand">
-                        <a class="navbar-item" href="/">
+                        <div class="navbar-item">
                             {{ APP_NAME }}
-                        </a>
+                        </div>
                         <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false">
                             <span aria-hidden="true"></span>
                             <span aria-hidden="true"></span>
@@ -118,6 +137,16 @@
                                 {{ name }}
                             </a>
                             {% endfor %}
+                            {% if self.view_options() %}
+                            <div class="navbar-item is-hidden-tablet">
+                                {{ self.view_options() }}
+                            </div>
+                            {% endif %}
+                            {% if self.module_selector() %}
+                            <div class="navbar-item is-hidden-tablet">
+                                {{ self.module_selector() }}
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </nav>
@@ -160,7 +189,7 @@
                     <p>
                         <a href="https://docs.signac.io/projects/dashboard/en/latest/">documentation</a> |
                         <a href="https://github.com/glotzerlab/signac-dashboard/">source</a> |
-                        <a href="https://github.com/glotzerlab/signac-dashboard/blob/master/LICENSE.txt">license</a>
+                        <a href="https://github.com/glotzerlab/signac-dashboard/blob/main/LICENSE.txt">license</a>
                     </p>
                 </div>
             </div>

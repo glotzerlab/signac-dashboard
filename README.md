@@ -1,11 +1,10 @@
-# <img src="https://raw.githubusercontent.com/glotzerlab/signac-dashboard/master/doc/images/palette-header.png" width="75" height="58"> signac-dashboard - data visualization for signac
+# <img src="https://raw.githubusercontent.com/glotzerlab/signac-dashboard/main/doc/images/palette-header.png" width="75" height="58"> signac-dashboard - data visualization for signac
 
 [![Affiliated with NumFOCUS](https://img.shields.io/badge/NumFOCUS-affiliated%20project-orange.svg?style=flat&colorA=E1523D&colorB=007D8A)](https://numfocus.org/sponsored-projects/affiliated-projects)
 [![PyPI](https://img.shields.io/pypi/v/signac-dashboard.svg)](https://pypi.org/project/signac-dashboard/)
 [![conda-forge](https://img.shields.io/conda/vn/conda-forge/signac-dashboard.svg?style=flat)](https://anaconda.org/conda-forge/signac-dashboard)
-![CircleCI](https://img.shields.io/circleci/project/github/glotzerlab/signac-dashboard/master.svg)
 [![RTD](https://img.shields.io/readthedocs/signac-dashboard.svg?style=flat)](https://docs.signac.io)
-[![License](https://img.shields.io/github/license/glotzerlab/signac-dashboard.svg)](https://github.com/glotzerlab/signac-dashboard/blob/master/LICENSE.txt)
+[![License](https://img.shields.io/github/license/glotzerlab/signac-dashboard.svg)](https://github.com/glotzerlab/signac-dashboard/blob/main/LICENSE.txt)
 [![PyPI-downloads](https://img.shields.io/pypi/dm/signac-dashboard.svg?style=flat)](https://pypistats.org/packages/signac-dashboard)
 [![Slack](https://img.shields.io/badge/Slack-chat%20support-brightgreen.svg?style=flat&logo=slack)](https://signac.io/slack-invite/)
 [![Twitter](https://img.shields.io/twitter/follow/signacdata?style=social)](https://twitter.com/signacdata)
@@ -33,7 +32,7 @@ The **signac-dashboard** package allows users to rapidly visualize and analyze d
 ## Installation
 
 The recommended installation method for **signac-dashboard** is through **conda** or **pip**.
-The software is tested for Python 3.7+ and is built for all major platforms.
+The software is tested for Python 3.8+ and is built for all major platforms.
 
 To install **signac-dashboard** *via* the [conda-forge](https://conda-forge.github.io/) channel, execute:
 
@@ -56,10 +55,11 @@ In an existing **signac** project directory, create a file `dashboard.py`:
 
 ```python
 from signac_dashboard import Dashboard
-from signac_dashboard.modules import StatepointList, DocumentList, ImageViewer
+from signac_dashboard.modules import StatepointList, DocumentList, ImageViewer, Schema
 
 if __name__ == '__main__':
-    modules = [StatepointList(), DocumentList(), ImageViewer()]
+    modules = [StatepointList(), DocumentList(), ImageViewer(context="JobContext"),
+               ImageViewer(context="ProjectContext"), Schema()]
     Dashboard(modules=modules).main()
 ```
 

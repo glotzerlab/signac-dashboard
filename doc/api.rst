@@ -42,6 +42,7 @@ Dashboard Modules
     modules.ImageViewer
     modules.IPythonDisplay
     modules.Notes
+    modules.Schema
     modules.StatepointList
     modules.TextDisplay
     modules.VideoViewer

@@ -1,4 +1,4 @@
-# Copyright (c) 2019 The Regents of the University of Michigan
+# Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 import sys
@@ -16,11 +16,8 @@ def main():
         print("No signac project could be found in the current directory.")
         sys.exit(1)
 
-    modules = []
     # Initialize a new Dashboard using essential modules
-    modules.append(StatepointList())
-    modules.append(DocumentList())
-    modules.append(ImageViewer())
+    modules = [StatepointList(), DocumentList(), ImageViewer()]
     Dashboard(modules=modules, project=project).main()
 
 

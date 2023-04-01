@@ -1,4 +1,4 @@
-# Copyright (c) 2019 The Regents of the University of Michigan
+# Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 
@@ -7,16 +7,19 @@ import inspect
 import json
 import logging
 import os
+import secrets
 import shlex
 import sys
 import warnings
 from functools import lru_cache
+from itertools import groupby
 from numbers import Real
 
+import flask_login
 import jinja2
 import natsort
 import signac
-from flask import Flask, flash, g, render_template, request, session, url_for
+from flask import Flask, flash, g, redirect, render_template, request, session, url_for
 from flask_assets import Bundle, Environment
 from flask_turbolinks import turbolinks
 from watchdog.events import FileSystemEventHandler
@@ -36,9 +39,20 @@ class _FileSystemEventHandler(FileSystemEventHandler):
 
     def on_modified(self, event):
         if os.path.realpath(event.src_path) == os.path.realpath(
-            self.dashboard.project.workspace()
+            self.dashboard.project.workspace
         ):
             self.dashboard.update_cache()
+
+
+class User(flask_login.UserMixin):
+    """User class for flask_login.
+
+    The default implementation of `UserMixin` assumes that all instantiated User
+    classes are active and logged in.
+    """
+
+    def __init__(self, id):
+        self.id = id
 
 
 class Dashboard:
@@ -59,7 +73,12 @@ class Dashboard:
       :py:class:`werkzeug.middleware.profiler.ProfilerMiddleware` if
       :code:`True` (default: :code:`False`).
     - **PER_PAGE**: Maximum number of jobs to show per page
-      (default: 25).
+      (default: 24).
+    - **CARDS_PER_ROW**: Cards to show per row in the desktop view. Must be a
+      factor of 12 (default: 3).
+    - **ACCESS_TOKEN**: The access token required to login to the dashboard.
+      Set to :code:`None` to disable authentication (not recommended on multi-user
+      systems).
     - **SECRET_KEY**: This must be specified to run via WSGI with multiple
       workers, so that sessions remain intact. See the
       `Flask docs <http://flask.pocoo.org/docs/1.0/config/#SECRET_KEY>`_
@@ -67,7 +86,7 @@ class Dashboard:
     - **ALLOW_WHERE**: If True, search queries can include :code:`$where`
       statements, which potentially allows arbitrary code execution from user
       input. *Caution:* This should only be enabled in trusted environments,
-      never on a publicly-accessible server (default: False).
+      never on a publicly-accessible server (default: :code:`False`).
 
     :param config: Configuration dictionary (default: :code:`{}`).
     :type config: dict
@@ -88,12 +107,78 @@ class Dashboard:
 
         self.event_handler = _FileSystemEventHandler(self)
         self.observer = Observer()
-        self.observer.schedule(self.event_handler, self.project.workspace())
+        self.observer.schedule(self.event_handler, self.project.workspace)
 
-        self._prepare()
+        # Prepare this dashboard instance to run.
+
+        # Set configuration defaults
+        self.config.setdefault("HOST", "localhost")
+        self.config.setdefault("DEBUG", False)
+        self.config.setdefault("PORT", 8888)
+        self.config.setdefault("PAGINATION", True)
+        self.config.setdefault("PER_PAGE", 24)
+        self.config.setdefault("CARDS_PER_ROW", 3)
+        if 12 % self.config["CARDS_PER_ROW"] != 0:
+            raise ValueError(
+                "The value of CARDS_PER_ROW must be a factor of 12. Got "
+                f"{self.config['CARDS_PER_ROW']}."
+            )
+
+        self.config.setdefault("ACCESS_TOKEN", secrets.token_urlsafe())
+
+        # Create and configure the Flask application
+        self.app = self._create_app(self.config)
+
+        # Initialize the login manager
+        self.login_manager = flask_login.LoginManager()
+        self.login_manager.init_app(self.app)
+
+        @self.login_manager.user_loader
+        def user_loader(identifier):
+            if self.config["ACCESS_TOKEN"] is None:
+                return User("None")
+
+            if secrets.compare_digest(identifier, self.config["ACCESS_TOKEN"]):
+                return User(identifier)
+
+            return None
+
+        @self.login_manager.request_loader
+        def load_user_from_request(request):
+            if self.config["ACCESS_TOKEN"] is None:
+                return User("None")
+
+            return None
+
+        # Add assets and routes
+        self.assets = self._create_assets()
+        self._register_routes()
+
+        # Add module assets and routes
+        self._module_assets = []
+        for module in self.modules:
+            try:
+                module.register(self)
+            except Exception as e:
+                logger.error(f"Error while registering {module.name} module: {e}")
+                logger.error(f"Removing module {module.name} from dashboard.")
+                self.modules.remove(module)
+
+        # Clear dashboard and project caches.
+        self.update_cache()
+
+        # Group modules to track enabled state
+        def keyfunc(module):
+            return module.context
+
+        grouped = groupby(sorted(self.modules, key=keyfunc), key=keyfunc)
+        modules_by_context = {}
+        for context_key, context_group in grouped:
+            modules_by_context[context_key] = [m for m in context_group]
+        self._modules_by_context = modules_by_context
 
     def _create_app(self, config={}):
-        """Creates a Flask application.
+        """Create a Flask application.
 
         :param config: Dictionary of configuration parameters.
         """
@@ -124,9 +209,9 @@ class Dashboard:
         # The paths in DASHBOARD_PATHS give the preferred order of template
         # loading
         loader_list = []
-        for dashpath in list(app.config.get("DASHBOARD_PATHS", [])):
-            logger.warning(f"Adding '{dashpath}' to dashboard paths.")
-            loader_list.append(jinja2.FileSystemLoader(dashpath + "/templates"))
+        for dash_path in list(app.config.get("DASHBOARD_PATHS", [])):
+            logger.warning(f"Adding '{dash_path}' to dashboard paths.")
+            loader_list.append(jinja2.FileSystemLoader(dash_path + "/templates"))
 
         # The default loader goes last and is overridden by any custom paths
         loader_list.append(app.jinja_loader)
@@ -139,7 +224,6 @@ class Dashboard:
 
     def _create_assets(self):
         """Add assets for inclusion in the dashboard HTML."""
-
         assets = Environment(self.app)
         # jQuery is served as a standalone file
         jquery = Bundle("js/jquery-*.min.js", output="gen/jquery.min.js")
@@ -171,47 +255,21 @@ class Dashboard:
         """
         self._module_assets.append(asset)
 
-    def _prepare(self):
-        """Prepare this dashboard instance to run."""
-
-        # Set configuration defaults and save to the project document
-        self.config.setdefault("PAGINATION", True)
-        self.config.setdefault("PER_PAGE", 25)
-
-        # Create and configure the Flask application
-        self.app = self._create_app(self.config)
-
-        # Add assets and routes
-        self.assets = self._create_assets()
-        self._register_routes()
-
-        # Add module assets and routes
-        self._module_assets = []
-        for module in self.modules:
-            try:
-                module.register(self)
-            except Exception as e:
-                logger.error(f"Error while registering {module.name} module: {e}")
-                logger.error(f"Removing module {module.name} from dashboard.")
-                self.modules.remove(module)
-
-        # Clear dashboard and project caches.
-        self.update_cache()
-
     def run(self, *args, **kwargs):
-        """Runs the dashboard webserver.
+        """Run the dashboard webserver.
 
         Use :py:meth:`~.main` instead of this method for the command-line
         interface. Arguments to this function are passed directly to
         :py:meth:`flask.Flask.run`.
         """
-        host = self.config.get("HOST", "localhost")
-        port = self.config.get("PORT", 8888)
+        host = self.config["HOST"]
+        port = self.config["PORT"]
+        debug = self.config["DEBUG"]
         max_retries = 5
 
         for _ in range(max_retries):
             try:
-                self.app.run(host, port, *args, **kwargs)
+                self.app.run(host=host, port=port, debug=debug, *args, **kwargs)
                 break
             except OSError as e:
                 logger.warning(e)
@@ -219,12 +277,12 @@ class Dashboard:
                     port += 1
                 pass
 
-    @lru_cache()
+    @lru_cache
     def _schema_variables(self):
         schema = self.project.detect_schema(exclude_const=True)
         return [key for key in schema]
 
-    @lru_cache()
+    @lru_cache
     def _project_min_len_unique_id(self):
         return self.project.min_len_unique_id()
 
@@ -235,7 +293,7 @@ class Dashboard:
         (but verbose) form of the job state point, based on the project schema.
 
         :param job: The job being titled.
-        :type job: :py:class:`signac.contrib.job.Job`
+        :type job: :py:class:`signac.job.Job`
         :returns: Title to be displayed.
         :rtype: str
         """
@@ -273,7 +331,7 @@ class Dashboard:
         minimal unique substring of the job id.
 
         :param job: The job being subtitled.
-        :type job: :py:class:`signac.contrib.job.Job`
+        :type job: :py:class:`signac.job.Job`
         :returns: Subtitle to be displayed.
         :rtype: str
         """
@@ -288,14 +346,14 @@ class Dashboard:
         strings or tuples of properties that should be used to sort.
 
         :param job: The job being sorted.
-        :type job: :py:class:`signac.contrib.job.Job`
+        :type job: :py:class:`signac.job.Job`
         :returns: Key for sorting.
         :rtype: any comparable type
         """
         key = natsort.natsort_keygen(key=self.job_title, alg=natsort.REAL)
         return key(job)
 
-    @lru_cache()
+    @lru_cache
     def _get_all_jobs(self):
         return sorted(self.project.find_jobs(), key=self.job_sorter)
 
@@ -310,11 +368,6 @@ class Dashboard:
             )
             raise RuntimeError("ALLOW_WHERE must be enabled for this query.")
 
-        querytype = "statepoint"
-        if query[:4] == "doc:":
-            query = query[4:]
-            querytype = "document"
-
         try:
             if query is None:
                 f = None
@@ -323,12 +376,9 @@ class Dashboard:
                     f = json.loads(query)
                 except json.JSONDecodeError:
                     query = shlex.split(query)
-                    f = signac.contrib.filterparse.parse_filter_arg(query)
+                    f = signac.filterparse.parse_filter_arg(query)
                     flash(f"Search string interpreted as '{json.dumps(f)}'.")
-            if querytype == "document":
-                jobs = self.project.find_jobs(doc_filter=f)
-            else:
-                jobs = self.project.find_jobs(filter=f)
+            jobs = self.project.find_jobs(filter=f)
             return sorted(jobs, key=lambda job: self.job_sorter(job))
         except json.JSONDecodeError as error:
             flash(
@@ -373,20 +423,45 @@ class Dashboard:
                 )
         return pagination
 
+    def _setup_enabled_module_indices(self):
+        enabled_module_indices = {}
+        for context_name, context_modules in self._modules_by_context.items():
+            enabled_module_indices[context_name] = [
+                i for i, m in enumerate(context_modules) if m.enabled
+            ]
+        return enabled_module_indices
+
     def _render_job_view(self, *args, **kwargs):
         g.active_page = "jobs"
+        session["context"] = "JobContext"
+        session.setdefault(
+            "enabled_module_indices", self._setup_enabled_module_indices()
+        )
         view_mode = request.args.get("view", kwargs.get("default_view", "list"))
         if view_mode == "grid":
             if (
-                "enabled_modules" in session
-                and len(session.get("enabled_modules", [])) == 0
+                len(session.get("enabled_module_indices", {}).get("JobContext", []))
+                == 0
             ):
-                flash("No modules are enabled.", "info")
+                flash("No modules for the JobContext are enabled.", "info")
             return render_template("jobs_grid.html", *args, **kwargs)
         elif view_mode == "list":
             return render_template("jobs_list.html", *args, **kwargs)
         else:
             return self._render_error(ValueError(f"Invalid view mode: {view_mode}"))
+
+    def _render_project_view(self, *args, **kwargs):
+        g.active_page = "project"
+        session["context"] = "ProjectContext"
+        session.setdefault(
+            "enabled_module_indices", self._setup_enabled_module_indices()
+        )
+        if (
+            len(session.get("enabled_module_indices", {}).get("ProjectContext", []))
+            == 0
+        ):
+            flash("No modules for the ProjectContext are enabled.", "info")
+        return render_template("project_info.html", *args, **kwargs)
 
     def _render_error(self, error):
         if isinstance(error, Exception):
@@ -401,9 +476,9 @@ class Dashboard:
         return [self._job_details(job) for job in list(jobs)]
 
     def add_url(
-        self, import_name, url_rules=[], import_file="signac_dashboard", **options
+        self, import_name, url_rules=[], import_file="signac_dashboard", **kwargs
     ):
-        """Add a route to the dashboard.
+        r"""Add a route to the dashboard.
 
         This method allows custom view functions to be triggered for specified
         routes. These view functions are imported lazily, when their route
@@ -443,20 +518,21 @@ class Dashboard:
         :param import_file: The module from which to import (default:
             :code:`'signac_dashboard'`).
         :type import_file: str
-        :param \\**options: Additional options to pass to
+        :param \\**kwargs: Additional keyword arguments to pass to
             :py:meth:`flask.Flask.add_url_rule`.
         """
         if import_file is not None:
             import_name = import_file + "." + import_name
+        view = LazyView(dashboard=self, import_name=import_name)
         for url_rule in url_rules:
             self.app.add_url_rule(
                 rule=url_rule,
-                view_func=LazyView(dashboard=self, import_name=import_name),
-                **options,
+                view_func=view,
+                **kwargs,
             )
 
     def _register_routes(self):
-        """Registers routes with the Flask application.
+        """Register routes with the Flask application.
 
         This method configures context processors, templates, and sets up
         routes for a basic Dashboard instance. Additionally, routes declared by
@@ -472,17 +548,17 @@ class Dashboard:
 
         @dashboard.app.context_processor
         def injections():
+            # inject new variables into the template context
             session.setdefault(
-                "enabled_modules",
-                [i for i in range(len(self.modules)) if self.modules[i].enabled],
+                "enabled_module_indices", self._setup_enabled_module_indices()
             )
             return {
                 "APP_NAME": "signac-dashboard",
                 "APP_VERSION": __version__,
-                "PROJECT_NAME": self.project.config["project"],
-                "PROJECT_DIR": self.project.config["project_dir"],
+                "CARDS_PER_ROW": self.config["CARDS_PER_ROW"],
                 "modules": self.modules,
-                "enabled_modules": session["enabled_modules"],
+                "modules_by_context": self._modules_by_context,
+                "enabled_module_indices": session["enabled_module_indices"],
                 "module_assets": self._module_assets,
             }
 
@@ -504,16 +580,36 @@ class Dashboard:
         def page_not_found(error):
             return self._render_error(str(error))
 
+        @dashboard.login_manager.unauthorized_handler
+        def unauthorized_handler():
+            return self._render_error("Access token is required.")
+
+        @dashboard.app.route("/login")
+        def login():
+            provided_token = request.args.get("token")
+            if provided_token == self.config["ACCESS_TOKEN"]:
+                user = User(provided_token)
+                flask_login.login_user(user)
+                return redirect("/")
+
+            return self._render_error("Invalid token")
+
         @dashboard.app.route("/favicon.ico")
+        @flask_login.login_required
         def favicon():
             return url_for("static", filename="favicon.ico")
 
+        # These routes are protected within the LazyView utility class
         self.add_url("views.home", ["/"])
         self.add_url("views.settings", ["/settings"])
         self.add_url("views.search", ["/search"])
+        self.add_url("views.project_info", ["/project/"])
         self.add_url("views.jobs_list", ["/jobs/"])
         self.add_url("views.show_job", ["/jobs/<jobid>"])
-        self.add_url("views.get_file", ["/jobs/<jobid>/file/<path:filename>"])
+        self.add_url(
+            "views.get_file",
+            ["/jobs/<jobid>/file/<path:filename>", "/project/file/<path:filename>"],
+        )
         self.add_url("views.change_modules", ["/modules"], methods=["POST"])
 
     def update_cache(self):
@@ -542,8 +638,8 @@ class Dashboard:
         """Call the dashboard as a WSGI application."""
         return self.app(environ, start_response)
 
-    def main(self):
-        """Runs the command line interface.
+    def main(self, command_args=None):
+        """Run the command line interface.
 
         Call this function to use signac-dashboard from its command line
         interface. For example, save this script as :code:`dashboard.py`:
@@ -563,7 +659,13 @@ class Dashboard:
         .. code-block:: bash
 
             python dashboard.py run
+
+        :param command_args: List of CLI arguments to pass, e.g.
+            ``["--debug", "--port", "8889"]`` (default: None).
+        :type command_args: list
         """
+        if command_args is not None and len(command_args) == 0:
+            command_args = None
 
         def _run(args):
             kwargs = vars(args)
@@ -573,6 +675,14 @@ class Dashboard:
                 self.config["PORT"] = kwargs.pop("port")
             self.config["PROFILE"] = kwargs.pop("profile")
             self.config["DEBUG"] = kwargs.pop("debug")
+
+            if self.config["ACCESS_TOKEN"] is not None:
+                print(
+                    f"To access this server, connect to: "
+                    f"http://{self.config['HOST']}:{self.config['PORT']}/"
+                    f"login?token={self.config['ACCESS_TOKEN']}"
+                )
+
             self.run()
 
         parser = argparse.ArgumentParser(
@@ -616,7 +726,7 @@ class Dashboard:
             print("signac-dashboard", __version__)
             sys.exit(0)
 
-        args = parser.parse_args()
+        args = parser.parse_args(command_args)
 
         if args.debug:
             logger.setLevel(logging.DEBUG)
