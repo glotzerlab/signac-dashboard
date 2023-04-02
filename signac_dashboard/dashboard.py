@@ -703,9 +703,9 @@ class Dashboard:
 
             if self.config["ACCESS_TOKEN"] is not None:
                 print(
-                    f"To access this server, connect to:\n"
+                    f"To access this server, connect to:\n\n"
                     f"http://{self.config['HOST']}:{self.config['PORT']}/"
-                    f"login?token={self.config['ACCESS_TOKEN']}"
+                    f"login?token={self.config['ACCESS_TOKEN']}\n"
                 )
 
             self.run()
