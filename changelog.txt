@@ -7,6 +7,14 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.5
 ===========
 
+[0.5.1] -- 2023-xx-xx
+---------------------
+
+Added
++++++
+
+- Login page that redirects back to current URL (#160, #181).
+
 [0.5.0] -- 2023-03-30
 ---------------------
 
