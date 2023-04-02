@@ -81,6 +81,7 @@ class IPythonDisplay(Module):
         rendered with IPython's :code:`HTMLFormatter`.
     :type contents: callable
     """
+
     _supported_contexts = {"JobContext"}
 
     def __init__(
