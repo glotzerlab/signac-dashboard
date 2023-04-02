@@ -589,19 +589,35 @@ class Dashboard:
 
         @dashboard.app.route("/login", methods=["GET", "POST"])
         def login():
-            if request.method == "GET":
-                provided_token = request.args.get("token")
-            elif request.method == "POST":
-                provided_token = request.form["token"]
-            else:
-                provided_token = None
+            redirect_url = session.pop("redirect_url", "/")
+            print("redirect url", redirect_url)
+            if flask_login.current_user.is_authenticated:
+                # in case the user goes to the login page via browser history
+                return redirect(redirect_url)
+
+            provided_token = request.args.get("token") # None if not given
+            if request.method == "POST":
+                provided_token = request.form.get("token")
+
             if provided_token == self.config["ACCESS_TOKEN"]:
                 user = User(provided_token)
                 flask_login.login_user(user)
-                redirect_url = session.pop("redirect_url", "/")
+                # logs user in and goes to page they were on
                 return redirect(redirect_url)
+
             else:
-                return render_template("login.html")
+                if provided_token is None:
+                    # First time visiting page, so don't display error.
+                    return render_template("login.html")
+                flash("Incorrect token", 'danger')
+                if request.method == "GET":
+                    return redirect("/login")
+                elif request.method == "POST":
+                    if redirect_url == '/':
+                        redirect_url = '/login'
+                    return redirect(redirect_url)
+                else:
+                    return render_template("login.html")
 
         @dashboard.app.route("/favicon.ico")
         @flask_login.login_required
