@@ -41,6 +41,10 @@ class DashboardTestCase(unittest.TestCase):
         response = str(rv.get_data())
         assert "Logged out" in response
 
+        rv = self.test_client.get("/jobs/7f9fb369851609ce9cb91404549393f3")
+        response = str(rv.get_data())
+        assert "Logged out" in response
+
         # login
         self.test_client.get("/login?token=test", follow_redirects=True)
 
