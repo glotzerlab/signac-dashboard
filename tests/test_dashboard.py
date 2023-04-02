@@ -45,13 +45,13 @@ class DashboardTestCase(unittest.TestCase):
         response = str(rv.get_data())
         assert "Logged out" in response
 
-        # login
-        self.test_client.get("/login?token=test", follow_redirects=True)
-
-    def test_invalid_token(self):
         rv = self.test_client.get("/login?token=error", follow_redirects=True)
         response = str(rv.get_data())
         assert "Logged out" in response
+        assert "Incorrect token" in response
+
+        # login
+        self.test_client.get("/login?token=test", follow_redirects=True)
 
     def test_get_project(self):
         rv = self.test_client.get("/project/", follow_redirects=True)
