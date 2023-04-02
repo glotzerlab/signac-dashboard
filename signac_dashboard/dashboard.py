@@ -582,17 +582,26 @@ class Dashboard:
 
         @dashboard.login_manager.unauthorized_handler
         def unauthorized_handler():
-            return self._render_error("Access token is required.")
+            request_url = request.url
+            if "module" not in request_url:
+                session['redirect_url'] = request_url
+            return render_template('login.html')
 
-        @dashboard.app.route("/login")
+        @dashboard.app.route("/login", methods = ['GET', 'POST'])
         def login():
-            provided_token = request.args.get("token")
+            if request.method == 'GET':
+                provided_token = request.args.get("token")
+            elif request.method == 'POST':
+                provided_token = request.form['token']
+            else:
+                provided_token = None
             if provided_token == self.config["ACCESS_TOKEN"]:
                 user = User(provided_token)
                 flask_login.login_user(user)
-                return redirect("/")
-
-            return self._render_error("Invalid token")
+                redirect_url = session.pop('redirect_url', '/')
+                return redirect(redirect_url)
+            else:
+                return render_template('login.html')
 
         @dashboard.app.route("/favicon.ico")
         @flask_login.login_required
@@ -678,7 +687,7 @@ class Dashboard:
 
             if self.config["ACCESS_TOKEN"] is not None:
                 print(
-                    f"To access this server, connect to: "
+                    f"To access this server, connect to:\n"
                     f"http://{self.config['HOST']}:{self.config['PORT']}/"
                     f"login?token={self.config['ACCESS_TOKEN']}"
                 )

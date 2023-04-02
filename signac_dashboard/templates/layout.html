@@ -118,6 +118,7 @@
                     </div>
                     <div class="navbar-menu" id="dashboard-menu">
                         <div class="navbar-start">
+                            {% block searchbar %}
                             <div class="navbar-item">
                                 <form action="{{ url_for('search') }}" method="GET" id="searchform">
                                     <div class="field has-addons searchbox">
@@ -132,6 +133,7 @@
                                     </div>
                                 </form>
                             </div>
+                            {% endblock searchbar %}
                             {% for href, id, name, icon in menu.content %}
                             <a href="{{ href | e }}" class="navbar-item is-hidden-tablet{% if id == g.active_page %} is-active{% endif %}">
                                 {{ name }}
