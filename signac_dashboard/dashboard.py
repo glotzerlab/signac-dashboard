@@ -595,7 +595,7 @@ class Dashboard:
                 # in case the user goes to the login page via browser history
                 return redirect(redirect_url)
 
-            provided_token = request.args.get("token") # None if not given
+            provided_token = request.args.get("token")  # None if not given
             if request.method == "POST":
                 provided_token = request.form.get("token")
 
@@ -609,12 +609,12 @@ class Dashboard:
                 if provided_token is None:
                     # First time visiting page, so don't display error.
                     return render_template("login.html")
-                flash("Incorrect token", 'danger')
+                flash("Incorrect token", "danger")
                 if request.method == "GET":
                     return redirect("/login")
                 elif request.method == "POST":
-                    if redirect_url == '/':
-                        redirect_url = '/login'
+                    if redirect_url == "/":
+                        redirect_url = "/login"
                     return redirect(redirect_url)
                 else:
                     return render_template("login.html")
