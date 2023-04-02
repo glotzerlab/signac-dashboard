@@ -584,24 +584,24 @@ class Dashboard:
         def unauthorized_handler():
             request_url = request.url
             if "module" not in request_url:
-                session['redirect_url'] = request_url
-            return render_template('login.html')
+                session["redirect_url"] = request_url
+            return render_template("login.html")
 
-        @dashboard.app.route("/login", methods = ['GET', 'POST'])
+        @dashboard.app.route("/login", methods=["GET", "POST"])
         def login():
-            if request.method == 'GET':
+            if request.method == "GET":
                 provided_token = request.args.get("token")
-            elif request.method == 'POST':
-                provided_token = request.form['token']
+            elif request.method == "POST":
+                provided_token = request.form["token"]
             else:
                 provided_token = None
             if provided_token == self.config["ACCESS_TOKEN"]:
                 user = User(provided_token)
                 flask_login.login_user(user)
-                redirect_url = session.pop('redirect_url', '/')
+                redirect_url = session.pop("redirect_url", "/")
                 return redirect(redirect_url)
             else:
-                return render_template('login.html')
+                return render_template("login.html")
 
         @dashboard.app.route("/favicon.ico")
         @flask_login.login_required
