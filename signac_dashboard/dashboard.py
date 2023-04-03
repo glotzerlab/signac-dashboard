@@ -30,7 +30,7 @@ from .pagination import Pagination
 from .util import LazyView
 from .version import __version__
 
-from .modules import DocumentEditor
+from .modules import DocumentEditor, StatepointEditor
 
 logger = logging.getLogger(__name__)
 
@@ -179,7 +179,12 @@ class Dashboard:
             modules_by_context[context_key] = [m for m in context_group]
         self._modules_by_context = modules_by_context
 
-        self._creator_modules = [DocumentEditor()] # todo add StatepointEditor()
+        se = StatepointEditor()
+        self._creator_modules = [se, DocumentEditor()]
+        se.register(self)
+        # todo figure out route clashes for initializing DocumentEditor again
+        # for module in self._creator_modules:
+        #     module.register(self)
 
     def _create_app(self, config={}):
         """Create a Flask application.
@@ -456,10 +461,7 @@ class Dashboard:
 
     def _render_job_creator(self, *args, **kwargs):
         g.active_page = "creator"
-        session["context"] = "JobContext"
-        session.setdefault(
-            "enabled_module_indices", self._setup_enabled_module_indices()
-        )
+        session["context"] = "JobInit"
         return render_template("job_creator.html", *args, **kwargs)
 
     def _render_project_view(self, *args, **kwargs):
@@ -619,7 +621,7 @@ class Dashboard:
         self.add_url("views.project_info", ["/project/"])
         self.add_url("views.jobs_list", ["/jobs/"])
         self.add_url("views.show_job", ["/jobs/<jobid>"])
-        self.add_url("views.init_job", ["/job/create"], methods=["GET", "POST"])
+        self.add_url("views.init_job", ["/job/init"], methods=["GET", "POST"])
         self.add_url("views.edit_job", ["/job/editor"], methods=["GET", "POST"])
         self.add_url(
             "views.get_file",

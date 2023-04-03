@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block title %}Job creator{% endblock %}
+{% block subtitle %}Edit the state point and document{% endblock %}
+{% block view_options %}{% endblock %}
+{% block module_selector %}{% endblock %}
+{% block searchbar %}{% endblock %}
+
+{% block panels %}
+<div class="column is-12 box">
+{% for module in creator_modules %}
+
+  {% for card in module.get_cards(g.job) %}
+
+<div class="column is-6-desktop is-full-mobile">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-title card-header-dashboard">
+        {{ card.name }}
+      </div>
+    </div>
+    <div class="card-content">
+      {{ card.content | safe }}
+    </div>
+  </div>
+</div>
+  {% endfor %}
+{% endfor %}
+
+<form method="POST" action="/job/init">
+  <button type="submit" class="block button is-primary">Create job</button>
+</form>
+</div>
+{% endblock panels %}

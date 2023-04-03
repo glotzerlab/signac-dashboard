@@ -6,6 +6,7 @@ from .image_viewer import ImageViewer
 from .notes import Notes
 from .schema import Schema
 from .statepoint_list import StatepointList
+from .statepoint_editor import StatepointEditor
 from .text_display import TextDisplay
 from .video_viewer import VideoViewer
 
@@ -18,6 +19,7 @@ __all__ = [
     "Notes",
     "Schema",
     "StatepointList",
+    "StatepointEditor",
     "TextDisplay",
     "VideoViewer",
 ]
