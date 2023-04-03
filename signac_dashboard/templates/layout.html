@@ -16,7 +16,7 @@
         <meta name="viewport" content="width=device-width">
         <meta name="viewport" content="initial-scale=1.0">
         <title>
-            {% block title %}Page Title{% endblock %}{% if self.subtitle() %} - {% block subtitle %}{% endblock %}{% else %}{{ APP_NAME }}{% endif %}
+            {% if self.title() %}{% block title %}Page Title{% endblock %} - {% endif %}{% if self.subtitle() %}{% block subtitle %}{% endblock %}{% else %}{{ APP_NAME }}{% endif %}
         </title>
         {% endblock %}
         {%- assets "jquery" %}

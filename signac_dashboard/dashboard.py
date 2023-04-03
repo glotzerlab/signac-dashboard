@@ -594,9 +594,10 @@ class Dashboard:
                 # in case the user goes to the login page via browser history
                 return redirect(redirect_url)
 
-            provided_token = request.args.get("token")  # None if not given
             if request.method == "POST":
                 provided_token = request.form.get("token")
+            else:
+                provided_token = request.args.get("token")  # None if not given
 
             if provided_token == self.config["ACCESS_TOKEN"]:
                 # Log the user in and redirect to the previous page (if applicable)
