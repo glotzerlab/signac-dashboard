@@ -14,6 +14,8 @@ from flask import (
     url_for,
 )
 
+from ast import literal_eval
+
 
 def home(dashboard):
     return redirect(url_for("project_info"))
@@ -69,10 +71,17 @@ def show_job(dashboard, jobid):
         g.subtitle = g.jobs[0]["subtitle"]
         return dashboard._render_job_view(default_view="grid")
 
-def init_job(dashboard, statepoint={}):
+def init_job(dashboard):
+    if request.method == "GET":
+        statepoint = request.args.get("statepoint")
+    elif request.method == "POST":
+        statepoint = request.form.get("statepoint")
+    if statepoint is None:
+        statepoint = {}
+    statepoint = literal_eval(statepoint)
     project = dashboard.project
     job = project.open_job(statepoint)
-    #job.init()
+    job.init()
     # todo: somehow the job is getting initialized even without calling job.init()
     print("new job id", job.id)
     if job in project:
@@ -81,7 +90,14 @@ def init_job(dashboard, statepoint={}):
         flash("Initialized this job.", "success")
     return redirect(url_for('show_job', jobid=job.id))
 
-def edit_job(dashboard, statepoint={}):
+def edit_job(dashboard):
+    if request.method == "GET":
+        statepoint = request.args.get("statepoint")
+    elif request.method == "POST":
+        statepoint = request.form.get("statepoint")
+    if statepoint is None:
+        statepoint = {}
+    statepoint = literal_eval(statepoint)
     project = dashboard.project
     job = project.open_job(statepoint)
     g.job = job
