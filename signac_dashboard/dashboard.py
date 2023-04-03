@@ -599,15 +599,15 @@ class Dashboard:
                 provided_token = request.form.get("token")
 
             if provided_token == self.config["ACCESS_TOKEN"]:
+                # Log the user in and redirect to the previous page (if applicable)
                 user = User(provided_token)
                 flask_login.login_user(user)
-                # Log the user in and redirect to the previous page (if applicable)
                 return redirect(redirect_url)
 
+            elif provided_token is None:
+                # First time visiting page, so don't display error.
+                return render_template("login.html")
             else:
-                if provided_token is None:
-                    # First time visiting page, so don't display error.
-                    return render_template("login.html")
                 flash("Incorrect token", "danger")
                 if request.method == "GET":
                     return redirect("/login")
