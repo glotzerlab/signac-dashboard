@@ -590,7 +590,6 @@ class Dashboard:
         @dashboard.app.route("/login", methods=["GET", "POST"])
         def login():
             redirect_url = session.pop("redirect_url", "/")
-            print("redirect url", redirect_url)
             if flask_login.current_user.is_authenticated:
                 # in case the user goes to the login page via browser history
                 return redirect(redirect_url)
@@ -602,7 +601,7 @@ class Dashboard:
             if provided_token == self.config["ACCESS_TOKEN"]:
                 user = User(provided_token)
                 flask_login.login_user(user)
-                # logs user in and goes to page they were on
+                # Log the user in and redirect to the previous page (if applicable)
                 return redirect(redirect_url)
 
             else:
