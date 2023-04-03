@@ -2,7 +2,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 import flask_login
-from flask import abort, Blueprint, render_template, request
+from flask import abort, Blueprint, render_template, request, redirect, url_for
 from jinja2.exceptions import TemplateNotFound
 from markupsafe import escape
 
@@ -68,6 +68,7 @@ class Notes(Module):
             jobid = request.form.get("jobid")
             job = dashboard.project.open_job(id=jobid)
             job.document[self.key] = note_text
+            #return redirect(url_for("show_job", jobid=jobid))
             return "Saved."
 
         @self.note_blueprint.route("/<path:filename>")
@@ -91,3 +92,8 @@ class Notes(Module):
 
         # register Blueprint
         dashboard.app.register_blueprint(self.note_blueprint)
+        print(self.note_blueprint.root_path)
+        # print(dashboard.app.url_map)
+        for name, blueprint in dashboard.app.blueprints.items():
+            print(f"Blueprint: {name}, URL prefix: {blueprint.url_prefix}")
+
