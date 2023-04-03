@@ -62,13 +62,30 @@ def show_job(dashboard, jobid):
     try:
         job = dashboard.project.open_job(id=jobid)
     except KeyError:
-        abort(404, "The job id requested could not be found.")
+        abort(404, f"The job id {jobid} requested could not be found.")
     else:
         g.jobs = dashboard._get_job_details([job])
         g.title = g.jobs[0]["title"]
         g.subtitle = g.jobs[0]["subtitle"]
         return dashboard._render_job_view(default_view="grid")
 
+def init_job(dashboard, statepoint={}):
+    project = dashboard.project
+    job = project.open_job(statepoint)
+    #job.init()
+    # todo: somehow the job is getting initialized even without calling job.init()
+    print("new job id", job.id)
+    if job in project:
+        flash("Job already existed.", "primary")
+    else:
+        flash("Initialized this job.", "success")
+    return redirect(url_for('show_job', jobid=job.id))
+
+def edit_job(dashboard, statepoint={}):
+    project = dashboard.project
+    job = project.open_job(statepoint)
+    g.job = job
+    return dashboard._render_job_creator()
 
 def get_file(dashboard, filename, jobid=None):
     if jobid is not None:

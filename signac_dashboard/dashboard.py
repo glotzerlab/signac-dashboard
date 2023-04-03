@@ -30,6 +30,8 @@ from .pagination import Pagination
 from .util import LazyView
 from .version import __version__
 
+from .modules import DocumentEditor
+
 logger = logging.getLogger(__name__)
 
 
@@ -176,6 +178,8 @@ class Dashboard:
         for context_key, context_group in grouped:
             modules_by_context[context_key] = [m for m in context_group]
         self._modules_by_context = modules_by_context
+
+        self._creator_modules = [DocumentEditor()] # todo add StatepointEditor()
 
     def _create_app(self, config={}):
         """Create a Flask application.
@@ -450,6 +454,14 @@ class Dashboard:
         else:
             return self._render_error(ValueError(f"Invalid view mode: {view_mode}"))
 
+    def _render_job_creator(self, *args, **kwargs):
+        g.active_page = "creator"
+        session["context"] = "JobContext"
+        session.setdefault(
+            "enabled_module_indices", self._setup_enabled_module_indices()
+        )
+        return render_template("job_creator.html", *args, **kwargs)
+
     def _render_project_view(self, *args, **kwargs):
         g.active_page = "project"
         session["context"] = "ProjectContext"
@@ -558,6 +570,7 @@ class Dashboard:
                 "CARDS_PER_ROW": self.config["CARDS_PER_ROW"],
                 "modules": self.modules,
                 "modules_by_context": self._modules_by_context,
+                "creator_modules": self._creator_modules,
                 "enabled_module_indices": session["enabled_module_indices"],
                 "module_assets": self._module_assets,
             }
@@ -606,6 +619,8 @@ class Dashboard:
         self.add_url("views.project_info", ["/project/"])
         self.add_url("views.jobs_list", ["/jobs/"])
         self.add_url("views.show_job", ["/jobs/<jobid>"])
+        self.add_url("views.init_job", ["/job/create"], methods=["GET", "POST"])
+        self.add_url("views.edit_job", ["/job/editor"], methods=["GET", "POST"])
         self.add_url(
             "views.get_file",
             ["/jobs/<jobid>/file/<path:filename>", "/project/file/<path:filename>"],
