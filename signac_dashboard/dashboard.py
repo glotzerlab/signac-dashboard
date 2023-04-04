@@ -295,6 +295,14 @@ class Dashboard:
     def _project_min_len_unique_id(self):
         return self.project.min_len_unique_id()
 
+    def job_init(self, statepoint: dict):
+        """Override this method for additional actions."""
+
+        project = self.project
+        job = project.open_job(statepoint)
+        job.init()
+        return job
+
     def job_title(self, job):
         """Override this method for custom job titles.
 

@@ -78,13 +78,11 @@ def init_job(dashboard):
         statepoint = request.form.get("statepoint")
     if statepoint is None:
         statepoint = {}
-    statepoint = literal_eval(statepoint)
-    project = dashboard.project
-    job = project.open_job(statepoint)
-    job.init()
-    # todo: somehow the job is getting initialized even without calling job.init()
-    print("new job id", job.id)
-    if job in project:
+    else:
+        statepoint = literal_eval(statepoint)
+    job = dashboard.job_init(statepoint)
+
+    if job in dashboard.project:
         flash("Job already existed.", "primary")
     else:
         flash("Initialized this job.", "success")
