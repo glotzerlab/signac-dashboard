@@ -80,24 +80,35 @@ def init_job(dashboard):
         statepoint = {}
     else:
         statepoint = literal_eval(statepoint)
+
     job = dashboard.job_init(statepoint)
 
     if job in dashboard.project:
         flash("Job already existed.", "primary")
     else:
         flash("Initialized this job.", "success")
+
     return redirect(url_for('show_job', jobid=job.id))
 
 def edit_job(dashboard):
     if request.method == "GET":
         statepoint = request.args.get("statepoint")
+        doc = request.args.get("document")
     elif request.method == "POST":
         statepoint = request.form.get("statepoint")
+        doc = request.form.get("document")
     if statepoint is None:
         statepoint = {}
-    statepoint = literal_eval(statepoint)
+    else:
+        statepoint = literal_eval(statepoint)
+    if doc is None:
+        doc = {}
+    else:
+        doc = literal_eval(doc)
+
     project = dashboard.project
     job = project.open_job(statepoint)
+    print(job)
     g.job = job
     return dashboard._render_job_creator()
 
