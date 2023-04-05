@@ -617,6 +617,11 @@ class Dashboard:
                         redirect_url = "/login"
                     return redirect(redirect_url)
 
+        @dashboard.app.route("/logout")
+        def logout():
+            flask_login.logout_user()
+            return redirect(url_for('login'))
+
         @dashboard.app.route("/favicon.ico")
         @flask_login.login_required
         def favicon():

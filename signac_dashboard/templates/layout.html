@@ -99,9 +99,17 @@
                         </a>
                         {% endif %}
                         {% endblock module_selector %}
-                        {% endblock sidebar %}
-                        {% endif %}
                     </div>
+                    {% block logout_link %}
+                    <div class="menu is-fixed-bottom">
+                    <a href="{{ url_for('logout') }}" class="item">
+                      <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+                      <span class="name">Log out</span>
+                    </a>
+                    </div>
+                    {% endblock logout_link %}
+                    {% endblock sidebar %}
+                    {% endif %} {# if self.modules() #}
                 </div>
             </aside>
             <div class="column is-10">
@@ -147,6 +155,11 @@
                             {% if self.module_selector() %}
                             <div class="navbar-item is-hidden-tablet">
                                 {{ self.module_selector() }}
+                            </div>
+                            {% endif %}
+                            {% if self.logout_link() %}
+                            <div class="navbar-item is-hidden-tablet">
+                                {{ self.logout_link() }}
                             </div>
                             {% endif %}
                         </div>
