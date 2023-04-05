@@ -124,6 +124,7 @@ class DashboardTestCase(unittest.TestCase):
         if self.dashboard.config.get("ACCESS_TOKEN") is not None:
             assert "Log-in required" in response
 
+
 class NoModulesTestCase(DashboardTestCase):
     """Test the inherited tests and cases without any modules."""
 
