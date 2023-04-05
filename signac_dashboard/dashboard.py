@@ -616,8 +616,6 @@ class Dashboard:
                     if redirect_url == "/":
                         redirect_url = "/login"
                     return redirect(redirect_url)
-                else:
-                    return render_template("login.html")
 
         @dashboard.app.route("/favicon.ico")
         @flask_login.login_required
