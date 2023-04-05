@@ -11,5 +11,7 @@ The use of the :code:`$where` operation in searches is disabled by default and m
 
 By default, **signac-dashboard** generates an access token that is required to login to the web page.
 This protects your data from access by other users on multi-user systems.
+To authenticate with the same token each time, set ``ACCESS_TOKEN`` and ``SECRET_KEY`` in the ``config`` dictionary.
+
 To disable authentication, set ``ACCESS_TOKEN`` to ``None`` in the ``config`` dictionary.
 To protect your data, disable authentication only when running on a dedicated host that provides additional layers of security.
