@@ -92,7 +92,7 @@
                                 <input class="button is-primary" type="submit" value="Update">
                             </form>
                             {% endif %} {# if g.active_page... #}
-                            
+
                         {% else %} {# modules_by_context[context] | length <= 0 #}
                         <a href="https://docs.signac.io/projects/dashboard/en/latest/api.html#dashboard-modules">
                             No modules. Add some!
@@ -151,7 +151,7 @@
                                 {{ self.module_selector() }}
                             </div>
                             {% endif %}
-                        
+
                         <div class="navbar-end">
                           <div class="navbar-item">
                             {% block logout_link %}
