@@ -100,14 +100,6 @@
                         {% endif %}
                         {% endblock module_selector %}
                     </div>
-                    {% block logout_link %}
-                    <div class="menu">
-                    <a href="{{ url_for('logout') }}" class="item">
-                      <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
-                      <span class="name">Log out</span>
-                    </a>
-                    </div>
-                    {% endblock logout_link %}
                     {% endblock sidebar %}
                     {% endif %} {# if self.modules() #}
                 </div>
@@ -124,7 +116,7 @@
                             <span aria-hidden="true"></span>
                         </a>
                     </div>
-                    <div class="navbar-menu" id="dashboard-menu">
+                    <div class="navbar-menu is-justify-content-space-between" id="dashboard-menu">
                         <div class="navbar-start">
                             {% block searchbar %}
                             <div class="navbar-item">
@@ -142,6 +134,18 @@
                                 </form>
                             </div>
                             {% endblock searchbar %}
+                        </div> <!--end navbar start -->
+                        <div class="navbar-end">
+                          <div class="navbar-item">
+                            {% block logout_link %}
+                            <a href="{{ url_for('logout') }}" class="item">
+                              <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+                              <span class="name">Log out</span>
+                            </a>
+                            {% endblock logout_link %}
+                          </div>
+                        </div>
+                            
                             {% for href, id, name, icon in menu.content %}
                             <a href="{{ href | e }}" class="navbar-item is-hidden-tablet{% if id == g.active_page %} is-active{% endif %}">
                                 {{ name }}
@@ -157,12 +161,13 @@
                                 {{ self.module_selector() }}
                             </div>
                             {% endif %}
-                            {% if self.logout_link() %}
-                            <div class="navbar-item is-hidden-tablet">
-                                {{ self.logout_link() }}
-                            </div>
-                            {% endif %}
-                        </div>
+
+                            <!-- {% if self.logout_link() %} -->
+                            <!-- <div class="navbar-item is-hidden-tablet"> -->
+                            <!--     {{ self.logout_link() }} -->
+                            <!-- </div> -->
+                            <!-- {% endif %} -->
+                        <!-- </div> -->
                     </div>
                 </nav>
                 <section class="page-heading">
