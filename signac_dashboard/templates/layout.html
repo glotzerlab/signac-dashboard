@@ -70,7 +70,7 @@
                         {% set context = {"jobs": "JobContext", "project": "ProjectContext"}[g.active_page] %}
                         <div class="box sidebar-box">
                             <h2 class="subtitle is-4">Modules</h2>
-                            {% if modules_by_context[context] | length > 0 %}
+                        {% if modules_by_context[context] | length > 0 %}
                             {% if g.active_page == "jobs" and g.jobs | length > 0  or g.active_page == "project" %}
                             <form action="{{ url_for('change_modules') }}" method="POST">
                                 <input type="hidden" name="redirect" value="{{ request.url }}">
@@ -91,15 +91,16 @@
                                 {% endfor %}
                                 <input class="button is-primary" type="submit" value="Update">
                             </form>
-                        </div>
-                        {% endif %}
-                        {% else %}
+                            {% endif %} {# if g.active_page... #}
+                            
+                        {% else %} {# modules_by_context[context] | length <= 0 #}
                         <a href="https://docs.signac.io/projects/dashboard/en/latest/api.html#dashboard-modules">
                             No modules. Add some!
                         </a>
-                        {% endif %}
+                        {% endif %} {# that checks number of enabled modules #}
+                        </div>
                         {% endblock module_selector %}
-                    </div>
+                    </div> <!-- end sidebar -->
                     {% endblock sidebar %}
                     {% endif %} {# if self.modules() #}
                 </div>
