@@ -36,7 +36,7 @@
     </head>
     <body>
         <div class="columns">
-            <aside class="column is-2 aside hero is-fullheight is-hidden-mobile">
+            <aside class="column is-2 aside hero is-fullheight is-hidden-touch">
                 <div>
                     <div class="menu">
                         {% for href, id, name, icon in menu.content %}
@@ -105,7 +105,7 @@
                     {% endif %} {# if self.modules() #}
                 </div>
             </aside>
-            <div class="column is-10">
+            <div class="column is-12-tablet">
                 <nav class="navbar is-light" role="navigation" aria-label="main navigation" id="top">
                     <div class="navbar-brand">
                         <div class="navbar-item">
@@ -137,17 +137,17 @@
                             {% endblock searchbar %}
                         </div> <!--end navbar start -->
                             {% for href, id, name, icon in menu.content %}
-                            <a href="{{ href | e }}" class="navbar-item is-hidden-tablet{% if id == g.active_page %} is-active{% endif %}">
+                            <a href="{{ href | e }}" class="navbar-item is-hidden-desktop{% if id == g.active_page %} is-active{% endif %}">
                                 {{ name }}
                             </a>
                             {% endfor %}
                             {% if self.view_options() %}
-                            <div class="navbar-item is-hidden-tablet">
+                            <div class="navbar-item is-hidden-desktop">
                                 {{ self.view_options() }}
                             </div>
                             {% endif %}
                             {% if self.module_selector() %}
-                            <div class="navbar-item is-hidden-tablet">
+                            <div class="navbar-item is-hidden-desktop">
                                 {{ self.module_selector() }}
                             </div>
                             {% endif %}
