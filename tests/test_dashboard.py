@@ -37,17 +37,14 @@ class DashboardTestCase(unittest.TestCase):
         self.addCleanup(shutil.rmtree, self._tmp_dir)
 
         # Test logged out content
-        rv = self.test_client.get("/", follow_redirects=True)
-        response = str(rv.get_data())
-        assert "Logged out" in response
+        response = self.get_response("/")
+        assert "Log-in required" in response
 
-        rv = self.test_client.get("/jobs/7f9fb369851609ce9cb91404549393f3")
-        response = str(rv.get_data())
-        assert "Logged out" in response
+        response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
+        assert "Log-in required" in response
 
-        rv = self.test_client.get("/login?token=error", follow_redirects=True)
-        response = str(rv.get_data())
-        assert "Logged out" in response
+        response = self.get_response("/login?token=error")
+        assert "Log-in required" in response
         assert "Incorrect token" in response
 
         # login
@@ -121,6 +118,11 @@ class DashboardTestCase(unittest.TestCase):
         """Make sure View panel is not shown when on a single job page."""
         response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
         assert "Views" not in response
+
+    def test_logout(self):
+        response = self.get_response("/logout")
+        if self.dashboard.config.get("ACCESS_TOKEN") is not None:
+            assert "Log-in required" in response
 
 
 class NoModulesTestCase(DashboardTestCase):

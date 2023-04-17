@@ -4,10 +4,10 @@ Changes
 
 The **signac-dashboard** package follows `semantic versioning <https://semver.org/>`_.
 
-Version 0.5
+Version 0.6
 ===========
 
-[0.5.1] -- 2023-xx-xx
+[0.6.0] -- 2023-xx-xx
 ---------------------
 
 Added

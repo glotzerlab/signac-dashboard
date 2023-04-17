@@ -16,7 +16,7 @@
         <meta name="viewport" content="width=device-width">
         <meta name="viewport" content="initial-scale=1.0">
         <title>
-            {% block title %}Page Title{% endblock %}{% if self.subtitle() %} - {% block subtitle %}{% endblock %}{% else %}{{ APP_NAME }}{% endif %}
+            {% if self.title() %}{% block title %}Page Title{% endblock %} - {% endif %}{% if self.subtitle() %}{% block subtitle %}{% endblock %}{% else %}{{ APP_NAME }}{% endif %}
         </title>
         {% endblock %}
         {%- assets "jquery" %}
@@ -70,7 +70,7 @@
                         {% set context = {"jobs": "JobContext", "project": "ProjectContext"}[g.active_page] %}
                         <div class="box sidebar-box">
                             <h2 class="subtitle is-4">Modules</h2>
-                            {% if modules_by_context[context] | length > 0 %}
+                        {% if modules_by_context[context] | length > 0 %}
                             {% if g.active_page == "jobs" and g.jobs | length > 0  or g.active_page == "project" %}
                             <form action="{{ url_for('change_modules') }}" method="POST">
                                 <input type="hidden" name="redirect" value="{{ request.url }}">
@@ -91,17 +91,18 @@
                                 {% endfor %}
                                 <input class="button is-primary" type="submit" value="Update">
                             </form>
-                        </div>
-                        {% endif %}
-                        {% else %}
+                            {% endif %} {# if g.active_page... #}
+
+                        {% else %} {# modules_by_context[context] | length <= 0 #}
                         <a href="https://docs.signac.io/projects/dashboard/en/latest/api.html#dashboard-modules">
                             No modules. Add some!
                         </a>
-                        {% endif %}
+                        {% endif %} {# that checks number of enabled modules #}
+                        </div>
                         {% endblock module_selector %}
-                        {% endblock sidebar %}
-                        {% endif %}
-                    </div>
+                    </div> <!-- end sidebar -->
+                    {% endblock sidebar %}
+                    {% endif %} {# if self.modules() #}
                 </div>
             </aside>
             <div class="column is-10">
@@ -116,7 +117,7 @@
                             <span aria-hidden="true"></span>
                         </a>
                     </div>
-                    <div class="navbar-menu" id="dashboard-menu">
+                    <div class="navbar-menu is-justify-content-space-between" id="dashboard-menu">
                         <div class="navbar-start">
                             {% block searchbar %}
                             <div class="navbar-item">
@@ -134,6 +135,7 @@
                                 </form>
                             </div>
                             {% endblock searchbar %}
+                        </div> <!--end navbar start -->
                             {% for href, id, name, icon in menu.content %}
                             <a href="{{ href | e }}" class="navbar-item is-hidden-tablet{% if id == g.active_page %} is-active{% endif %}">
                                 {{ name }}
@@ -149,6 +151,16 @@
                                 {{ self.module_selector() }}
                             </div>
                             {% endif %}
+
+                        <div class="navbar-end">
+                          <div class="navbar-item">
+                            {% block logout_link %}
+                            <a href="{{ url_for('logout') }}" class="item">
+                              <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+                              <span class="name">Log out</span>
+                            </a>
+                            {% endblock logout_link %}
+                          </div>
                         </div>
                     </div>
                 </nav>

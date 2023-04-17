@@ -590,25 +590,25 @@ class Dashboard:
         @dashboard.app.route("/login", methods=["GET", "POST"])
         def login():
             redirect_url = session.pop("redirect_url", "/")
-            print("redirect url", redirect_url)
             if flask_login.current_user.is_authenticated:
                 # in case the user goes to the login page via browser history
                 return redirect(redirect_url)
 
-            provided_token = request.args.get("token")  # None if not given
             if request.method == "POST":
                 provided_token = request.form.get("token")
+            else:
+                provided_token = request.args.get("token")  # None if not given
 
             if provided_token == self.config["ACCESS_TOKEN"]:
+                # Log the user in and redirect to the previous page (if applicable)
                 user = User(provided_token)
                 flask_login.login_user(user)
-                # logs user in and goes to page they were on
                 return redirect(redirect_url)
 
+            elif provided_token is None:
+                # First time visiting page, so don't display error.
+                return render_template("login.html")
             else:
-                if provided_token is None:
-                    # First time visiting page, so don't display error.
-                    return render_template("login.html")
                 flash("Incorrect token", "danger")
                 if request.method == "GET":
                     return redirect("/login")
@@ -616,8 +616,11 @@ class Dashboard:
                     if redirect_url == "/":
                         redirect_url = "/login"
                     return redirect(redirect_url)
-                else:
-                    return render_template("login.html")
+
+        @dashboard.app.route("/logout")
+        def logout():
+            flask_login.logout_user()
+            return redirect(url_for("login"))
 
         @dashboard.app.route("/favicon.ico")
         @flask_login.login_required
