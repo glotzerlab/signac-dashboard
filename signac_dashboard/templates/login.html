@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}{% endblock %}
+{% block subtitle %}{% endblock %}
+{% block view_options %}{% endblock %}
+{% block module_selector %}{% endblock %}
+{% block searchbar %}{% endblock %}
+{% block logout_link %}{% endblock %}
+
+{% block panels %}
+
+<div class="container column is-8">
+  <form method="POST" action="/login" class="box">
+    <h4 class="title">Log-in required</h4>
+    <input class="block input is-medium" type="password" id="token" name="token" placeholder="Token">
+    <button type="submit" class="block button is-primary">Log in</button>
+    <p>
+      Token authentication is enabled. Copy the token from the command line where signac-dashboard was run.
+    </p>
+    <p>
+      <a href="https://docs.signac.io/projects/dashboard/en/latest/security.html" target="_blank">Read more about security in signac-dashboard.</a>
+    </p>
+  </form>
+</div>
+
+{% endblock panels %}
