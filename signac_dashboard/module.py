@@ -1,6 +1,8 @@
 # Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
+from typing import Set
+
 from flask import render_template
 
 
@@ -27,7 +29,7 @@ class Module:
     **Custom modules:** User-defined module classes should be a subclass of
     :py:class:`~.Module` and define the function :py:meth:`~.Module.get_cards`.
     Template files are written in HTML/Jinja-compatible syntax.
-    See `this example <https://github.com/glotzerlab/signac-dashboard/tree/master/examples/custom-modules>`_.
+    See `this example <https://github.com/glotzerlab/signac-dashboard/tree/main/examples/custom-modules>`_.
 
     **Module assets:** If a module requires scripts or stylesheets to be
     included for its content to be rendered, they must be handled by the
@@ -65,7 +67,7 @@ class Module:
 
     """  # noqa: E501
 
-    _supported_contexts = {}
+    _supported_contexts: Set[str] = set()
 
     def __init__(self, name, context, template, enabled=True):
         self._module = self.__module__
@@ -83,7 +85,7 @@ class Module:
         self.enabled = enabled
 
     def get_cards(self):
-        """Returns this module's cards for rendering.
+        """Return this module's cards for rendering.
 
         The cards are returned as a list of dictionaries with keys
         :code:`'name'` and :code:`'content'`.
@@ -106,10 +108,10 @@ class Module:
         self.enabled = not self.enabled
 
     def register(self, dashboard):
-        """Callback to register this module with the dashboard.
+        """Register this module with the dashboard.
 
-        This callback should register assets and routes, as well as any other
-        initialization that accesses or modifies the dashboard.
+        This method is a callback used to register assets and routes, as well
+        as any other initialization that accesses or modifies the dashboard.
 
         :param dashboard: The dashboard invoking this callback method.
         :type dashboard: :py:class:`signac_dashboard.Dashboard`

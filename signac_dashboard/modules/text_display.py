@@ -32,7 +32,7 @@ class TextDisplay(Module):
     :param context: Supports :code:`'JobContext'` and :code:`'ProjectContext'`.
     :type context: str
     :param message: A callable accepting one argument of type
-        :py:class:`signac.contrib.job.Job` or :py:class:`signac.Project`
+        :py:class:`signac.job.Job` or :py:class:`signac.Project`
         and returning text or Markdown content.
     :type message: callable
     :param markdown: Enables Markdown rendering if True (default: :code:`False`).
@@ -49,7 +49,6 @@ class TextDisplay(Module):
         markdown=False,
         **kwargs,
     ):
-
         super().__init__(
             name=name,
             context=context,

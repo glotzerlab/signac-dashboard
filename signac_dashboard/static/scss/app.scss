@@ -12,69 +12,86 @@ body {
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
   height: 100%;
 }
+
 .button.is-success {
   background-color: #2EB398;
 }
+
 .aside {
   background-color: #354052;
   margin-right: -0.75rem;
 }
+
 .aside .menu {
   padding: 1.5rem 1.5rem 1.5rem 2rem;
   color: #6F7B7E;
 }
+
 .aside .title {
   color: #6F7B7E;
   font-size: 12px;
   font-weight: bold;
   text-transform: uppercase;
 }
+
 .aside .menu .item {
   display: block;
   padding: 10px 0;
   color: #6F7B7E;
 }
+
 .aside .menu .item.active {
   color: #F6F7F7;
 }
+
 .aside .menu .icon {
   font-size: 19px;
   padding-right: 30px;
 }
+
 .aside .menu .name {
   font-size: 16px;
   font-weight: bold;
 }
+
 .content {
   display: block;
   background-color: #fff;
   padding: 3rem 2rem;
 }
+
 .sidebar-content {
   padding: 1rem;
 }
+
 .page-heading {
   padding: 1rem 1.5rem;
 }
-section.section.panel {
+
+section.section {
   padding: 1rem 1.5rem;
 }
+
 .card {
   overflow-wrap: break-word;
   word-break: break-word;
 }
+
 .card-header-title.card-header-dashboard {
   display: block;
   background-color: whitesmoke;
   overflow-wrap: break-word;
   word-break: break-word;
 }
+
 .hero .tabs ul {
   border-bottom: 1px solid #d3d6db;
 }
+
 .modal, .modal-close {
   position: fixed; // Fixes bug where this is overwritten
 }
+
 .modal-button {
   cursor: pointer;
 }

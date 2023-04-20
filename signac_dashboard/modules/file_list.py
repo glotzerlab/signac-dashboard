@@ -28,7 +28,6 @@ class FileList(Module):
         prefix_jobid=True,
         **kwargs,
     ):
-
         super().__init__(
             name=name,
             context=context,

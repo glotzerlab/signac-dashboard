@@ -36,7 +36,6 @@ class Schema(Module):
         subset=None,
         **kwargs,
     ):
-
         super().__init__(
             name=name,
             context=context,

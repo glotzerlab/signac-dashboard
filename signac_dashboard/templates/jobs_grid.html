@@ -18,13 +18,13 @@
 
 {% block panels %}
 {% if num_enabled_modules <= 1 %}
-<section class="section panel">
+<section class="section">
     <div class="columns is-mobile is-multiline">
 {% endif %}
 {% for job_details in g.jobs %}
 {% set card_count = [] %}
 {% if num_enabled_modules > 1 %}
-<section class="section panel" id="{{ job_details.job._id }}">
+<section class="section" id="{{ job_details.job._id }}">
 {% endif %}
     {% if ( num_enabled_modules > 1 and g.jobs | length > 1 ) or ( g.jobs | length == 1 and query is defined ) %}
     <h4 class="title is-4">{{ job_details.title }}</h4>
