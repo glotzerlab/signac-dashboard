@@ -38,13 +38,13 @@ class DashboardTestCase(unittest.TestCase):
 
         # Test logged out content
         response = self.get_response("/")
-        assert "Log-in required" in response
+        assert "Login required" in response
 
         response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
-        assert "Log-in required" in response
+        assert "Login required" in response
 
         response = self.get_response("/login?token=error")
-        assert "Log-in required" in response
+        assert "Login required" in response
         assert "Incorrect token" in response
 
         # login
@@ -122,7 +122,7 @@ class DashboardTestCase(unittest.TestCase):
     def test_logout(self):
         response = self.get_response("/logout")
         if self.dashboard.config.get("ACCESS_TOKEN") is not None:
-            assert "Log-in required" in response
+            assert "Login required" in response
 
 
 class NoModulesTestCase(DashboardTestCase):
