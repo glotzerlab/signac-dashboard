@@ -8,7 +8,7 @@
       {% if previous_link is none %}
       <div class="button is-light is-primary" disabled>{{ previous_label }}</div>
       {% else %}
-      <a href="{{ previous_link }}" class = "button is-light is-primary">{{ previous_label }}</a>
+      <a href="{{ previous_link }}" class = "button is-light is-primary wrap-button-text">{{ previous_label }}</a>
       {% endif %}
     </td>
 
@@ -16,7 +16,7 @@
       {% if next_link is none %}
       <div class="button is-light is-primary" disabled>{{ next_label }}</div>
       {% else %}
-      <a href="{{ next_link }}" class = "button is-light is-primary">{{ next_label }}</a>
+      <a href="{{ next_link }}" class = "button is-light is-primary wrap-button-text">{{ next_label }}</a>
       {% endif %}
     </td>
   </tr>

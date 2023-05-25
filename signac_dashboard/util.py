@@ -8,7 +8,7 @@ from werkzeug.utils import cached_property, import_string
 
 
 def simplified_keys(project):
-    sps = list(project.find_statepoints())
+    sps = list(project.find_statepoints()) # todo: this is deprecated
     varied_keys = []
     for key in sps[0]:
         same_for_all = True  # This key has the same value for all statepoints
