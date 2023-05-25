@@ -4,7 +4,14 @@ from signac_dashboard.module import Module
 from signac_dashboard.util import escape_truncated_values
 
 class Navigator(Module):
-    """Displays links to related jobs."""
+    """Displays links to jobs differing in one state point parameter.
+
+    This module may not update if the signac project changes because the module
+    caches the project schema when the signac-dashboard launches.
+
+    :param context: Supports :code:`'JobContext`
+    :type context: str
+    """
 
     _supported_contexts = {"JobContext"}
 
@@ -27,11 +34,14 @@ class Navigator(Module):
         project = self._dashboard.project
 
         def link_label(key, other_val):
-            nearest = job.sp() # modifiable
-            nearest.update({key: other_val})
+            """Returns the url and label for the job with job.sp[key] == other_val."""
 
-            # Look only for exact matches in case of heterogeneous schema
-            other_job = project.open_job(nearest)
+            similar_sp = job.sp() # modifiable
+            similar_sp.update({key: other_val})
+
+            # Look only for exact matches of only changing one parameter
+            # in case of heterogeneous schema
+            other_job = project.open_job(similar_sp)
             if other_job in project:
                 link = url_for('show_job', jobid = other_job.id)
                 label = other_job.sp[key]
@@ -43,17 +53,14 @@ class Navigator(Module):
         nearby_jobs = dict()
         # for each parameter in the schema, find the next and previous job and get links to them
         for key, values in self._sorted_schema.items():
-            print("working on key", key)
 
             my_val = job.sp.get(key, None)
             if my_val is None:
-                print("Job didn't have this key")
+                # Possible if schema is heterogeneous
                 continue
 
-            # find position of my_val in schema values
             my_index = values.index(my_val)
-            print(f"my value {my_val} is at index {my_index} of {values}")
-            # search for the job that only has that one different
+
             if my_index >= 1:
                 prev_val = values[my_index - 1]
                 link, label = link_label(key, prev_val)
@@ -61,7 +68,6 @@ class Navigator(Module):
                 link = None
                 label = "beginning"
             prevlab = (link, label)
-            print("prev label", prevlab)
 
             if my_index <= len(values)-2:
                 next_val = values[my_index + 1]
@@ -70,7 +76,6 @@ class Navigator(Module):
                 link = None
                 label = "end"
             nextlab = (link, label)
-            print("next label", nextlab)
 
             if prevlab[0] is not None or nextlab[0] is not None:
                 nearby_jobs[key] = (prevlab, nextlab)
@@ -84,17 +89,18 @@ class Navigator(Module):
 
     def register(self, dashboard):
         """Sorts and caches non-constant schema values."""
-        print("Detecting schema for Navigator...")
         self._dashboard = dashboard
-        schema = dashboard.project.detect_schema(exclude_const = True)
-        print("...done")
 
+        # Tell user because this can take a long time
+        print("Detecting project schema for Navigator...", end="")
+        schema = dashboard.project.detect_schema(exclude_const = True)
+        print("done.")
         # turn dict of sets of lists ...into list of parameters
-        sortedSchema = dict()
+        sorted_schema = dict()
         for key, project_values in schema.items():
-            thisKeyValues = set()
+            this_key_vals = set()
             for typename in project_values.keys():
-                thisKeyValues.update(project_values[typename])
-            thisKeyValues = sorted(list(thisKeyValues))
-            sortedSchema[key] = thisKeyValues
-        self._sorted_schema = sortedSchema
+                this_key_vals.update(project_values[typename])
+            sorted_schema[key] = sorted(list(this_key_vals))
+        self._sorted_schema = sorted_schema
+
