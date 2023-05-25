@@ -3,6 +3,7 @@ from flask import render_template, url_for
 from signac_dashboard.module import Module
 from signac_dashboard.util import escape_truncated_values
 
+
 class Navigator(Module):
     """Displays links to jobs differing in one state point parameter.
 
@@ -17,18 +18,12 @@ class Navigator(Module):
 
     def __init__(
         self,
-        name = "Navigator",
-        context = "JobContext",
-        template = "cards/navigator.html",
-        **kwargs
+        name="Navigator",
+        context="JobContext",
+        template="cards/navigator.html",
+        **kwargs,
     ):
-        super().__init__(
-            name = name,
-            context=context,
-            template=template,
-            **kwargs
-        )
-
+        super().__init__(name=name, context=context, template=template, **kwargs)
 
     def get_cards(self, job):
         project = self._dashboard.project
@@ -36,14 +31,14 @@ class Navigator(Module):
         def link_label(key, other_val):
             """Returns the url and label for the job with job.sp[key] == other_val."""
 
-            similar_sp = job.sp() # modifiable
+            similar_sp = job.sp()  # modifiable
             similar_sp.update({key: other_val})
 
             # Look only for exact matches of only changing one parameter
             # in case of heterogeneous schema
             other_job = project.open_job(similar_sp)
             if other_job in project:
-                link = url_for('show_job', jobid = other_job.id)
+                link = url_for("show_job", jobid=other_job.id)
                 label = other_job.sp[key]
             else:
                 link = None
@@ -53,7 +48,6 @@ class Navigator(Module):
         nearby_jobs = dict()
         # for each parameter in the schema, find the next and previous job and get links to them
         for key, values in self._sorted_schema.items():
-
             my_val = job.sp.get(key, None)
             if my_val is None:
                 # Possible if schema is heterogeneous
@@ -69,7 +63,7 @@ class Navigator(Module):
                 label = "beginning"
             prevlab = (link, label)
 
-            if my_index <= len(values)-2:
+            if my_index <= len(values) - 2:
                 next_val = values[my_index + 1]
                 link, label = link_label(key, next_val)
             else:
@@ -83,7 +77,7 @@ class Navigator(Module):
         return [
             {
                 "name": self.name,
-                "content": render_template(self.template, job_nav = nearby_jobs.items()),
+                "content": render_template(self.template, job_nav=nearby_jobs.items()),
             }
         ]
 
@@ -93,7 +87,7 @@ class Navigator(Module):
 
         # Tell user because this can take a long time
         print("Detecting project schema for Navigator...", end="")
-        schema = dashboard.project.detect_schema(exclude_const = True)
+        schema = dashboard.project.detect_schema(exclude_const=True)
         print("done.")
         # turn dict of sets of lists ...into list of parameters
         sorted_schema = dict()
@@ -103,4 +97,3 @@ class Navigator(Module):
                 this_key_vals.update(project_values[typename])
             sorted_schema[key] = sorted(list(this_key_vals))
         self._sorted_schema = sorted_schema
-
