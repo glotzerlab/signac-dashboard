@@ -23,20 +23,21 @@ class Navigator(Module):
         )
 
 
-    
     def get_cards(self, job):
         project = self._dashboard.project
 
-        nearby_jobs = dict()
+        def link_label(key, other_val):
+            nearest = job.sp() # modifiable
+            nearest.update({key: other_val})
 
-        def link_label(job, key):
-            if job is not None:
-                if job.sp.get(key, None) is not None:
-                    link = url_for('show_job', jobid = job.id)
-                    label = job.sp[key]
+            # Look only for exact matches in case of heterogeneous schema
+            other_job = project.open_job(nearest)
+            if other_job in project:
+                link = url_for('show_job', jobid = other_job.id)
+                label = other_job.sp[key]
             else:
-                label = ""
-                link = ""
+                link = None
+                label = "no match"
             return link, label
 
         nearby_jobs = dict()
@@ -46,52 +47,27 @@ class Navigator(Module):
 
             my_val = job.sp.get(key, None)
             if my_val is None:
+                print("Job didn't have this key")
                 continue
 
-            # find position of my_val in list
+            # find position of my_val in schema values
             my_index = values.index(my_val)
             print(f"my value {my_val} is at index {my_index} of {values}")
             # search for the job that only has that one different
-            link = None
-            label = None
             if my_index >= 1:
                 prev_val = values[my_index - 1]
-
-                # function here of prev/next_val
-                nearest = job.sp()
-                nearest.update({key: prev_val})
-                prev_job = project.find_jobs(nearest)
-                l = len(prev_job)
-                print(f"found {l} jobs with previous value {prev_val}")
-                if l == 0:
-                    pass
-                elif l == 1:
-                    prev_job = next(iter(prev_job))  
-                    link, label = link_label(prev_job, key)
-                else:
-                    label = f"{l} options"
+                link, label = link_label(key, prev_val)
             else:
+                link = None
                 label = "beginning"
             prevlab = (link, label)
             print("prev label", prevlab)
 
-            link = None
-            label = None
             if my_index <= len(values)-2:
                 next_val = values[my_index + 1]
-                nearest = job.sp()
-                nearest.update({key: next_val})
-                next_job = project.find_jobs(nearest)
-                l = len(next_job)
-                print(f"found {l} jobs with next value {next_val}")
-                if l == 0:
-                    pass
-                elif l == 1:
-                    next_job = next(iter(next_job))
-                    link, label = link_label(next_job, key)
-                else:
-                    label = f"{l} options"
+                link, label = link_label(key, next_val)
             else:
+                link = None
                 label = "end"
             nextlab = (link, label)
             print("next label", nextlab)
@@ -107,7 +83,7 @@ class Navigator(Module):
         ]
 
     def register(self, dashboard):
-
+        """Sorts and caches non-constant schema values."""
         print("Detecting schema for Navigator...")
         self._dashboard = dashboard
         schema = dashboard.project.detect_schema(exclude_const = True)
