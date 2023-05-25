@@ -1,0 +1,24 @@
+<table class="table">
+  {% for key, ((plink, plabel), (nlink, nlabel)) in job_nav %}
+  <tr>
+    <th>
+      {{key}}
+    </th>
+    <td>
+      {% if plink is none%}
+      <div class="button is-light is-primary" disabled>{{plabel}}</div>
+      {% else %}
+      <a href="{{plink}}" class = "button is-light is-primary">{{plabel}}</a>
+      {% endif %}
+    </td>
+
+    <td>
+      {% if nlink is none%}
+      <div class="button is-light is-primary" disabled>{{nlabel}}</div>
+      {% else %}
+      <a href="{{nlink}}" class = "button is-light is-primary">{{nlabel}}</a>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
