@@ -32,11 +32,11 @@ class Navigator(Module):
             """Returns the url and label for the job with job.sp[key] == other_val."""
 
             similar_statepoint = job.statepoint()  # modifiable
-            similar_sp.update({key: other_val})
+            similar_statepoint.update({key: other_val})
 
             # Look only for exact matches of only changing one parameter
             # in case of heterogeneous schema
-            other_job = project.open_job(similar_sp)
+            other_job = project.open_job(similar_statepoint)
             if other_job in project:
                 link = url_for("show_job", jobid=other_job.id)
                 label = other_val
@@ -71,8 +71,8 @@ class Navigator(Module):
                 label = "end"
             next_label = (link, label)
 
-            if prevlab[0] is not None or nextlab[0] is not None:
-                nearby_jobs[key] = (prevlab, nextlab)
+            if previous_label[0] is not None or next_label[0] is not None:
+                nearby_jobs[key] = (previous_label, next_label)
 
         return [
             {
