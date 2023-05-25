@@ -10,7 +10,7 @@ class Navigator(Module):
     This module may not update if the signac project changes because the module
     caches the project schema when the signac-dashboard launches.
 
-    :param context: Supports :code:`'JobContext`
+    :param context: Supports :code:`'JobContext'`
     :type context: str
     """
 
@@ -31,7 +31,7 @@ class Navigator(Module):
         def link_label(key, other_val):
             """Returns the url and label for the job with job.sp[key] == other_val."""
 
-            similar_sp = job.sp()  # modifiable
+            similar_statepoint = job.statepoint()  # modifiable
             similar_sp.update({key: other_val})
 
             # Look only for exact matches of only changing one parameter
@@ -39,13 +39,13 @@ class Navigator(Module):
             other_job = project.open_job(similar_sp)
             if other_job in project:
                 link = url_for("show_job", jobid=other_job.id)
-                label = other_job.sp[key]
+                label = other_val
             else:
                 link = None
                 label = "no match"
             return link, label
 
-        nearby_jobs = dict()
+        nearby_jobs = {}
         # for each parameter in the schema, find the next and previous job and get links to them
         for key, values in self._sorted_schema.items():
             my_val = job.sp.get(key, None)
@@ -61,7 +61,7 @@ class Navigator(Module):
             else:
                 link = None
                 label = "beginning"
-            prevlab = (link, label)
+            previous_label = (link, label)
 
             if my_index <= len(values) - 2:
                 next_val = values[my_index + 1]
@@ -69,7 +69,7 @@ class Navigator(Module):
             else:
                 link = None
                 label = "end"
-            nextlab = (link, label)
+            next_label = (link, label)
 
             if prevlab[0] is not None or nextlab[0] is not None:
                 nearby_jobs[key] = (prevlab, nextlab)
@@ -90,7 +90,7 @@ class Navigator(Module):
         schema = dashboard.project.detect_schema(exclude_const=True)
         print("done.")
         # turn dict of sets of lists ...into list of parameters
-        sorted_schema = dict()
+        sorted_schema = {}
         for key, project_values in schema.items():
             this_key_vals = set()
             for typename in project_values.keys():

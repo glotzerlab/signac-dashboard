@@ -1,22 +1,22 @@
 <table class="table">
-  {% for key, ((plink, plabel), (nlink, nlabel)) in job_nav %}
+  {% for key, ((previous_link, previous_label), (next_link, next_label)) in job_nav %}
   <tr>
     <th>
-      {{key}}
+      {{ key }}
     </th>
     <td>
-      {% if plink is none%}
-      <div class="button is-light is-primary" disabled>{{plabel}}</div>
+      {% if previous_link is none %}
+      <div class="button is-light is-primary" disabled>{{ previous_label }}</div>
       {% else %}
-      <a href="{{plink}}" class = "button is-light is-primary">{{plabel}}</a>
+      <a href="{{ previous_link }}" class = "button is-light is-primary">{{ previous_label }}</a>
       {% endif %}
     </td>
 
     <td>
-      {% if nlink is none%}
-      <div class="button is-light is-primary" disabled>{{nlabel}}</div>
+      {% if next_link is none %}
+      <div class="button is-light is-primary" disabled>{{ next_label }}</div>
       {% else %}
-      <a href="{{nlink}}" class = "button is-light is-primary">{{nlabel}}</a>
+      <a href="{{ next_link }}" class = "button is-light is-primary">{{ next_label }}</a>
       {% endif %}
     </td>
   </tr>
