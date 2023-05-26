@@ -6,6 +6,7 @@ from signac_dashboard.util import escape_truncated_values
 class _DictPlaceholder:
     pass
 
+
 class Navigator(Module):
     """Displays links to jobs differing in one state point parameter.
 
@@ -27,25 +28,27 @@ class Navigator(Module):
     ):
         super().__init__(name=name, context=context, template=template, **kwargs)
 
+
+    def _link_label(self, job, project, key, other_val):
+        """Returns the url and label for the job with job.sp[key] == other_val."""
+
+        similar_statepoint = job.statepoint()  # modifiable
+        similar_statepoint.update({key: other_val})
+
+        # Look only for exact matches of only changing one parameter
+        # in case of heterogeneous schema
+        other_job = project.open_job(similar_statepoint)
+        if other_job in project:
+            link = url_for("show_job", jobid=other_job.id)
+            label = other_val
+        else:
+            link = None
+            label = "no match"
+        return link, label
+
+
     def get_cards(self, job):
         project = self._dashboard.project
-
-        def link_label(key, other_val):
-            """Returns the url and label for the job with job.sp[key] == other_val."""
-
-            similar_statepoint = job.statepoint()  # modifiable
-            similar_statepoint.update({key: other_val})
-
-            # Look only for exact matches of only changing one parameter
-            # in case of heterogeneous schema
-            other_job = project.open_job(similar_statepoint)
-            if other_job in project:
-                link = url_for("show_job", jobid=other_job.id)
-                label = other_val
-            else:
-                link = None
-                label = "no match"
-            return link, label
 
         nearby_jobs = {}
         # for each parameter in the schema, find the next and previous job and get links to them
@@ -59,7 +62,7 @@ class Navigator(Module):
 
             if index >= 1:
                 prev_val = values[index - 1]
-                link, label = link_label(key, prev_val)
+                link, label = self._link_label(job, project, key, prev_val)
             else:
                 link = None
                 label = "beginning"
@@ -67,7 +70,7 @@ class Navigator(Module):
 
             if index <= len(values) - 2:
                 next_val = values[index + 1]
-                link, label = link_label(key, next_val)
+                link, label = self._link_label(job, project, key, next_val)
             else:
                 link = None
                 label = "end"
