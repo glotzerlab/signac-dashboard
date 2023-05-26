@@ -42,7 +42,7 @@ class Navigator(Module):
             label = other_val
         else:
             link = None
-            label = "no match"
+            label = f"no match for {other_val}"
         return link, label
 
 
@@ -51,25 +51,35 @@ class Navigator(Module):
 
         nearby_jobs = {}
         # for each parameter in the schema, find the next and previous job and get links to them
-        for key, values in self._sorted_schema.items():
+        for key, schema_values in self._sorted_schema.items():
             my_val = job.sp.get(key, _DictPlaceholder)
             if my_val is _DictPlaceholder:
                 # Possible if schema is heterogeneous
                 continue
 
-            index = values.index(my_val)
+            value_index = schema_values.index(my_val)
 
-            if index >= 1:
-                prev_val = values[index - 1]
+            query_index = value_index - 1
+            while query_index >= 0:
+                prev_val = schema_values[query_index]
                 link, label = self._link_label(job, project, key, prev_val)
+                if link is None:
+                    query_index = query_index - 1
+                else:
+                    break
             else:
                 link = None
                 label = "beginning"
             previous_label = (link, label)
 
-            if index <= len(values) - 2:
-                next_val = values[index + 1]
+            query_index = value_index + 1
+            while query_index <= len(schema_values) - 1:
+                next_val = schema_values[query_index]
                 link, label = self._link_label(job, project, key, next_val)
+                if link is None:
+                    query_index = query_index + 1
+                else:
+                    break
             else:
                 link = None
                 label = "end"
@@ -86,7 +96,7 @@ class Navigator(Module):
         ]
 
     def register(self, dashboard):
-        """Sorts and caches non-constant schema values."""
+        """Sorts and caches non-constant schema schema_values."""
         self._dashboard = dashboard
 
         # Tell user because this can take a long time
