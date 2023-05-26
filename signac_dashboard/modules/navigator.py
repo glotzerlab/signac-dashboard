@@ -29,7 +29,7 @@ class Navigator(Module):
         name="Navigator",
         context="JobContext",
         template="cards/navigator.html",
-        max_chars = 6,
+        max_chars=6,
         **kwargs,
     ):
         super().__init__(name=name, context=context, template=template, **kwargs)
@@ -91,7 +91,10 @@ class Navigator(Module):
             next_label = (link, label)
 
             if previous_label[0] is not None or next_label[0] is not None:
-                nearby_jobs[key] = (abbr_value(value, self.max_chars), (previous_label, next_label))
+                nearby_jobs[key] = (
+                    abbr_value(value, self.max_chars),
+                    (previous_label, next_label),
+                )
 
         return [
             {
