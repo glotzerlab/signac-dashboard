@@ -1,5 +1,6 @@
-from flask import render_template, url_for
 from collections import OrderedDict
+
+from flask import render_template, url_for
 
 from signac_dashboard.module import Module
 
@@ -91,7 +92,7 @@ class Navigator(Module):
         return [
             {
                 "name": self.name,
-                "content": render_template(self.template, job_nav = nearby_jobs.items()),
+                "content": render_template(self.template, job_nav=nearby_jobs.items()),
             }
         ]
 
@@ -111,4 +112,6 @@ class Navigator(Module):
                 this_key_vals.update(project_values[typename])
             sorted_schema[key] = sorted(this_key_vals)
 
-        self._sorted_schema = OrderedDict(sorted(sorted_schema.items(), key=lambda t: t[0]))
+        self._sorted_schema = OrderedDict(
+            sorted(sorted_schema.items(), key=lambda t: t[0])
+        )
