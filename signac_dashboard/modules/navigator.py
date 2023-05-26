@@ -1,7 +1,6 @@
 from flask import render_template, url_for
 
 from signac_dashboard.module import Module
-from signac_dashboard.util import escape_truncated_values
 
 class _DictPlaceholder:
     pass
@@ -30,7 +29,7 @@ class Navigator(Module):
 
 
     def _link_label(self, job, project, key, other_val):
-        """Returns the url and label for the job with job.sp[key] == other_val."""
+        """Return the url and label for the job with job.sp[key] == other_val."""
 
         similar_statepoint = job.statepoint()  # modifiable
         similar_statepoint.update({key: other_val})
