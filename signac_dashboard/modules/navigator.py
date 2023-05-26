@@ -53,12 +53,12 @@ class Navigator(Module):
         nearby_jobs = {}
         # for each parameter in the schema, find the next and previous job and get links to them
         for key, schema_values in self._sorted_schema.items():
-            my_val = job.sp.get(key, _DictPlaceholder)
-            if my_val is _DictPlaceholder:
+            value = job.sp.get(key, _DictPlaceholder)
+            if value is _DictPlaceholder:
                 # Possible if schema is heterogeneous
                 continue
 
-            value_index = schema_values.index(my_val)
+            value_index = schema_values.index(value)
 
             query_index = value_index - 1
             while query_index >= 0:
@@ -87,12 +87,12 @@ class Navigator(Module):
             next_label = (link, label)
 
             if previous_label[0] is not None or next_label[0] is not None:
-                nearby_jobs[key] = (previous_label, next_label)
+                nearby_jobs[key] = (value, (previous_label, next_label))
 
         return [
             {
                 "name": self.name,
-                "content": render_template(self.template, job_nav=nearby_jobs.items()),
+                "content": render_template(self.template, job_nav = nearby_jobs.items()),
             }
         ]
 
