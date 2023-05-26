@@ -100,5 +100,5 @@ class Navigator(Module):
             this_key_vals = set()
             for typename in project_values.keys():
                 this_key_vals.update(project_values[typename])
-            sorted_schema[key] = sorted(list(this_key_vals))
+            sorted_schema[key] = sorted(this_key_vals)
         self._sorted_schema = sorted_schema
