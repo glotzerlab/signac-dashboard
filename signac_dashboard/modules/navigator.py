@@ -31,7 +31,6 @@ class Navigator(Module):
 
     def _link_label(self, job, project, key, other_val):
         """Return the url and label for the job with job.sp[key] == other_val."""
-
         similar_statepoint = job.statepoint()  # modifiable
         similar_statepoint.update({key: other_val})
 
