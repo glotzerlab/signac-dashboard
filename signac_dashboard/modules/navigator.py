@@ -3,6 +3,8 @@ from flask import render_template, url_for
 from signac_dashboard.module import Module
 from signac_dashboard.util import escape_truncated_values
 
+class _DictPlaceholder:
+    pass
 
 class Navigator(Module):
     """Displays links to jobs differing in one state point parameter.
@@ -48,23 +50,23 @@ class Navigator(Module):
         nearby_jobs = {}
         # for each parameter in the schema, find the next and previous job and get links to them
         for key, values in self._sorted_schema.items():
-            my_val = job.sp.get(key, None)
-            if my_val is None:
+            my_val = job.sp.get(key, _DictPlaceholder)
+            if my_val is _DictPlaceholder:
                 # Possible if schema is heterogeneous
                 continue
 
-            my_index = values.index(my_val)
+            index = values.index(my_val)
 
-            if my_index >= 1:
-                prev_val = values[my_index - 1]
+            if index >= 1:
+                prev_val = values[index - 1]
                 link, label = link_label(key, prev_val)
             else:
                 link = None
                 label = "beginning"
             previous_label = (link, label)
 
-            if my_index <= len(values) - 2:
-                next_val = values[my_index + 1]
+            if index <= len(values) - 2:
+                next_val = values[index + 1]
                 link, label = link_label(key, next_val)
             else:
                 link = None
