@@ -3,6 +3,7 @@ from collections import OrderedDict
 
 from signac_dashboard.module import Module
 
+
 class _DictPlaceholder:
     pass
 
@@ -28,7 +29,6 @@ class Navigator(Module):
     ):
         super().__init__(name=name, context=context, template=template, **kwargs)
 
-
     def _link_label(self, job, project, key, other_val):
         """Return the url and label for the job with job.sp[key] == other_val."""
 
@@ -45,7 +45,6 @@ class Navigator(Module):
             link = None
             label = f"no match for {other_val}"
         return link, label
-
 
     def get_cards(self, job):
         project = self._dashboard.project
