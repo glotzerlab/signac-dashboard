@@ -1,4 +1,5 @@
 from flask import render_template, url_for
+from collections import OrderedDict
 
 from signac_dashboard.module import Module
 
@@ -110,4 +111,5 @@ class Navigator(Module):
             for typename in project_values.keys():
                 this_key_vals.update(project_values[typename])
             sorted_schema[key] = sorted(this_key_vals)
-        self._sorted_schema = sorted_schema
+
+        self._sorted_schema = OrderedDict(sorted(sorted_schema.items(), key=lambda t: t[0]))
