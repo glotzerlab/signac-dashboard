@@ -21,7 +21,7 @@ def simplified_keys(project):
     return varied_keys
 
 
-def ellipsis_string(string, length=60):
+def ellipsis_truncate_middle(string, length=60):
     string = str(string)
     half = int(length / 2)
     if len(string) < length:
@@ -29,6 +29,18 @@ def ellipsis_string(string, length=60):
     else:
         return string[:half] + "..." + string[-half:]
 
+def ellipsis_truncate_end(string, length=60):
+    string = str(string)
+    if len(string) < length:
+        return string
+    else:
+        return string[:length] + "…"
+
+def abbr_value(val, max_chars):
+    if len(str(val)) > max_chars:
+        return f'<abbr title="{escape(val)}">{str(escape(ellipsis_truncate_end(val, length=max_chars)))}</abbr>'
+    else:
+        return escape(val)
 
 def escape_truncated_values(data, max_chars):
     """Truncate values in a dict to a maximum number of characters."""
@@ -36,7 +48,7 @@ def escape_truncated_values(data, max_chars):
         for key in data:
             if len(str(data[key])) > max_chars:
                 data[key] = (
-                    str(escape(ellipsis_string(data[key], length=max_chars)))
+                    str(escape(ellipsis_truncate_middle(data[key], length=max_chars)))
                     + " <em>[Truncated]</em>"
                 )
     else:

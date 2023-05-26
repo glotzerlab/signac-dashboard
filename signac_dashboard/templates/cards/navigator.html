@@ -14,21 +14,21 @@
   <tr>
     <td headers = "{{ key }} previous">
       {% if previous_link is none %}
-      <div class="button is-light is-primary" disabled>{{ previous_label }}</div>
+      <div class="button is-light is-primary" disabled>{{ previous_label | safe }}</div>
       {% else %}
-      <a href="{{ previous_link }}" class = "button is-light is-primary wrap-button-text">{{ previous_label }}</a>
+      <a href="{{ previous_link }}" class = "button is-light is-primary wrap-button-text">{{ previous_label | safe }}</a>
       {% endif %}
     </td>
 
     <td headers = "{{ key }} current">
-      {{ value }}
+      {{ value | safe }}
     </td>
 
     <td headers = "{{ key }} next">
       {% if next_link is none %}
-      <div class="button is-light is-primary" disabled>{{ next_label }}</div>
+      <div class="button is-light is-primary" disabled>{{ next_label  | safe }}</div>
       {% else %}
-      <a href="{{ next_link }}" class = "button is-light is-primary wrap-button-text">{{ next_label }}</a>
+      <a href="{{ next_link }}" class = "button is-light is-primary wrap-button-text">{{ next_label | safe }}</a>
       {% endif %}
     </td>
   </tr>

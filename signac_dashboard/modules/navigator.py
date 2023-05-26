@@ -3,6 +3,7 @@ from collections import OrderedDict
 from flask import render_template, url_for
 
 from signac_dashboard.module import Module
+from signac_dashboard.util import abbr_value
 
 
 class _DictPlaceholder:
@@ -17,6 +18,8 @@ class Navigator(Module):
 
     :param context: Supports :code:`'JobContext'`
     :type context: str
+    :param max_chars: Truncation length of state point values (default: 6).
+    :type max_chars: int
     """
 
     _supported_contexts = {"JobContext"}
@@ -26,9 +29,11 @@ class Navigator(Module):
         name="Navigator",
         context="JobContext",
         template="cards/navigator.html",
+        max_chars = 6,
         **kwargs,
     ):
         super().__init__(name=name, context=context, template=template, **kwargs)
+        self.max_chars = max_chars
 
     def _link_label(self, job, project, key, other_val):
         """Return the url and label for the job with job.sp[key] == other_val."""
@@ -40,7 +45,7 @@ class Navigator(Module):
         other_job = project.open_job(similar_statepoint)
         if other_job in project:
             link = url_for("show_job", jobid=other_job.id)
-            label = other_val
+            label = abbr_value(other_val, self.max_chars)
         else:
             link = None
             label = f"no match for {other_val}"
@@ -86,7 +91,7 @@ class Navigator(Module):
             next_label = (link, label)
 
             if previous_label[0] is not None or next_label[0] is not None:
-                nearby_jobs[key] = (value, (previous_label, next_label))
+                nearby_jobs[key] = (abbr_value(value, self.max_chars), (previous_label, next_label))
 
         return [
             {
