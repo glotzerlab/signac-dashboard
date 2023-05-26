@@ -23,6 +23,20 @@ body {
     text-align: left;
 }
 
+.table td, .table th {
+    vertical-align: middle;
+}
+
+.table.is-borderless td, .table.is-borderless th {
+ border: 0;
+}
+
+.table .span {
+    padding-bottom: 0px;
+    padding-top: 0.5em;
+    vertical-align: bottom;
+}
+
 .aside {
   background-color: #354052;
   margin-right: -0.75rem;
