@@ -14,21 +14,21 @@
   <tr>
     <td headers = "{{ key }} previous">
       {% if previous_link is none %}
-      <div class="button is-light is-primary" disabled>{{ previous_label | safe }}</div>
+      <div class="button is-light is-primary is-fullwidth" disabled>{{ previous_label | safe }}</div>
       {% else %}
-      <a href="{{ previous_link }}" class = "button is-light is-primary wrap-button-text">{{ previous_label | safe }}</a>
+      <a href="{{ previous_link }}" class = "button is-light is-primary wrap-button-text is-fullwidth">{{ previous_label | safe }}</a>
       {% endif %}
     </td>
 
-    <td headers = "{{ key }} current">
+    <td headers = "{{ key }} current" class="has-text-centered">
       {{ value | safe }}
     </td>
 
     <td headers = "{{ key }} next">
       {% if next_link is none %}
-      <div class="button is-light is-primary" disabled>{{ next_label  | safe }}</div>
+      <div class="button is-light is-primary is-fullwidth" disabled>{{ next_label  | safe }}</div>
       {% else %}
-      <a href="{{ next_link }}" class = "button is-light is-primary wrap-button-text">{{ next_label | safe }}</a>
+      <a href="{{ next_link }}" class = "button is-light is-primary wrap-button-text is-fullwidth">{{ next_label | safe }}</a>
       {% endif %}
     </td>
   </tr>
