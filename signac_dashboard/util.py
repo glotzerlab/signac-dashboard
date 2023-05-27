@@ -29,6 +29,7 @@ def ellipsis_truncate_middle(string, length=60):
     else:
         return string[:half] + "..." + string[-half:]
 
+
 def ellipsis_truncate_end(string, length=60):
     string = str(string)
     if len(string) < length:
@@ -36,11 +37,13 @@ def ellipsis_truncate_end(string, length=60):
     else:
         return string[:length] + "…"
 
+
 def abbr_value(val, max_chars):
     if len(str(val)) > max_chars:
         return f'<abbr title="{escape(val)}">{str(escape(ellipsis_truncate_end(val, length=max_chars)))}</abbr>'
     else:
         return escape(val)
+
 
 def escape_truncated_values(data, max_chars):
     """Truncate values in a dict to a maximum number of characters."""
