@@ -101,6 +101,7 @@ class Dashboard:
             self.project = signac.get_project()
         else:
             self.project = project
+        self.project.update_cache()
 
         self.config = config
         self.modules = modules
