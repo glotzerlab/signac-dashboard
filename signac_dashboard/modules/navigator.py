@@ -52,7 +52,7 @@ class Navigator(Module):
         return link, label
 
     def get_cards(self, job):
-        project = self._dashboard.project
+        project = self._dashboard_project
 
         nearby_jobs = {}
         # for each parameter in the schema, find the next and previous job and get links to them
@@ -105,7 +105,7 @@ class Navigator(Module):
 
     def register(self, dashboard):
         """Sorts and caches non-constant schema schema_values."""
-        self._dashboard = dashboard
+        self._dashboard_project = dashboard.project
 
         # Tell user because this can take a long time
         print("Detecting project schema for Navigator...", end="")
