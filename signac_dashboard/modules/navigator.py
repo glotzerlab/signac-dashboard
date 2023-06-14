@@ -74,7 +74,7 @@ class Navigator(Module):
                     break
             else:
                 link = None
-                label = "beginning"
+                label = "min"
             previous_label = (link, label)
 
             query_index = value_index + 1
@@ -87,7 +87,7 @@ class Navigator(Module):
                     break
             else:
                 link = None
-                label = "end"
+                label = "max"
             next_label = (link, label)
 
             if previous_label[0] is not None or next_label[0] is not None:
