@@ -61,8 +61,10 @@ class Navigator(Module):
             if value is _DictPlaceholder:
                 # Possible if schema is heterogeneous
                 continue
-
-            value_index = schema_values.index(value)
+            try:
+                value_index = schema_values.index(value)
+            except ValueError:
+                value_index = schema_values.index(tuple(value))
 
             query_index = value_index - 1
             while query_index >= 0:
