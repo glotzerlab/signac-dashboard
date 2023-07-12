@@ -124,7 +124,7 @@ class Dashboard:
                 f"{self.config['CARDS_PER_ROW']}."
             )
 
-        self.config.setdefault("ACCESS_TOKEN", secrets.token_urlsafe())
+        self.config.setdefault("ACCESS_TOKEN", secrets.token_hex(24))
 
         # Create and configure the Flask application
         self.app = self._create_app(self.config)
@@ -582,17 +582,45 @@ class Dashboard:
 
         @dashboard.login_manager.unauthorized_handler
         def unauthorized_handler():
-            return self._render_error("Access token is required.")
+            request_url = request.url
+            if "module" not in request_url:
+                session["redirect_url"] = request_url
+            return render_template("login.html")
 
-        @dashboard.app.route("/login")
+        @dashboard.app.route("/login", methods=["GET", "POST"])
         def login():
-            provided_token = request.args.get("token")
+            redirect_url = session.pop("redirect_url", "/")
+            if flask_login.current_user.is_authenticated:
+                # in case the user goes to the login page via browser history
+                return redirect(redirect_url)
+
+            if request.method == "POST":
+                provided_token = request.form.get("token")
+            else:
+                provided_token = request.args.get("token")  # None if not given
+
             if provided_token == self.config["ACCESS_TOKEN"]:
+                # Log the user in and redirect to the previous page (if applicable)
                 user = User(provided_token)
                 flask_login.login_user(user)
-                return redirect("/")
+                return redirect(redirect_url)
 
-            return self._render_error("Invalid token")
+            elif provided_token is None:
+                # First time visiting page, so don't display error.
+                return render_template("login.html")
+            else:
+                flash("Incorrect token", "danger")
+                if request.method == "GET":
+                    return redirect("/login")
+                elif request.method == "POST":
+                    if redirect_url == "/":
+                        redirect_url = "/login"
+                    return redirect(redirect_url)
+
+        @dashboard.app.route("/logout")
+        def logout():
+            flask_login.logout_user()
+            return redirect(url_for("login"))
 
         @dashboard.app.route("/favicon.ico")
         @flask_login.login_required
@@ -678,9 +706,9 @@ class Dashboard:
 
             if self.config["ACCESS_TOKEN"] is not None:
                 print(
-                    f"To access this server, connect to: "
+                    f"To access this server, connect to:\n\n"
                     f"http://{self.config['HOST']}:{self.config['PORT']}/"
-                    f"login?token={self.config['ACCESS_TOKEN']}"
+                    f"login?token={self.config['ACCESS_TOKEN']}\n"
                 )
 
             self.run()

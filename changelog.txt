@@ -4,8 +4,21 @@ Changes
 
 The **signac-dashboard** package follows `semantic versioning <https://semver.org/>`_.
 
-Version 0.5
+Version 0.6
 ===========
+
+[0.6.0] -- 2023-xx-xx
+---------------------
+
+Added
++++++
+
+- Login page that redirects back to current URL (#160, #181).
+
+Fixed
++++++
+
+- Updated bundled jQuery version to 3.6.4 for a security fix (#184).
 
 [0.5.0] -- 2023-03-30
 ---------------------
