@@ -204,7 +204,8 @@ class AllModulesTestCase(DashboardTestCase):
         assert '<a href="/jobs/fb4e5868559e719f0c5826de08023281"' in response
         # next job for b = 1
         assert '<a href="/jobs/386b19932c82f3f9749dd6611e846293"' in response
-        assert 'disabled>min</div>' in response # no previous job for b
+        assert "disabled>min</div>" in response  # no previous job for b
+
 
 if __name__ == "__main__":
     unittest.main()
