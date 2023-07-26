@@ -200,8 +200,10 @@ class AllModulesTestCase(DashboardTestCase):
     def test_navigator_module(self):
         """Look for the next and previous values in a table on the page."""
         response = self.get_response("/jobs/017d53deb17a290d8b0d2ae02fa8bd9d")
-        assert '<a href="/jobs/fb4e5868559e719f0c5826de08023281"' in response # next job for a = 2
-        assert '<a href="/jobs/386b19932c82f3f9749dd6611e846293"' in response # next job for b = 1
+        # next job for a = 2
+        assert '<a href="/jobs/fb4e5868559e719f0c5826de08023281"' in response
+        # next job for b = 1
+        assert '<a href="/jobs/386b19932c82f3f9749dd6611e846293"' in response
         assert 'disabled>min</div>' in response # no previous job for b
 
 if __name__ == "__main__":
