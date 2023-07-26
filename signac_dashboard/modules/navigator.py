@@ -2,6 +2,8 @@ from collections import OrderedDict
 
 from flask import render_template, url_for
 
+from signac._utility import _to_hashable
+
 from signac_dashboard.module import Module
 from signac_dashboard.util import abbr_value
 
@@ -57,14 +59,14 @@ class Navigator(Module):
         nearby_jobs = {}
         # for each parameter in the schema, find the next and previous job and get links to them
         for key, schema_values in self._sorted_schema.items():
-            value = job.sp.get(key, _DictPlaceholder)
+            sp_copy = job.sp()
+            # converts lists to tuples
+            # TODO check with dicts
+            value = _to_hashable(sp_copy.get(key, _DictPlaceholder))
             if value is _DictPlaceholder:
                 # Possible if schema is heterogeneous
                 continue
-            try:
-                value_index = schema_values.index(value)
-            except ValueError:
-                value_index = schema_values.index(tuple(value))
+            value_index = schema_values.index(value)
 
             query_index = value_index - 1
             while query_index >= 0:
