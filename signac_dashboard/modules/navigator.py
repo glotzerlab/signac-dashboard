@@ -114,7 +114,7 @@ class Navigator(Module):
         self._dashboard_project = dashboard.project
 
         # Tell user because this can take a long time
-        print("Detecting project schema for Navigator...", end="")
+        print("Detecting project schema for Navigator...", end="", flush = True)
         schema = dashboard.project.detect_schema(exclude_const=True)
         print("done.")
         # turn dict of sets of lists ...into list of parameters
