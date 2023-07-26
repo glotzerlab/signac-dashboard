@@ -44,7 +44,7 @@ class Navigator(Module):
         similar_statepoint = job.statepoint()  # modifiable
         similar_statepoint.update({key: other_val})
 
-        # Look only for exact matches of only changing one parameter
+        # Look only for exact matches that result from only changing one parameter
         # in case of heterogeneous schema
         other_job = project.open_job(similar_statepoint)
         if other_job in project:
@@ -63,7 +63,7 @@ class Navigator(Module):
 
         # for each parameter in the schema, find the next and previous job and get links to them
         for key, schema_values in self._sorted_schema.items():
-            # allow comparison with output of schema
+            # allow comparison with output of schema, which is hashable
             value = _to_hashable(sp_copy.get(key, _DictPlaceholder))
             if value is _DictPlaceholder:
                 # Possible if schema is heterogeneous
