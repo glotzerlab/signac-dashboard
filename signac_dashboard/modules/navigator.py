@@ -23,7 +23,6 @@ class Navigator(Module):
     :type context: str
     :param max_chars: Truncation length of state point values (default: 6).
     :type max_chars: int
-
     """
 
     _supported_contexts = {"JobContext"}
