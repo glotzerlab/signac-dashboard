@@ -59,10 +59,11 @@ class Navigator(Module):
         project = self._dashboard_project
 
         nearby_jobs = {}
+        sp_copy = job.sp()
+
         # for each parameter in the schema, find the next and previous job and get links to them
         for key, schema_values in self._sorted_schema.items():
             # allow comparison with output of schema
-            sp_copy = job.sp()
             value = _to_hashable(sp_copy.get(key, _DictPlaceholder))
             if value is _DictPlaceholder:
                 # Possible if schema is heterogeneous
