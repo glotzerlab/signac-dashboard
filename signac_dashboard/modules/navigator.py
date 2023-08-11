@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from flask import render_template, url_for
 from signac._utility import _to_hashable
 
