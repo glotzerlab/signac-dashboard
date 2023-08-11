@@ -74,7 +74,7 @@ class Navigator(Module):
                 prev_val = schema_values[query_index]
                 link, label = self._link_label(job, project, key, prev_val)
                 if link is None:
-                    query_index = query_index - 1
+                    query_index -= 1
                 else:
                     break
             else:
@@ -87,7 +87,7 @@ class Navigator(Module):
                 next_val = schema_values[query_index]
                 link, label = self._link_label(job, project, key, next_val)
                 if link is None:
-                    query_index = query_index + 1
+                    query_index += 1
                 else:
                     break
             else:
@@ -124,6 +124,6 @@ class Navigator(Module):
                 this_key_vals.update(project_values[typename])
             sorted_schema[key] = sorted(this_key_vals)
 
-        self._sorted_schema = OrderedDict(
+        self._sorted_schema = dict(
             sorted(sorted_schema.items(), key=lambda t: t[0])
         )
