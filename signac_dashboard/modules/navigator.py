@@ -124,6 +124,4 @@ class Navigator(Module):
                 this_key_vals.update(project_values[typename])
             sorted_schema[key] = sorted(this_key_vals)
 
-        self._sorted_schema = dict(
-            sorted(sorted_schema.items(), key=lambda t: t[0])
-        )
+        self._sorted_schema = dict(sorted(sorted_schema.items(), key=lambda t: t[0]))
