@@ -7,20 +7,6 @@ from markupsafe import escape
 from werkzeug.utils import cached_property, import_string
 
 
-def simplified_keys(project):
-    sps = list(project.find_statepoints())  # todo: this is deprecated
-    varied_keys = []
-    for key in sps[0]:
-        same_for_all = True  # This key has the same value for all statepoints
-        for sp in sps:
-            if sps[0][key] != sp[key]:
-                same_for_all = False
-                break
-        if not same_for_all:
-            varied_keys.append(key)
-    return varied_keys
-
-
 def ellipsis_truncate_middle(string, length=60):
     string = str(string)
     half = int(length / 2)
