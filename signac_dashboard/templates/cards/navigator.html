@@ -16,7 +16,7 @@
       {% if previous_link is none %}
       <div class="button is-light is-primary is-fullwidth" disabled>{{ previous_label | safe }}</div>
       {% else %}
-      <a href="{{ previous_link }}" class = "button is-light is-primary wrap-button-text is-fullwidth">{{ previous_label | safe }}</a>
+      <a href="{{ previous_link }}" class = "button is-light is-primary is-fullwidth">{{ previous_label | safe }}</a>
       {% endif %}
     </td>
 
@@ -28,7 +28,7 @@
       {% if next_link is none %}
       <div class="button is-light is-primary is-fullwidth" disabled>{{ next_label  | safe }}</div>
       {% else %}
-      <a href="{{ next_link }}" class = "button is-light is-primary wrap-button-text is-fullwidth">{{ next_label | safe }}</a>
+      <a href="{{ next_link }}" class = "button is-light is-primary is-fullwidth">{{ next_label | safe }}</a>
       {% endif %}
     </td>
   </tr>
