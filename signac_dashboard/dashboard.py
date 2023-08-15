@@ -165,9 +165,6 @@ class Dashboard:
                 logger.error(f"Removing module {module.name} from dashboard.")
                 self.modules.remove(module)
 
-        # Clear dashboard and project caches.
-        self.update_cache()
-
         # Group modules to track enabled state
         def keyfunc(module):
             return module.context
