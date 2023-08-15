@@ -23,15 +23,12 @@ body {
     text-align: left;
 }
 
-.table td, .table th {
+.navigator.table td, .navigator.table th {
+    border: 0;
     vertical-align: middle;
 }
 
-.table.is-borderless td, .table.is-borderless th {
- border: 0;
-}
-
-.table .span {
+.navigator .table .span {
     padding-bottom: 0px;
     padding-top: 0.5em;
     vertical-align: bottom;
