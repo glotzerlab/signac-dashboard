@@ -13,7 +13,7 @@ def ellipsis_truncate_middle(string, length=60):
     if len(string) < length:
         return string
     else:
-        return string[:half] + "..." + string[-half:]
+        return string[:half] + "&hellip;" + string[-half:]
 
 
 def ellipsis_truncate_end(string, length=60):
@@ -21,7 +21,7 @@ def ellipsis_truncate_end(string, length=60):
     if len(string) < length:
         return string
     else:
-        return string[:length] + "…"
+        return string[:length] + "&hellip;"
 
 
 def abbr_value(val, max_chars):
