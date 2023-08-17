@@ -7,29 +7,31 @@ from markupsafe import escape
 from werkzeug.utils import cached_property, import_string
 
 
-def ellipsis_truncate_middle(string, length=60):
-    string = str(string)
+def ellipsis_truncate_middle(val, length=60):
+    string = str(val)
     half = int(length / 2)
     if len(string) < length:
-        return string
+        return str(escape(string))
     else:
-        return string[:half] + "&hellip;" + string[-half:]
+        return str(escape(string[:half])) + "&hellip;" + str(escape(string[-half:]))
 
 
-def ellipsis_truncate_end(string, length=60):
-    string = str(string)
+def ellipsis_truncate_end(val, length=60):
+    """Escape and truncate val to length with html ellipsis at end."""
+    string = str(val)
     if len(string) < length:
-        return string
+        return str(escape(string))
     else:
-        return string[:length] + "&hellip;"
+        return str(escape(string[:length])) + "&hellip;"
 
 
 def abbr_value(val, max_chars):
     if len(str(val)) > max_chars:
-        link_string = str(escape(ellipsis_truncate_end(val, length=max_chars)))
+        link_string = str(ellipsis_truncate_end(val, length=max_chars))
+        print(link_string)
         return f'<abbr title="{escape(val)}">{link_string}</abbr>'
     else:
-        return escape(val)
+        return str(escape(val))
 
 
 def escape_truncated_values(data, max_chars):
