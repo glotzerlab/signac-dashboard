@@ -114,7 +114,7 @@ class Navigator(Module):
         print("Detecting project schema for Navigator...", end="", flush=True)
         schema = dashboard.project.detect_schema(exclude_const=True)
         print("done.")
-        
+
         # turn dict of sets of lists ...into list of parameters
         sorted_schema = {}
         for key, project_values in schema.items():
