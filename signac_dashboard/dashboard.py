@@ -101,6 +101,7 @@ class Dashboard:
             self.project = signac.get_project()
         else:
             self.project = project
+        self.project.update_cache()
 
         self.config = config
         self.modules = modules
@@ -163,9 +164,6 @@ class Dashboard:
                 logger.error(f"Error while registering {module.name} module: {e}")
                 logger.error(f"Removing module {module.name} from dashboard.")
                 self.modules.remove(module)
-
-        # Clear dashboard and project caches.
-        self.update_cache()
 
         # Group modules to track enabled state
         def keyfunc(module):

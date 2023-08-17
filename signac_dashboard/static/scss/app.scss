@@ -17,6 +17,23 @@ body {
   background-color: #2EB398;
 }
 
+.navigator .button {
+    height: max-content;
+    white-space: inherit;
+    text-align: left;
+}
+
+.navigator.table td, .navigator.table th {
+    border: 0;
+    vertical-align: middle;
+}
+
+.navigator .table .span {
+    padding-bottom: 0px;
+    padding-top: 0.5em;
+    vertical-align: bottom;
+}
+
 .aside {
   background-color: #354052;
   margin-right: -0.75rem;
