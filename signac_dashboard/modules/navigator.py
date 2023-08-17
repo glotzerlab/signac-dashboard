@@ -58,7 +58,7 @@ class Navigator(Module):
         nearby_jobs = {}
         sp_copy = job.sp()
 
-        # for each parameter in the schema, find the next and previous job and get links to them
+        # for each parameter in the schema, find the next and previous jobs and get links to them
         for key, schema_values in self._sorted_schema.items():
             # allow comparison with output of schema, which is hashable
             value = _to_hashable(sp_copy.get(key, _DictPlaceholder))
@@ -114,9 +114,9 @@ class Navigator(Module):
         print("Detecting project schema for Navigator...", end="", flush=True)
         schema = dashboard.project.detect_schema(exclude_const=True)
         print("done.")
+        
         # turn dict of sets of lists ...into list of parameters
         sorted_schema = {}
-
         for key, project_values in schema.items():
             this_key_vals = set()
             for typename in project_values.keys():
@@ -124,6 +124,7 @@ class Navigator(Module):
             try:
                 sorted_schema[key] = sorted(this_key_vals)
             except TypeError:
+                # cannot sort between different types, so leave in order
                 sorted_schema[key] = list(this_key_vals)
 
         self._sorted_schema = dict(sorted(sorted_schema.items(), key=lambda t: t[0]))
