@@ -14,6 +14,7 @@ Added
 +++++
 
 - Login page that redirects back to current URL (#160, #181).
+- Navigator module to display links to jobs differing by one state point parameter (#188).
 
 Fixed
 +++++
