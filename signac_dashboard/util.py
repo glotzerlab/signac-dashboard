@@ -28,7 +28,6 @@ def ellipsis_truncate_end(val, length=60):
 def abbr_value(val, max_chars):
     if len(str(val)) > max_chars:
         link_string = str(ellipsis_truncate_end(val, length=max_chars))
-        print(link_string)
         return f'<abbr title="{escape(val)}">{link_string}</abbr>'
     else:
         return str(escape(val))
