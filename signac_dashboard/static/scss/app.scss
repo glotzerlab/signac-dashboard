@@ -17,13 +17,13 @@ body {
   background-color: #2EB398;
 }
 
-.navigator.button {
+.navigator .button {
     height: max-content;
     white-space: inherit;
     text-align: left;
 }
 
-.navigator.table td, .navigator.table th {
+.navigator .table td, .navigator .table th {
     border: 0;
     vertical-align: middle;
 }
