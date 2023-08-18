@@ -2,7 +2,7 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 import flask_login
-from flask import Blueprint, abort, redirect, render_template, request, url_for
+from flask import Blueprint, abort, render_template, request
 from jinja2.exceptions import TemplateNotFound
 from markupsafe import escape
 
