@@ -46,7 +46,6 @@ class Notes(Module):
             url_prefix=f"/module/notes/{escape(key)}",
             template_folder=template,
         )
-        print(self.note_blueprint)
 
     def get_cards(self, job):
         note_text = job.document.get(self.key, "")
@@ -65,12 +64,9 @@ class Notes(Module):
         @flask_login.login_required
         def notes_update():
             note_text = request.form.get("note_text")
-            print("key is", self.key)
-            # breakpoint()
             jobid = request.form.get("jobid")
             job = dashboard.project.open_job(id=jobid)
             job.document[self.key] = note_text
-            # return redirect(url_for("show_job", jobid=jobid))
             return "Saved."
 
         @self.note_blueprint.route("/<path:filename>")
@@ -94,7 +90,3 @@ class Notes(Module):
 
         # register Blueprint
         dashboard.app.register_blueprint(self.note_blueprint)
-        print(self.note_blueprint.root_path)
-        # print(dashboard.app.url_map)
-        for name, blueprint in dashboard.app.blueprints.items():
-            print(f"Blueprint: {name}, URL prefix: {blueprint.url_prefix}")
