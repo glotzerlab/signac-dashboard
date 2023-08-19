@@ -10,7 +10,7 @@ import signac
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
-project = signac.init_project("plots")
+project = signac.init_project()
 
 
 def plot_coherence(job):

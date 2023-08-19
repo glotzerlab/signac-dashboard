@@ -24,7 +24,6 @@ class StatepointList(Module):
         template="cards/statepoint_list.html",
         **kwargs,
     ):
-
         super().__init__(
             name=name,
             context=context,

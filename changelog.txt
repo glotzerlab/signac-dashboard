@@ -4,23 +4,63 @@ Changes
 
 The **signac-dashboard** package follows `semantic versioning <https://semver.org/>`_.
 
+Version 0.6
+===========
+
+[0.6.0] -- 2023-xx-xx
+---------------------
+
+Added
++++++
+
+- Login page that redirects back to current URL (#160, #181).
+- Navigator module to display links to jobs differing by one state point parameter (#188).
+
+Fixed
++++++
+
+- Updated bundled jQuery version to 3.6.4 for a security fix (#184).
+
+[0.5.0] -- 2023-03-30
+---------------------
+
+Added
++++++
+
+- Official Python 3.11 support (#176).
+- Ability to sort ``ImageViewer`` and ``VideoViewer`` cards (#155).
+
+Changed
++++++++
+
+- Require signac 2.0.0 (#166).
+- Default value of ``PER_PAGE`` is now 24 (#168).
+- Minor visual updates (#175).
+- Switched to a pyproject.toml based build (#176).
+
 Version 0.4
 ===========
 
-[next release] -- YYYY-MM-DD
-----------------------------
+[0.4.0] -- 2022-12-12
+---------------------
 
 Added
 +++++
 
 - Improve security on multi-user systems. Dashboard now generates a login token when started. Users
-  must login with the token to view project and job data in the dashboard.
+  must login with the token to view project and job data in the dashboard (#122, #158).
 - PlotlyViewer module for showing interactive plots in the dashboard (#162, #163).
 
 Changed
 +++++++
 
-- ``ImageViewer`` searches for ``*.svg`` files by default.
+- ``ImageViewer`` searches for ``*.svg`` files by default (#157).
+
+Fixed
++++++
+
+- Fixed handling of ``--debug`` command line option (#152).
+- Addressed deprecation warnings from signac 1.8.0 (#132, #153).
 
 Version 0.3
 ===========

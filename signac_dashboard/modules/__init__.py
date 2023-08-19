@@ -3,6 +3,7 @@ from .document_list import DocumentList
 from .file_list import FileList
 from .flow_status import FlowStatus
 from .image_viewer import ImageViewer
+from .navigator import Navigator
 from .notes import Notes
 from .plotly_viewer import PlotlyViewer
 from .schema import Schema
@@ -16,6 +17,7 @@ __all__ = [
     "FileList",
     "FlowStatus",
     "ImageViewer",
+    "Navigator",
     "Notes",
     "PlotlyViewer",
     "Schema",

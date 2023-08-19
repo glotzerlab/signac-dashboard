@@ -9,7 +9,7 @@ from flask import abort, jsonify, render_template, request
 from flask.views import View
 from jinja2.exceptions import TemplateNotFound
 from signac import Project
-from signac.contrib.job import Job
+from signac.job import Job
 
 from signac_dashboard.dashboard import Dashboard
 from signac_dashboard.module import Module

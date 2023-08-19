@@ -40,7 +40,6 @@ class FlowStatus(Module):
         project_class="Project",
         **kwargs,
     ):
-
         super().__init__(
             name=name,
             context=context,

@@ -7,27 +7,30 @@ from markupsafe import escape
 from werkzeug.utils import cached_property, import_string
 
 
-def simplified_keys(project):
-    sps = list(project.find_statepoints())
-    varied_keys = list()
-    for key in sps[0]:
-        same_for_all = True  # This key has the same value for all statepoints
-        for sp in sps:
-            if sps[0][key] != sp[key]:
-                same_for_all = False
-                break
-        if not same_for_all:
-            varied_keys.append(key)
-    return varied_keys
-
-
-def ellipsis_string(string, length=60):
-    string = str(string)
+def ellipsis_truncate_middle(val, length=60):
+    string = str(val)
     half = int(length / 2)
     if len(string) < length:
-        return string
+        return str(escape(string))
     else:
-        return string[:half] + "..." + string[-half:]
+        return str(escape(string[:half])) + "&hellip;" + str(escape(string[-half:]))
+
+
+def ellipsis_truncate_end(val, length=60):
+    """Escape and truncate val to length with html ellipsis at end."""
+    string = str(val)
+    if len(string) < length:
+        return str(escape(string))
+    else:
+        return str(escape(string[:length])) + "&hellip;"
+
+
+def abbr_value(val, max_chars):
+    if len(str(val)) > max_chars:
+        link_string = str(ellipsis_truncate_end(val, length=max_chars))
+        return f'<abbr title="{escape(val)}">{link_string}</abbr>'
+    else:
+        return str(escape(val))
 
 
 def escape_truncated_values(data, max_chars):
@@ -36,7 +39,7 @@ def escape_truncated_values(data, max_chars):
         for key in data:
             if len(str(data[key])) > max_chars:
                 data[key] = (
-                    str(escape(ellipsis_string(data[key], length=max_chars)))
+                    str(escape(ellipsis_truncate_middle(data[key], length=max_chars)))
                     + " <em>[Truncated]</em>"
                 )
     else:

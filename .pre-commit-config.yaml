@@ -5,37 +5,49 @@ exclude: (?:signac_dashboard/static/.*)
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: 'v4.3.0'
+    rev: 'v4.4.0'
     hooks:
       - id: end-of-file-fixer
-        exclude: 'setup.cfg'
       - id: trailing-whitespace
-        exclude: 'setup.cfg'
+      - id: check-builtin-literals
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-yaml
       - id: debug-statements
+      - id: requirements-txt-fixer
   - repo: https://github.com/asottile/pyupgrade
-    rev: 'v3.2.2'
+    rev: 'v3.8.0'
     hooks:
       - id: pyupgrade
         args:
           - --py38-plus
   - repo: https://github.com/PyCQA/isort
-    rev: '5.10.1'
+    rev: '5.12.0'
     hooks:
       - id: isort
   - repo: https://github.com/psf/black
-    rev: '22.10.0'
+    rev: '23.3.0'
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/flake8
-    rev: '5.0.4'
+    rev: '6.0.0'
     hooks:
       - id: flake8
-#  - repo: https://github.com/PyCQA/pydocstyle
-#    rev: '6.1.1'
-#    hooks:
-#      - id: pydocstyle
-#        exclude: |
-#          (?x)(
-#            ^doc/|
-#            ^tests/
-#          )
+  - repo: https://github.com/PyCQA/pydocstyle
+    rev: '6.3.0'
+    hooks:
+      - id: pydocstyle
+        exclude: |
+          (?x)(
+            ^doc/|
+            ^tests/
+          )
+        additional_dependencies:
+          - tomli
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: 'v1.4.1'
+    hooks:
+      - id: mypy
+        additional_dependencies: ["types-Markdown"]
+        args: ["--config-file=pyproject.toml", "signac_dashboard"]
+        pass_filenames: false

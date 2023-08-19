@@ -1,0 +1,36 @@
+<table class="navigator table">
+
+  <tr class = "is-sr-only">
+    <th id="previous" scope="col">Previous statepoint parameter value</th>
+    <th id="current" scope="col">Current value</th>
+    <th id="next" scope="col">Next statepoint parameter value</th>
+  </tr>
+  {% for key, (value, ((previous_link, previous_label), (next_link, next_label))) in job_nav %}
+    <tr>
+      <th id = "{{ key }}" class="span" colspan="3" scope="colgroup">
+        {{ key }}
+      </th>
+    </tr>
+  <tr>
+    <td headers = "{{ key }} previous">
+      {% if previous_link is none %}
+      <div class="button is-light is-primary is-fullwidth" disabled>{{ previous_label | safe }}</div>
+      {% else %}
+      <a href="{{ previous_link }}" class = "button is-light is-primary is-fullwidth">{{ previous_label | safe }}</a>
+      {% endif %}
+    </td>
+
+    <td headers = "{{ key }} current" class="has-text-centered">
+      {{ value | safe }}
+    </td>
+
+    <td headers = "{{ key }} next">
+      {% if next_link is none %}
+      <div class="button is-light is-primary is-fullwidth" disabled>{{ next_label  | safe }}</div>
+      {% else %}
+      <a href="{{ next_link }}" class = "button is-light is-primary is-fullwidth">{{ next_label | safe }}</a>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>

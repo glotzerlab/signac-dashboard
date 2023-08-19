@@ -45,16 +45,14 @@ def jobs_list(dashboard):
     if not jobs:
         flash("No jobs found.", "warning")
     g.jobs = dashboard._get_job_details(g.pagination.paginate(jobs))
-    project_title = dashboard.project.config.get("project", None)
-    g.title = f"{project_title}: Jobs" if project_title else "Jobs"
+    g.title = "signac-dashboard: Jobs"
     g.subtitle = g.pagination.item_counts()
     return dashboard._render_job_view(default_view="list")
 
 
 def project_info(dashboard):
     g.project = dashboard.project
-    project_title = dashboard.project.config["project"]
-    g.title = str(project_title)
+    g.title = "signac-dashboard"
     num_jobs = len(dashboard.project)
     g.subtitle = f"{num_jobs} jobs"
     return dashboard._render_project_view()
