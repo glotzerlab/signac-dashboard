@@ -86,7 +86,6 @@ class PlotlyViewer(Module):
         template="cards/plotly_viewer.html",
         **kwargs,
     ):
-
         super().__init__(
             name=name,
             context=context,
@@ -102,7 +101,7 @@ class PlotlyViewer(Module):
                 "name": self.name,
                 "content": render_template(
                     self.template,
-                    jobid=job_or_project.id, # will not work for project anymore
+                    jobid=job_or_project.id,  # will not work for project anymore
                     endpoint=self.arguments_endpoint(),
                 ),
             }
