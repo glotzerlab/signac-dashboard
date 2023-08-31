@@ -7,7 +7,7 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.6
 ===========
 
-[0.6.0] -- 2023-xx-xx
+[0.6.0] -- 2023-08-30
 ---------------------
 
 Added
@@ -20,6 +20,11 @@ Fixed
 +++++
 
 - Updated bundled jQuery version to 3.6.4 for a security fix (#184).
+
+Updated
++++++++
+
+- Security documentation (#185).
 
 [0.5.0] -- 2023-03-30
 ---------------------
