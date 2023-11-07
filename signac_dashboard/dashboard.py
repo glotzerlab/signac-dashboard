@@ -14,6 +14,7 @@ import warnings
 from functools import lru_cache
 from itertools import groupby
 from numbers import Real
+from urllib.parse import urlencode
 
 import flask_login
 import jinja2
@@ -24,7 +25,6 @@ from flask_assets import Bundle, Environment
 from flask_turbolinks import turbolinks
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
-from werkzeug.urls import url_encode
 
 from .pagination import Pagination
 from .util import LazyView
@@ -572,7 +572,7 @@ class Dashboard:
             args = request.args.copy()
             for key, value in new_values.items():
                 args[key] = value
-            return f"{request.path}?{url_encode(args)}"
+            return f"{request.path}?{urlencode(args)}"
 
         @dashboard.app.errorhandler(404)
         def page_not_found(error):
