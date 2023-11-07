@@ -1,6 +1,6 @@
 flask>=2.1.0
-flask-login>=0.6.0
 flask-assets>=2.1.0
+flask-login>=0.6.3
 flask-turbolinks
 jinja2>=3.0.0
 jsmin
