@@ -29,13 +29,19 @@ jobs:
           # Test the oldest Python with the oldest supported dependencies.
           - python: '3.8'
             dependencies: 'oldest'
-          # Test macOS and windows only on latest version
+          # Test macOS and windows on oldest and latest versions.
           - os: 'macos-latest'
             python: '3.12'
             dependencies: 'newest'
           - os: 'windows-latest'
             python: '3.12'
             dependencies: 'newest'
+          - os: 'windows-latest'
+            python: '3.8'
+            dependencies: 'oldest'
+          - os: 'macos-latest'
+            python: '3.8'
+            dependencies: 'oldest'
     steps:
     - uses: actions/checkout@v3
       with:
