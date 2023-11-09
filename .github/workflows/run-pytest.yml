@@ -29,11 +29,6 @@ jobs:
           # Test the oldest Python with the oldest supported dependencies.
           - python: '3.8'
             dependencies: 'oldest'
-          # Test the newest Python with both the newest and minimal dependencies.
-          - python: '3.12'
-            dependencies: 'newest'
-          - python: '3.12'
-            dependencies: 'minimal'
           # Test macOS and windows only on latest version
           - os: 'macos-latest'
             python: '3.12'
@@ -53,10 +48,6 @@ jobs:
       run: |
         pip install -r requirements/requirements-test.txt
       if: ${{ matrix.dependencies == 'newest' }}
-    - name: Install minimal dependencies
-      run: |
-        pip install -r requirements/requirements-test.txt
-      if: ${{ matrix.dependencies == 'minimal' }}
     - name: Install oldest supported dependencies
       # To prevent Dependabot from updating the pinnings in this "oldest"
       # dependency list, we have to avoid the word "requirements" in the
