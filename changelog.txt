@@ -7,6 +7,15 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.6
 ===========
 
+[0.6.1] -- 2023-11-09
+---------------------
+
+Added
++++++
+
+- Support for flask 3 and werkzeug 3 (#204).
+
+
 [0.6.0] -- 2023-08-30
 ---------------------
 
