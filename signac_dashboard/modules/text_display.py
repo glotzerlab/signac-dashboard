@@ -1,7 +1,8 @@
 # Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
-from flask import Markup, render_template
+from flask import render_template
+from markupsafe import Markup
 
 from signac_dashboard.module import Module
 
