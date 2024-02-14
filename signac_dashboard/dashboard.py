@@ -373,6 +373,8 @@ class Dashboard:
                 try:
                     f = json.loads(query)
                 except json.JSONDecodeError:
+                    if "True" in query or "False" in query:
+                        flash("JSON booleans are lowercase", "warning")
                     query = shlex.split(query)
                     f = signac.filterparse.parse_filter_arg(query)
                     flash(f"Search string interpreted as '{json.dumps(f)}'.")
