@@ -374,11 +374,20 @@ class Dashboard:
                     f = json.loads(query)
                 except json.JSONDecodeError:
                     if "True" in query and "False" in query:
-                      flash("Interpreting \"True\" and \"False\" as strings. For boolean values use \"true\" and \"false\".", "warning")
+                        flash(
+                            'Interpreting "True" and "False" as strings. For boolean values use "true" and "false".',
+                            "warning",
+                        )
                     elif "True" in query:
-                        flash("Interpreting \"True\" as a string. For a boolean value use \"true\".", "warning")
+                        flash(
+                            'Interpreting "True" as a string. For a boolean value use "true".',
+                            "warning",
+                        )
                     elif "False" in query:
-                        flash("Interpreting \"False\" as a string. For a boolean value use \"false\".", "warning")
+                        flash(
+                            'Interpreting "False" as a string. For a boolean value use "false".',
+                            "warning",
+                        )
                     query = shlex.split(query)
                     f = signac.filterparse.parse_filter_arg(query)
                     flash(f"Search string interpreted as '{json.dumps(f)}'.")
