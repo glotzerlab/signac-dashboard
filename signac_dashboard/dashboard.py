@@ -375,7 +375,8 @@ class Dashboard:
                 except json.JSONDecodeError:
                     if "True" in query and "False" in query:
                         flash(
-                            'Interpreting "True" and "False" as strings. For boolean values use "true" and "false".',  # noqa:E501
+                            'Interpreting "True" and "False" as strings. For'
+							'boolean values use "true" and "false".',
                             "warning",
                         )
                     elif "True" in query:
