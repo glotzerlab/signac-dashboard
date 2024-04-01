@@ -100,9 +100,11 @@ class VideoViewer(Module):
                 "content": render_template(
                     self.template,
                     jobid=jobid,
-                    poster=self.poster
-                    if self.poster and job_or_project.isfile(self.poster)
-                    else None,
+                    poster=(
+                        self.poster
+                        if self.poster and job_or_project.isfile(self.poster)
+                        else None
+                    ),
                     preload=self.preload,
                     filename=filename,
                 ),
