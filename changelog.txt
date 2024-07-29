@@ -11,7 +11,7 @@ Version 0.7
 ---------------------
 
 Updated
-+++++
++++++++
 
 - Feedback when querying for Python booleans instead of JSON booleans (#213).
 
