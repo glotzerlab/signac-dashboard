@@ -3,7 +3,7 @@
 Support and Development
 -----------------------
 
-To get help using the **signac-dashboard** package, join the `signac Slack workspace <https://signac.io/slack-invite/>`_ or send an email to `signac-support@umich.edu <mailto:signac-support@umich.edu>`_.
+Use the `signac discussion board <https://github.com/glotzerlab/signac/discussions/>`_ to
+post questions, ask for support, and discuss potential new features.
 
-The **signac-dashboard** package is hosted on `GitHub <https://github.com/glotzerlab/signac-dashboard>`_ and licensed under the open-source BSD 3-Clause license.
-Please use the `repository's issue tracker <https://github.com/glotzerlab/signac-dashboard/issues>`_ to report bugs or request new features.
+File bug reports on `signac-dashboard's issue tracker <https://github.com/glotzerlab/signac-dashboard/issues>`_.
