@@ -11,7 +11,7 @@ The signac framework uses the `NEP 29 deprecation policy <https://numpy.org/neps
 .. _conda: https://docs.conda.io/
 .. _conda-forge: https://conda-forge.org/
 .. _pip: https://pip.pypa.io/
-.. _signac: https://signac.io/
+.. _signac: https://signac.readthedocs.io/
 .. _flask: https://flask.palletsprojects.com/
 
 Install with conda
