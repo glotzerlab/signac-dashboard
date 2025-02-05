@@ -55,7 +55,7 @@ Download = "https://pypi.org/project/signac-dashboard/"
 Source = "https://github.com/glotzerlab/signac-dashboard"
 Issues = "https://github.com/glotzerlab/signac-dashboard/issues"
 
-[tools.setuptools.packages.find]
+[tool.setuptools.packages.find]
 namespaces = false
 exclude = ["examples*", "tests*"]
 
