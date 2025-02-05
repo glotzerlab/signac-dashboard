@@ -7,13 +7,18 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.7
 ===========
 
-[0.7.0] -- 2024-xx-xx
+[0.7.0] -- 2025-xx-xx
 ---------------------
 
 Updated
 +++++++
 
 - Feedback when querying for Python booleans instead of JSON booleans (#213).
+
+Fixed
++++++
+
+- Use ``tool.setuptools`` key in ``pyproject.toml``.
 
 Version 0.6
 ===========
