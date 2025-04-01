@@ -55,7 +55,7 @@ jobs:
       shell: bash
       run: |
         echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
-    - uses: actions/cache@v4.2.2
+    - uses: actions/cache@v4.2.3
       with:
         path: ${{ steps.pip-cache.outputs.dir }}
         key: dashboard-unit-test-${{ matrix.os }}-${{ matrix.python }}-${{ matrix.dependencies }}-pip-${{ hashFiles('requirements/requirements-test.txt', '.github/workflows/ci-oldest-reqs.txt') }}
