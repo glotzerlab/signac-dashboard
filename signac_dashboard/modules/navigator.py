@@ -31,19 +31,32 @@ class Navigator(Module):
         context="JobContext",
         template="cards/navigator.html",
         max_chars=6,
+        ignore=None,
         **kwargs,
     ):
         super().__init__(name=name, context=context, template=template, **kwargs)
         self.max_chars = max_chars
+        self.ignore=ignore
 
     def _link_label(self, job, project, key, other_val):
         """Return the url and label for the job with job.sp[key] == other_val."""
         similar_statepoint = job.statepoint()  # modifiable
         similar_statepoint.update({key: other_val})
 
+        if self.ignore is not None:
+            similar_statepoint.pop(self.ignore, None)
+            #print(f"Looking for {similar_statepoint}", flush=True)
+            possible_match = project.find_jobs(similar_statepoint)
+            #print(f"Found {len(possible_match)} matches.", flush=True)
+            if len(possible_match) == 1:
+                other_job = possible_match[0]
+                #print(f"The match is job {other_job.id}")
+            else:
+                return (None, f"Multiple matches for {other_val} when ignoring {self.ignore}")
+        else:
+            other_job = project.open_job(similar_statepoint)
         # Look only for exact matches that result from only changing one parameter
         # in case of heterogeneous schema
-        other_job = project.open_job(similar_statepoint)
         if other_job in project:
             link = url_for("show_job", jobid=other_job.id)
             label = abbr_value(other_val, self.max_chars)
@@ -126,5 +139,5 @@ class Navigator(Module):
             except TypeError:
                 # cannot sort between different types, so leave in order
                 sorted_schema[key] = list(this_key_vals)
-
+        sorted_schema.pop(self.ignore, None)
         self._sorted_schema = dict(sorted(sorted_schema.items(), key=lambda t: t[0]))
