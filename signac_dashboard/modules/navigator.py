@@ -6,7 +6,6 @@ import functools
 
 from signac_dashboard.module import Module
 from signac_dashboard.util import abbr_value
-from line_profiler import profile
 
 class _DictPlaceholder:
     pass
