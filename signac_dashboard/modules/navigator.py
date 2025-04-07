@@ -255,7 +255,10 @@ class Navigator(Module):
             except TypeError:
                 # cannot sort between different types, so leave in order
                 sorted_schema[key] = list(this_key_vals)
-        sorted_schema.pop(self.ignore, None)
+        need_to_ignore = sorted_schema.pop(self.ignore, None)
+        if need_to_ignore is None:
+            self.ignore = None
+            print("Ignored key not present")
         self._sorted_schema = dict(sorted(sorted_schema.items(), key=lambda t: t[0]))
 
         print("Building neighbor list...", end="", flush=True)
