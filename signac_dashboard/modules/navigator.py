@@ -257,9 +257,10 @@ class Navigator(Module):
                 # cannot sort between different types, so leave in order
                 sorted_schema[key] = list(this_key_vals)
         need_to_ignore = sorted_schema.pop(self.ignore, None)
-        if need_to_ignore is None:
+        if need_to_ignore is None and self.ignore is not None:
+            import warnings
             self.ignore = None
-            print("Ignored key not present")
+            warnings.warn("Ignored key not present in project.", RuntimeWarning)
         self._sorted_schema = dict(sorted(sorted_schema.items(), key=lambda t: t[0]))
 
         print("Building neighbor list...", end="", flush=True)
