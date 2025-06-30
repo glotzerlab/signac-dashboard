@@ -41,7 +41,11 @@ class Navigator(Module):
     ):
         super().__init__(name=name, context=context, template=template, **kwargs)
         self.max_chars = max_chars
-        self.ignore=ignore
+        # TODO check how this handles iterables
+        if isinstance(ignore, list):
+            self.ignore = ignore
+        else:
+            self.ignore = [ignore]
 
 
     def prepare_shadow_project(self, project):
@@ -119,7 +123,8 @@ class Navigator(Module):
         job_to_shadow = {} # goes from job id to shadow. Call it the projection?
         for job in project:
             shadow_sp = dict(job.cached_statepoint)
-            shadow_sp.pop(self.ignore, None)
+            for ig in self.ignore:
+                shadow_sp.pop(ig, None)
             shadow_id = calc_id(shadow_sp)
             shadow_cache[shadow_id] = shadow_sp
             job_to_shadow[job.id] = shadow_id
@@ -256,8 +261,8 @@ class Navigator(Module):
             except TypeError:
                 # cannot sort between different types, so leave in order
                 sorted_schema[key] = list(this_key_vals)
-        need_to_ignore = sorted_schema.pop(self.ignore, None)
-        if need_to_ignore is None and self.ignore is not None:
+        need_to_ignore = [sorted_schema.pop(ig, None) for ig in self.ignore]
+        if any(a is None for a in need_to_ignore) and self.ignore is not None:
             import warnings
             self.ignore = None
             warnings.warn("Ignored key not present in project.", RuntimeWarning)
