@@ -8,6 +8,7 @@
       "matchDepTypes": ["github-runner"],
       "matchDepNames": ["ubuntu"],
       "matchCurrentValue": "latest",
+      "replacementName": "ubuntu",
       "replacementVersion": "24.04"
     }
   ]
