@@ -1,19 +1,18 @@
 name: Run Unit Tests
 
 on:
-  # trigger on pull requests
   pull_request:
 
-  # trigger on all commits to main
   push:
     branches:
       - 'main'
 
-  # trigger on request
   workflow_dispatch:
+
 concurrency:
-  group: "${{ github.workflow }}-${{ github.ref }}"
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
+
 jobs:
   test:
     name: test (${{ matrix.os }}, ${{ matrix.python }}, ${{ matrix.dependencies }})
@@ -21,27 +20,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        python: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        os: [ubuntu-24.04]
+        python: ['3.10', '3.11', '3.12', '3.13']
         include:
-          # Default to newest dependencies
-          - dependencies: 'newest'
-          # Test the oldest Python with the oldest supported dependencies.
-          - python: '3.8'
-            dependencies: 'oldest'
-          # Test macOS and windows on oldest and latest versions.
-          - os: 'macos-latest'
-            python: '3.12'
-            dependencies: 'newest'
-          - os: 'windows-latest'
-            python: '3.12'
-            dependencies: 'newest'
-          - os: 'windows-latest'
-            python: '3.8'
-            dependencies: 'oldest'
-          - os: 'macos-latest'
-            python: '3.8'
-            dependencies: 'oldest'
+          - os: 'macos-14'
+            python: '3.13'
+          - os: 'windows-2025'
+            python: '3.13'
     steps:
     - uses: actions/checkout@v4
       with:
@@ -50,33 +35,27 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python }}
-    - name: Get pip cache dir
-      id: pip-cache
-      shell: bash
-      run: |
-        echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
-    - uses: actions/cache@v4.2.4
+    - name: Setup Python environment
+      uses: glotzerlab/workflows/setup-uv@1fe577d5430222a9793694a14cdb316cf8f720e1 # 0.9.0
       with:
-        path: ${{ steps.pip-cache.outputs.dir }}
-        key: dashboard-unit-test-${{ matrix.os }}-${{ matrix.python }}-${{ matrix.dependencies }}-pip-${{ hashFiles('requirements/requirements-test.txt', '.github/workflows/ci-oldest-reqs.txt') }}
-        restore-keys: |
-          dashboard-unit-test-${{ matrix.os }}-${{ matrix.python }}-${{ matrix.dependencies }}-pip-
-    - name: Install newest dependencies
-      run: |
-        pip install -r requirements/requirements-test.txt
-      if: ${{ matrix.dependencies == 'newest' }}
-    - name: Install oldest supported dependencies
-      # To prevent Dependabot from updating the pinnings in this "oldest"
-      # dependency list, we have to avoid the word "requirements" in the
-      # filename. That's why it is in the .github/ directory and named "reqs"
-      # instead of "requirements."
-      run: |
-        pip install -r .github/workflows/ci-oldest-reqs.txt
-      if: ${{ matrix.dependencies == 'oldest' }}
+        lockfile: "requirements/requirements-test-py${{ matrix.python }}.txt"
+        only-binary: ":none:"
     - name: Install the package
       run: |
-        pip install -e .
+        uv pip install . --no-build-isolation --no-deps --system -v
     - name: Test with pytest
       run: |
         pytest --cov=signac_dashboard --cov-config=pyproject.toml --cov-report=xml tests/ -v
     - uses: codecov/codecov-action@v5
+
+  # This job is used to provide a single requirement for branch merge conditions.
+  tests_complete:
+    name: Unit test
+    if: always()
+    needs: [test]
+    runs-on: ubuntu-24.04
+
+    steps:
+    - run: jq --exit-status 'all(.result == "success")' <<< '${{ toJson(needs) }}'
+    - name: Done
+      run: echo "Done."
