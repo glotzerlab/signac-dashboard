@@ -2,5 +2,13 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>glotzerlab/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "matchDepTypes": ["github-runner"],
+      "matchDepNames": ["ubuntu"],
+      "matchCurrentValue": "latest",
+      "replacementVersion": "24.04"
+    }
   ]
 }
