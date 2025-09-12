@@ -39,6 +39,7 @@ jobs:
       uses: glotzerlab/workflows/setup-uv@1fe577d5430222a9793694a14cdb316cf8f720e1 # 0.9.0
       with:
         lockfile: "requirements/requirements-test-py${{ matrix.python }}.txt"
+        only-binary: ":none:"
     - name: Install the package
       run: |
         uv pip install . --no-build-isolation --no-deps --system -v
