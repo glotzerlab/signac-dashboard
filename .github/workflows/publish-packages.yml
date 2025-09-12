@@ -14,7 +14,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - name: Check out repo
       uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
 
   publish:
     needs: [build]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v5
