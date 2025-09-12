@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04]
-        python: ['3.9', '3.10', '3.11', '3.12', '3.313']
+        python: ['3.10', '3.11', '3.12', '3.13']
         include:
           - os: 'macos-14'
             python: '3.13'
@@ -38,7 +38,7 @@ jobs:
     - name: Setup Python environment
       uses: glotzerlab/workflows/setup-uv@1fe577d5430222a9793694a14cdb316cf8f720e1 # 0.9.0
       with:
-        lockfile: "requirements/requirements-test.txt"
+        lockfile: "requirements/requirements-test-py${{ matrix.python }}.txt"
     - name: Install the package
       run: |
         uv pip install . --no-build-isolation --no-deps --system -v
@@ -46,3 +46,15 @@ jobs:
       run: |
         pytest --cov=signac_dashboard --cov-config=pyproject.toml --cov-report=xml tests/ -v
     - uses: codecov/codecov-action@v5
+
+  # This job is used to provide a single requirement for branch merge conditions.
+  tests_complete:
+    name: Unit test
+    if: always()
+    needs: [test]
+    runs-on: ubuntu-24.04
+
+    steps:
+    - run: jq --exit-status 'all(.result == "success")' <<< '${{ toJson(needs) }}'
+    - name: Done
+      run: echo "Done."
