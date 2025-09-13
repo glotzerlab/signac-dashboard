@@ -28,11 +28,11 @@ jobs:
           - os: 'windows-2025'
             python: '3.13'
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
       with:
         submodules: "recursive"
     - name: Set up Python ${{ matrix.python }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
       with:
         python-version: ${{ matrix.python }}
     - name: Setup Python environment
@@ -46,7 +46,7 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --cov=signac_dashboard --cov-config=pyproject.toml --cov-report=xml tests/ -v
-    - uses: codecov/codecov-action@v5
+    - uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5
 
   # This job is used to provide a single requirement for branch merge conditions.
   tests_complete:
