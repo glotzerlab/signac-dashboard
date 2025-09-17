@@ -52,8 +52,13 @@ class Navigator(Module):
         nearby_jobs = {}
 
         for key, neighbor_vals in neighbors.items():
-            # TODO breaks when using a dotted key from neighborlist (which is from schema)
-            my_value = job.cached_statepoint[key]
+            if "." in key:
+                ks = iter(key.split("."))
+                my_value = job.cached_statepoint[next(ks)]
+                for k in ks:
+                    my_value = my_value[k]
+            else:
+                my_value = job.cached_statepoint[key]
             previous_link = None
             next_link = None
             previous_label = "min"
