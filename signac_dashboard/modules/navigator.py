@@ -2,6 +2,7 @@ from flask import render_template, url_for
 
 from signac_dashboard.module import Module
 from signac_dashboard.util import abbr_value
+from signac._utility import _to_hashable
 
 class _DictPlaceholder:
     pass
@@ -49,11 +50,11 @@ class Navigator(Module):
         for key, neighbor_vals in neighbors.items():
             if "." in key:
                 ks = iter(key.split("."))
-                my_value = job.cached_statepoint[next(ks)]
+                my_value = _to_hashable(job.cached_statepoint[next(ks)])
                 for k in ks:
                     my_value = my_value[k]
             else:
-                my_value = job.cached_statepoint[key]
+                my_value = _to_hashable(job.cached_statepoint[key])
             previous_link = None
             next_link = None
             previous_label = "min"
