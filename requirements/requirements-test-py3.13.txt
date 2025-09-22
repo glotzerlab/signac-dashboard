@@ -2,9 +2,9 @@
 #    uv pip compile requirements.in requirements/requirements-test.in --python-version=3.13 --output-file=requirements/requirements-test-py3.13.txt
 blinker==1.9.0
     # via flask
-click==8.2.1
+click==8.3.0
     # via flask
-coverage==7.10.6
+coverage==7.10.7
     # via
     #   -r requirements/requirements-test.in
     #   pytest-cov

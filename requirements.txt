@@ -2,7 +2,7 @@
 #    uv pip compile requirements.in --output-file=requirements.txt
 blinker==1.9.0
     # via flask
-click==8.2.1
+click==8.3.0
     # via flask
 filelock==3.19.1
     # via signac
