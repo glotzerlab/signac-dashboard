@@ -28,7 +28,7 @@ jsmin==3.0.1
     # via -r requirements.in
 libsass==0.23.0
     # via -r requirements.in
-markupsafe==3.0.2
+markupsafe==3.0.3
     # via
     #   -r requirements.in
     #   flask
@@ -38,7 +38,7 @@ natsort==8.4.0
     # via -r requirements.in
 packaging==25.0
     # via signac
-pyyaml==6.0.2
+pyyaml==6.0.3
     # via webassets
 setuptools==80.9.0
     # via zope-dottedname
