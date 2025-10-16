@@ -8,13 +8,13 @@ beautifulsoup4==4.14.2
     # via sphinx-codeautolink
 certifi==2025.10.5
     # via requests
-charset-normalizer==3.4.3
+charset-normalizer==3.4.4
     # via requests
 docutils==0.21.2
     # via
     #   sphinx
     #   sphinx-rtd-theme
-idna==3.10
+idna==3.11
     # via requests
 imagesize==1.4.1
     # via sphinx

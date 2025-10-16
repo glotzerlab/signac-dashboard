@@ -4,7 +4,7 @@ blinker==1.9.0
     # via flask
 click==8.3.0
     # via flask
-coverage==7.10.7
+coverage==7.11.0
     # via
     #   -r requirements/requirements-test.in
     #   pytest-cov
