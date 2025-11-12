@@ -5,6 +5,7 @@ from .flow_status import FlowStatus
 from .image_viewer import ImageViewer
 from .navigator import Navigator
 from .notes import Notes
+from .plotly_viewer import PlotlyViewer
 from .schema import Schema
 from .statepoint_list import StatepointList
 from .text_display import TextDisplay
@@ -18,6 +19,7 @@ __all__ = [
     "ImageViewer",
     "Navigator",
     "Notes",
+    "PlotlyViewer",
     "Schema",
     "StatepointList",
     "TextDisplay",
