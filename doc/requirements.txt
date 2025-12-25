@@ -34,7 +34,7 @@ roman-numerals-py==4.1.0
     # via sphinx
 snowballstemmer==3.0.1
     # via sphinx
-soupsieve==2.8
+soupsieve==2.8.1
     # via beautifulsoup4
 sphinx==8.2.3
     # via
