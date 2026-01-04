@@ -15,63 +15,94 @@
 {% set num_enabled_modules = enabled_module_indices[context] | length %}
 {% set columns_per_card = (12 / CARDS_PER_ROW) | int %}
 
+{# Macro to render cards in vertical columns (masonry layout) #}
+{% macro render_cards(card_list) %}
+    {% if card_list | length > 0 %}
+    <div class="tile is-ancestor">
+        {% for col_index in range(CARDS_PER_ROW) %}
+        <div class="tile is-parent is-vertical is-{{ columns_per_card }}">
+            {% for item in card_list %}
+                {% if loop.index0 % CARDS_PER_ROW == col_index %}
+                    {% set card = item.card %}
+                    {% set job_details = item.job_details %}
+                    <article class="tile is-child card">
+                        <div class="card-header">
+                            <div class="card-header-title card-header-dashboard">
+                                {% if num_enabled_modules <= 1 and g.jobs | length > 1 %}
+                                <h5 class="title is-5">{{ job_details.title }}</h5>
+                                <h6 class="subtitle is-6"><a href="{{ url_for('show_job', jobid=job_details.job._id) }}">{{ job_details.job | string }}</a></h6>
+                                {% endif %}
+                                {{ card.name }}
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            {{ card.content | safe }}
+                        </div>
+                    </article>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endmacro %}
+
 
 {% block panels %}
-{% if num_enabled_modules <= 1 %}
-<section class="section">
-    <div class="columns is-mobile is-multiline">
-{% endif %}
+
+{# Global collection for single-module view #}
+{% set global_cards = [] %}
+
 {% for job_details in g.jobs %}
-{% set card_count = [] %}
-{% if num_enabled_modules > 1 %}
-<section class="section" id="{{ job_details.job._id }}">
-{% endif %}
-    {% if ( num_enabled_modules > 1 and g.jobs | length > 1 ) or ( g.jobs | length == 1 and query is defined ) %}
-    <h4 class="title is-4">{{ job_details.title }}</h4>
-    <h5 class="subtitle is-5"><a href="{{ url_for('show_job', jobid=job_details.job._id) }}">{{ job_details.job | string }}</a></h5>
-    {% endif %}
+
+    {# Collect cards for the current job #}
+    {% set job_cards = [] %}
+    {% for module in modules_by_context[context] %}
+        {% if loop.index0 in enabled_module_indices[context] %}
+            {% for card in module.get_cards(job_details.job) %}
+                {% if job_cards.append({'card': card, 'job_details': job_details}) %}{% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+
+    {# If multiple modules enabled, render per job #}
     {% if num_enabled_modules > 1 %}
-    <div class="columns is-mobile is-multiline">
-    {% endif %}
-    {% for module in modules_by_context[context] %} {# begin modules #}
-    {% if loop.index0 in enabled_module_indices[context] %} {# if module is enabled #}
-    {% for card in module.get_cards(job_details.job) %} {# begin cards #}
-        {# jinja variables go out of scope after the loop unless this "list" hack is used #}
-        {% if card_count.append(1) %}{% endif %}
-        <div class="column is-{{ columns_per_card }}-desktop is-full-mobile">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-header-title card-header-dashboard">
-                        {% if num_enabled_modules <= 1 and g.jobs | length > 1 %}
-                        <h5 class="title is-5">{{ job_details.title }}</h5>
-                        <h6 class="subtitle is-6"><a href="{{ url_for('show_job', jobid=job_details.job._id) }}">{{ job_details.job | string }}</a></h6>
-                        {% endif %}
-                        {{ card.name }}
+        <section class="section" id="{{ job_details.job._id }}">
+            {% if ( num_enabled_modules > 1 and g.jobs | length > 1 ) or ( g.jobs | length == 1 and query is defined ) %}
+            <h4 class="title is-4">{{ job_details.title }}</h4>
+            <h5 class="subtitle is-5"><a href="{{ url_for('show_job', jobid=job_details.job._id) }}">{{ job_details.job | string }}</a></h5>
+            {% endif %}
+
+            {% if job_cards | length > 0 %}
+                {{ render_cards(job_cards) }}
+            {% else %}
+                <div class="tile is-ancestor">
+                     <div class="tile is-parent is-12">
+                        <article class="tile is-child box">
+                            <h6 class="subtitle is-6">No cards to show.</h6>
+                        </article>
                     </div>
                 </div>
-                <div class="card-content">
-                    {{ card.content | safe }}
-                </div>
-            </div>
-        </div>
-    {% endfor %} {# end cards #}
-    {% endif %} {# end if module is enabled #}
-    {% endfor %} {# end modules #}
-    {% if card_count | length == 0 and num_enabled_modules > 1 %} {# begin no cards message #}
-        <div class="column is-{{ columns_per_card }}-desktop is-full-mobile">
-            <h6 class="subtitle is-6">No cards to show.</h6>
-        </div>
-    {% endif %} {# end no cards message #}
-{% if num_enabled_modules > 1 %}
-    </div>
-</section>
-{% if not loop.last %}
-<hr/>
-{% endif %}
-{% endif %}
+            {% endif %}
+        </section>
+        {% if not loop.last %}
+        <hr/>
+        {% endif %}
+
+    {% else %}
+        {# Aggregate cards for global rendering #}
+        {% for item in job_cards %}
+            {% if global_cards.append(item) %}{% endif %}
+        {% endfor %}
+    {% endif %}
+
 {% endfor %} {# end jobs #}
+
+{# Render global collection if applicable #}
 {% if num_enabled_modules <= 1 %}
-    </div>
+<section class="section">
+    {{ render_cards(global_cards) }}
 </section>
 {% endif %}
+
 {% endblock %}
