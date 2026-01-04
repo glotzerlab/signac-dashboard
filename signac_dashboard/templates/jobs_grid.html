@@ -80,7 +80,9 @@
     </div>
     {% endif %}
 </section>
-{% if not loop.last %}<hr/>{% endif %}
+{% if not loop.last %}
+<hr/>
+{% endif %}
 {% else %}
 {% for item in job_cards %}{% if global_cards.append(item) %}{% endif %}{% endfor %}
 {% endif %}
