@@ -229,9 +229,12 @@ class Dashboard:
         js_all = Bundle("js/js_all/*.js", filters="jsmin", output="gen/app.min.js")
         # SCSS (Sassy CSS) is compiled to CSS
         scss_all = Bundle("scss/app.scss", filters="libsass", output="gen/app.css")
+        # Sortable is used for rearranging tiles in the tile view
+        sortable = Bundle("js/sortable-*.min.js", output="gen/sortable.min.js")
         assets.register("jquery", jquery)
         assets.register("js_all", js_all)
         assets.register("scss_all", scss_all)
+        assets.register("sortable", sortable)
         return assets
 
     def register_module_asset(self, asset):
