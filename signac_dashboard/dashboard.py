@@ -451,7 +451,20 @@ class Dashboard:
         session.setdefault(
             "enabled_module_indices", self._setup_enabled_module_indices()
         )
-        view_mode = request.args.get("view", kwargs.get("default_view", "list"))
+
+        # Determine view mode
+        default_view = kwargs.get("default_view", "list")
+        view_mode = request.args.get("view")
+
+        if view_mode:
+            session["view_mode"] = view_mode
+        else:
+            view_mode = session.get("view_mode", default_view)
+            # If the saved view is "list" but the default is "grid", fall back to "grid"
+            # because "list" doesn't make sense for single job
+            if view_mode == "list" and default_view == "grid":
+                view_mode = "grid"
+
         if view_mode == "grid":
             if (
                 len(session.get("enabled_module_indices", {}).get("JobContext", []))
