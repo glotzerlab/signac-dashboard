@@ -8,6 +8,13 @@ from flask import render_template
 
 from signac_dashboard.module import Module
 
+# Register mimetypes for C/C++ files that are not present on Windows
+mimetypes.add_type("text/x-c", ".c")
+mimetypes.add_type("text/x-c", ".h")
+mimetypes.add_type("text/x-c++", ".cpp")
+mimetypes.add_type("text/x-c++", ".hpp")
+mimetypes.add_type("text/x-c++", ".cc")
+
 
 class FileList(Module):
     """Lists files in the job directory with download links.
@@ -65,7 +72,7 @@ class FileList(Module):
                 return "fa-file-excel"
             if "powerpoint" in mtype or "presentation" in mtype:
                 return "fa-file-powerpoint"
-            if "x-" in mtype or mtype.endswith(("json", "cpp", "c", "h", "rs")):
+            if "x-" in mtype or "json" in mtype:
                 return "fa-file-code"
             if mtype.startswith("text/"):
                 return "fa-file-alt"
