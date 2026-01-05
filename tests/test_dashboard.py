@@ -8,6 +8,7 @@ import tempfile
 import unittest
 from urllib.parse import quote as urlquote
 
+import pytest
 from signac import init_project
 
 import signac_dashboard.modules
@@ -205,6 +206,29 @@ class AllModulesTestCase(DashboardTestCase):
         # next job for b = 1
         assert '<a href="/jobs/386b19932c82f3f9749dd6611e846293"' in response
         assert "disabled>min</div>" in response  # no previous job for b
+
+
+@pytest.mark.parametrize(
+    "filename,expected",
+    [
+        ("test.pdf", "fa-file-pdf"),
+        ("archive.zip", "fa-file-archive"),
+        ("image.png", "fa-file-image"),
+        ("audio.mp3", "fa-file-audio"),
+        ("video.mp4", "fa-file-video"),
+        ("text.txt", "fa-file-alt"),
+        ("text.csv", "fa-file-excel"),
+        ("code.sh", "fa-file-code"),
+        ("code.py", "fa-file-code"),
+        ("code.h", "fa-file-code"),
+        ("code.c", "fa-file-code"),
+        ("code.json", "fa-file-code"),
+    ],
+)
+def test_file_list_icon(filename, expected):
+    """Test that FileList._get_icon returns correct icon classes."""
+    file_list = signac_dashboard.modules.FileList()
+    assert file_list._get_icon(filename) == expected
 
 
 if __name__ == "__main__":
