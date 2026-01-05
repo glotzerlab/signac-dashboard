@@ -65,7 +65,7 @@ class FileList(Module):
                 return "fa-file-excel"
             if "powerpoint" in mtype or "presentation" in mtype:
                 return "fa-file-powerpoint"
-            if "x-" in mtype or "json" in mtype:
+            if "x-" in mtype or mtype.endswith(("json", "cpp", "c", "h", "rs")):
                 return "fa-file-code"
             if mtype.startswith("text/"):
                 return "fa-file-alt"
