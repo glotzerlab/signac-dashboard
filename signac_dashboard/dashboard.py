@@ -459,6 +459,13 @@ class Dashboard:
             ):
                 flash("No modules for the JobContext are enabled.", "info")
             return render_template("jobs_grid.html", *args, **kwargs)
+        elif view_mode == "tiles":
+            if (
+                len(session.get("enabled_module_indices", {}).get("JobContext", []))
+                == 0
+            ):
+                flash("No modules for the JobContext are enabled.", "info")
+            return render_template("jobs_tile.html", *args, **kwargs)
         elif view_mode == "list":
             return render_template("jobs_list.html", *args, **kwargs)
         else:
