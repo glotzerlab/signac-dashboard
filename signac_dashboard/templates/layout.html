@@ -70,14 +70,27 @@
                         <div class="box sidebar-box">
                             <h2 class="subtitle is-4">Views</h2>
                             <p class="field">
+                                {% if g.jobs | length == 1 %}
+                                <a class="button is-static" disabled title="List View">
+                                    <span class="icon is-small">
+                                        <i class="fas fa-list-ul"></i>
+                                    </span>
+                                </a>
+                                {% else %}
                                 <a class="button" href="{{ modify_query(view='list') }}" title="List View">
                                     <span class="icon is-small">
                                         <i class="fas fa-list-ul"></i>
                                     </span>
                                 </a>
+                                {% endif %}
                                 <a class="button" href="{{ modify_query(view='grid') }}" title="Grid View">
                                     <span class="icon is-small">
                                         <i class="fas fa-th"></i>
+                                    </span>
+                                </a>
+                                <a class="button" href="{{ modify_query(view='tiles') }}" title="Tiles View">
+                                    <span class="icon is-small">
+                                        <i class="fas fa-th-large"></i>
                                     </span>
                                 </a>
                             </p>
