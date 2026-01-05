@@ -52,7 +52,6 @@ class FileList(Module):
             return icon_map[ext]
 
         mtype, _ = mimetypes.guess_type(filename)
-        print(mtype)
         if mtype:
             if mtype.startswith("image/"):
                 return "fa-file-image"
