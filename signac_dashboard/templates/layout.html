@@ -9,22 +9,6 @@
         {%- assets "scss_all" %}
         <link rel="stylesheet" href="{{ ASSET_URL }}">
         {%- endassets %}
-        <script>
-            function initSortable() {
-                var el = document.querySelectorAll('.tile.is-parent.is-vertical');
-                el.forEach(function (element) {
-                    // Check if already initialized to avoid duplicates
-                    if (!element.sortableInstance) {
-                        element.sortableInstance = new Sortable(element, {
-                            group: 'shared', // set both lists to same group
-                            animation: 150
-                        });
-                    }
-                });
-            }
-            document.addEventListener('DOMContentLoaded', initSortable);
-            document.addEventListener('turbolinks:load', initSortable);
-        </script>
         <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
         <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
         <meta name="apple-mobile-web-app-title" content="{{ APP_NAME }}">
