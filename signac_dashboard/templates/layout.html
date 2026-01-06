@@ -9,9 +9,6 @@
         {%- assets "scss_all" %}
         <link rel="stylesheet" href="{{ ASSET_URL }}">
         {%- endassets %}
-        {%- assets "sortable" %}
-        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-        {% endassets %}
         <script>
             function initSortable() {
                 var el = document.querySelectorAll('.tile.is-parent.is-vertical');
@@ -42,6 +39,9 @@
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}
         {%- assets "js_all" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        {% endassets %}
+        {%- assets "sortable" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}
         <!-- Module assets -->
