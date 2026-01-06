@@ -1,5 +1,5 @@
 // Initialize Sortable for tile rearranging
-function initSortable() {
+$(document).on('turbolinks:load', function() {
   var el = document.querySelectorAll('.tile.is-parent.is-vertical');
   el.forEach(function(element) {
     // Check if already initialized to avoid duplicates
@@ -9,5 +9,4 @@ function initSortable() {
       });
     }
   });
-}
-$(document).on('turbolinks:load', initSortable);
+});
