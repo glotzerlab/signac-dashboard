@@ -9,11 +9,11 @@ from flask import render_template
 from signac_dashboard.module import Module
 
 # Register mimetypes for C/C++ files that are not present on Windows
-mimetypes.add_type("text/x-c", ".c")
-mimetypes.add_type("text/x-c", ".h")
-mimetypes.add_type("text/x-c++", ".cpp")
-mimetypes.add_type("text/x-c++", ".hpp")
-mimetypes.add_type("text/x-c++", ".cc")
+mimetypes.add_type("application/x-c", ".c")
+mimetypes.add_type("application/x-c", ".h")
+mimetypes.add_type("application/x-c++", ".cpp")
+mimetypes.add_type("application/x-c++", ".hpp")
+mimetypes.add_type("application/x-c++", ".cc")
 
 
 class FileList(Module):
