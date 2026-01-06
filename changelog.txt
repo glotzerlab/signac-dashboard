@@ -10,6 +10,11 @@ Version 0.7
 [0.7.0] -- 2025-xx-xx
 ---------------------
 
+Added
++++++
+
+- File icons for the FileList module (#287).
+
 Updated
 +++++++
 

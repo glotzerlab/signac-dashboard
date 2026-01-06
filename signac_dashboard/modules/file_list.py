@@ -1,11 +1,19 @@
 # Copyright (c) 2022 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
+import mimetypes
 import os
 
 from flask import render_template
 
 from signac_dashboard.module import Module
+
+# Register mimetypes for C/C++ files that are not present on Windows
+mimetypes.add_type("application/x-c", ".c")
+mimetypes.add_type("application/x-c", ".h")
+mimetypes.add_type("application/x-c++", ".cpp")
+mimetypes.add_type("application/x-c++", ".hpp")
+mimetypes.add_type("application/x-c++", ".cc")
 
 
 class FileList(Module):
@@ -36,6 +44,41 @@ class FileList(Module):
         )
         self.prefix_jobid = prefix_jobid
 
+    def _get_icon(self, filename):
+        _, ext = os.path.splitext(filename)
+        ext = ext.lstrip(".").lower()
+
+        icon_map = {
+            "pdf": "fa-file-pdf",
+            "zip": "fa-file-archive",
+            "tar": "fa-file-archive",
+            "gz": "fa-file-archive",
+            "7z": "fa-file-archive",
+        }
+        if ext in icon_map:
+            return icon_map[ext]
+
+        mtype, _ = mimetypes.guess_type(filename)
+        if mtype:
+            if mtype.startswith("image/"):
+                return "fa-file-image"
+            if mtype.startswith("audio/"):
+                return "fa-file-audio"
+            if mtype.startswith("video/"):
+                return "fa-file-video"
+            if "word" in mtype:
+                return "fa-file-word"
+            if "excel" in mtype or "spreadsheet" in mtype or "csv" in mtype:
+                return "fa-file-excel"
+            if "powerpoint" in mtype or "presentation" in mtype:
+                return "fa-file-powerpoint"
+            if mtype.startswith("application/x-") or "json" in mtype:
+                return "fa-file-code"
+            if mtype.startswith("text/"):
+                return "fa-file-alt"
+
+        return "fa-file"
+
     def download_name(self, job, filename):
         if self.prefix_jobid:
             return f"{str(job)}_{filename}"
@@ -49,6 +92,7 @@ class FileList(Module):
                     "name": filename,
                     "jobid": job._id,
                     "download": self.download_name(job, filename),
+                    "icon": self._get_icon(filename),
                 }
                 for filename in os.listdir(job.path)
             ),
