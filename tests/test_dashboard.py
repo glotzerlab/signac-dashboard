@@ -114,10 +114,11 @@ class DashboardTestCase(unittest.TestCase):
         response = str(rv.get_data())
         assert f"{len(self.project)} jobs" in response
 
-    def test_no_view_single_job(self):
-        """Make sure View panel is not shown when on a single job page."""
+    def test_view_single_job_list_disabled(self):
+        """Make sure View panel is shown but list view is disabled when on a single job page."""
         response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
-        assert "Views" not in response
+        assert "Views" in response
+        assert '<a class="button is-static" disabled title="List View">' in response
 
     def test_logout(self):
         response = self.get_response("/logout")
