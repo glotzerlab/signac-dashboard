@@ -8,7 +8,7 @@ coverage==7.13.1
     # via
     #   -r requirements/requirements-test.in
     #   pytest-cov
-filelock==3.20.1
+filelock==3.20.2
     # via signac
 flask==3.1.2
     # via
