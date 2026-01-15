@@ -8,7 +8,7 @@ coverage==7.13.1
     # via
     #   -r requirements/requirements-test.in
     #   pytest-cov
-filelock==3.20.2
+filelock==3.20.3
     # via signac
 flask==3.1.2
     # via
@@ -66,7 +66,7 @@ signac==2.3.0
     # via -r requirements.in
 synced-collections==1.0.0
     # via signac
-tomli==2.3.0
+tomli==2.4.0
     # via coverage
 tqdm==4.67.1
     # via signac
