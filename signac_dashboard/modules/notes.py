@@ -2,8 +2,9 @@
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
 import flask_login
-from flask import abort, render_template, request
+from flask import Blueprint, abort, render_template, request
 from jinja2.exceptions import TemplateNotFound
+from markupsafe import escape
 
 from signac_dashboard.module import Module
 
@@ -39,20 +40,27 @@ class Notes(Module):
         )
         self.key = key
 
+        self.note_blueprint = Blueprint(
+            name=key,
+            import_name=key,
+            url_prefix=f"/module/notes/{escape(key)}",
+            template_folder=template,
+        )
+
     def get_cards(self, job):
         note_text = job.document.get(self.key, "")
         return [
             {
                 "name": self.name,
                 "content": render_template(
-                    self.template, note_text=note_text, jobid=job._id
+                    self.template, note_text=note_text, jobid=job.id, note_key=self.key
                 ),
             }
         ]
 
     def register(self, dashboard):
         # Register routes
-        @dashboard.app.route("/module/notes/update", methods=["POST"])
+        @self.note_blueprint.route("/update", methods=["POST"])
         @flask_login.login_required
         def notes_update():
             note_text = request.form.get("note_text")
@@ -61,7 +69,7 @@ class Notes(Module):
             job.document[self.key] = note_text
             return "Saved."
 
-        @dashboard.app.route("/module/notes/<path:filename>")
+        @self.note_blueprint.route("/<path:filename>")
         @flask_login.login_required
         def notes_asset(filename):
             path = f"notes/{filename}"
@@ -76,6 +84,9 @@ class Notes(Module):
             dashboard.register_module_asset(
                 {
                     "file": f"templates/notes/{asset_file}",
-                    "url": f"/module/notes/{asset_file}",
+                    "url": f"/module/notes/{self.key}/{asset_file}",
                 }
             )
+
+        # register Blueprint
+        dashboard.app.register_blueprint(self.note_blueprint)
