@@ -44,7 +44,7 @@ markupsafe==3.0.3
     #   werkzeug
 natsort==8.4.0
     # via -r requirements.in
-packaging==25.0
+packaging==26.0
     # via
     #   pytest
     #   signac
@@ -62,7 +62,7 @@ pytest-cov==7.0.0
     # via -r requirements/requirements-test.in
 pyyaml==6.0.3
     # via webassets
-setuptools==80.9.0
+setuptools==80.10.1
     # via zope-dottedname
 signac==2.3.0
     # via -r requirements.in
