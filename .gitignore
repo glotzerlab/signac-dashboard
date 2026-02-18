@@ -10,3 +10,10 @@ doc/_*
 .signac
 .signac_sp_cache.json.gz
 .signac_shell_history
+
+vue-sandbox/node_modules
+vue-sandbox/vue-project
+vue-sandbox/workspace
+vue-sandbox/server
+node_modules
+workspace
