@@ -4,13 +4,13 @@ blinker==1.9.0
     # via flask
 click==8.3.1
     # via flask
-coverage==7.13.1
+coverage==7.13.4
     # via
     #   -r requirements/requirements-test.in
     #   pytest-cov
-filelock==3.20.3
+filelock==3.24.3
     # via signac
-flask==3.1.2
+flask==3.1.3
     # via
     #   -r requirements.in
     #   flask-assets
@@ -60,7 +60,7 @@ pytest-cov==7.0.0
     # via -r requirements/requirements-test.in
 pyyaml==6.0.3
     # via webassets
-setuptools==80.10.1
+setuptools==82.0.0
     # via zope-dottedname
 signac==2.3.0
     # via -r requirements.in
@@ -68,7 +68,7 @@ synced-collections==1.0.0
     # via signac
 tomli==2.4.0
     # via coverage
-tqdm==4.67.1
+tqdm==4.67.3
     # via signac
 watchdog==6.0.0
     # via -r requirements.in
