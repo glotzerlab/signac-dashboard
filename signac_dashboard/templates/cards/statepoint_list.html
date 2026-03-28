@@ -1,5 +1,5 @@
 <ul class="statepoint-list">
   {% for key in statepoint %}
-  <li><a href="{{ url_for('search', q=({key: statepoint[key]} | tojson) | e) }}"><strong>{{ key }}:</strong> {{ statepoint[key] }}</a></li>
+  <li><a href="{{ url_for('search', q=({key: statepoint[key]} | tojson) | escape) }}"><strong>{{ key }}:</strong> {{ statepoint[key] }}</a></li>
   {% endfor %}
 </ul>
