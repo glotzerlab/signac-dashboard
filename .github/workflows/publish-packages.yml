@@ -27,7 +27,7 @@ jobs:
     - name: Setup Python environment
       uses: glotzerlab/workflows/setup-uv@204dc7c0f82720090703712694b7cab761aacaa0 # 0.13.0
       with:
-        lockfile: "requirements/requirements-test.txt"
+        lockfile: "requirements/requirements-test-py3.14.txt"
     - name: Build a binary wheel and a source tarball
       run:
         uv build --sdist --wheel --outdir dist/ .
