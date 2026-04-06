@@ -8,7 +8,7 @@ beautifulsoup4==4.14.3
     # via sphinx-codeautolink
 certifi==2026.2.25
     # via requests
-charset-normalizer==3.4.4
+charset-normalizer==3.4.7
     # via requests
 docutils==0.22.4
     # via
@@ -16,7 +16,7 @@ docutils==0.22.4
     #   sphinx-rtd-theme
 idna==3.11
     # via requests
-imagesize==1.4.1
+imagesize==2.0.0
     # via sphinx
 jinja2==3.1.6
     # via sphinx
@@ -24,9 +24,9 @@ markupsafe==3.0.3
     # via jinja2
 packaging==26.0
     # via sphinx
-pygments==2.19.2
+pygments==2.20.0
     # via sphinx
-requests==2.32.5
+requests==2.33.1
     # via sphinx
 roman-numerals==4.1.0
     # via sphinx
