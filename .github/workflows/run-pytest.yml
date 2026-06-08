@@ -46,7 +46,7 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --cov=signac_dashboard --cov-config=pyproject.toml --cov-report=xml tests/ -v
-    - uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v6
+    - uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
 
   # This job is used to provide a single requirement for branch merge conditions.
   tests_complete:
