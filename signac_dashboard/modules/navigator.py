@@ -23,6 +23,7 @@ class Navigator(Module):
     :param max_chars: Truncation length of state point values (default: 6).
     :type max_chars: int
     :param ignore: key to ignore when detecting neighbors
+    :type ignore: str or list[str]
 
     """
 
@@ -51,7 +52,7 @@ class Navigator(Module):
         for key, neighbor_vals in neighbors.items():
             if "." in key:
                 # For schema keys with dots, show neighbors for each nested key.
-                # If the state point parameter is a dictionary, it gets interpreted by
+                # If the state point parameter is a dictionary, it is interpreted by
                 # schema as a nested state point and gets placed in the schema with dots
                 # separating the levels. Neighbors are detected for each deepest level.
                 ks = iter(key.split("."))
