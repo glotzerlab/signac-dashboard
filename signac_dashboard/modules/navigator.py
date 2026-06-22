@@ -15,14 +15,15 @@ class Navigator(Module):
     This module uses the project schema to determine which state points vary, then displays links to
     jobs with adjacent values of these parameters in a table.
 
-    This module caches the schema and the job neighbor list. Therefore, this module may not update if
-    the signac project changes while the signac-dashboard is running.
+    This module caches the schema and the job neighbor list. Therefore, this module may not update
+    if the signac project changes while the signac-dashboard is running.
 
     :param context: Supports :code:`'JobContext'`
     :type context: str
     :param max_chars: Truncation length of state point values (default: 6).
     :type max_chars: int
     :param ignore: key to ignore when detecting neighbors
+
     """
 
     _supported_contexts = {"JobContext"}
