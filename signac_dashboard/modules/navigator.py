@@ -48,6 +48,10 @@ class Navigator(Module):
 
         for key, neighbor_vals in neighbors.items():
             if "." in key:
+                # For schema keys with dots, show neighbors for each nested key.
+                # If the state point parameter is a dictionary, it gets interpreted by
+                # schema as a nested state point and gets placed in the schema with dots
+                # separating the levels. Neighbors are detected for each deepest level.
                 ks = iter(key.split("."))
                 my_value = _to_hashable(job.cached_statepoint[next(ks)])
                 for k in ks:
