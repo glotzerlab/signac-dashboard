@@ -62,7 +62,7 @@ pyyaml==6.0.3
     # via webassets
 setuptools==82.0.1
     # via -r requirements/requirements-test.in
-signac==2.3.0
+signac==2.4.0
     # via -r requirements.in
 synced-collections==1.0.0
     # via signac
