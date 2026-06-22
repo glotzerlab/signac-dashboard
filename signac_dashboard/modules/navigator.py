@@ -1,8 +1,9 @@
 from flask import render_template, url_for
+from signac._utility import _to_hashable
 
 from signac_dashboard.module import Module
 from signac_dashboard.util import abbr_value
-from signac._utility import _to_hashable
+
 
 class _DictPlaceholder:
     pass
@@ -67,9 +68,9 @@ class Navigator(Module):
                 # prev and next in dict order
                 (prev_val, prev_jobid), (next_val, next_jobid) = neighbor_vals.items()
                 previous_label = abbr_value(prev_val, self.max_chars)
-                previous_link = url_for("show_job", jobid = prev_jobid)
+                previous_link = url_for("show_job", jobid=prev_jobid)
                 next_label = abbr_value(next_val, self.max_chars)
-                next_link = url_for("show_job", jobid = next_jobid)
+                next_link = url_for("show_job", jobid=next_jobid)
             elif len(neighbor_vals) == 1:
                 val, jobid = next(iter(neighbor_vals.items()))
                 try:
@@ -78,11 +79,14 @@ class Navigator(Module):
                     is_previous = type(val).__name__ < type(my_value).__name__
                 if is_previous:
                     previous_label = abbr_value(val, self.max_chars)
-                    previous_link = url_for("show_job", jobid = jobid)
+                    previous_link = url_for("show_job", jobid=jobid)
                 else:
                     next_label = abbr_value(val, self.max_chars)
-                    next_link = url_for("show_job", jobid = jobid)
-            nearby_jobs[key] = (abbr_value(my_value, self.max_chars), ((previous_link, previous_label), (next_link, next_label)))
+                    next_link = url_for("show_job", jobid=jobid)
+            nearby_jobs[key] = (
+                abbr_value(my_value, self.max_chars),
+                ((previous_link, previous_label), (next_link, next_label)),
+            )
         return [
             {
                 "name": self.name,
@@ -94,7 +98,5 @@ class Navigator(Module):
         self._dashboard_project = dashboard.project
 
         print("Building neighbor list...", end="", flush=True)
-        self._neighbor_list = self._dashboard_project.get_neighbors(ignore = self.ignore)
+        self._neighbor_list = self._dashboard_project.get_neighbors(ignore=self.ignore)
         print("done.")
-
-        
