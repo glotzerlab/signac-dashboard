@@ -217,5 +217,27 @@ class AllModulesTestCase(DashboardTestCase):
         assert "disabled>min</div>" in response  # no previous job for b
 
 
+class NavigatorTestCase(DashboardTestCase):
+    """Test navigator ignore feature"""
+
+    config = {"ACCESS_TOKEN": None}
+
+    def yield_statepoints(self):
+        for a in range(3):
+            yield {"a": a, "b": 2*a, "constant": 1}
+
+    def test_ignore_one(self):
+        self.modules = [signac_dashboard.modules.Navigator(ignore = "b")]
+        self.make_dashboard()
+
+    def test_ignore_list_one(self):
+        self.modules = [signac_dashboard.modules.Navigator(ignore = ["b"])]
+        self.make_dashboard()
+
+    def test_ignore_list_list_two(self):
+        self.modules = [signac_dashboard.modules.Navigator(ignore = ["b", "constant"])]
+        self.make_dashboard()
+
+
 if __name__ == "__main__":
     unittest.main()
