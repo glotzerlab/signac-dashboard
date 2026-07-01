@@ -35,12 +35,14 @@ class Navigator(Module):
         context="JobContext",
         template="cards/navigator.html",
         max_chars=6,
-        ignore=[],
+        ignore=None,
         **kwargs,
     ):
         super().__init__(name=name, context=context, template=template, **kwargs)
         self.max_chars = max_chars
-        if isinstance(ignore, list):
+        if ignore is None:
+            self.ignore = []
+        elif isinstance(ignore, list):
             self.ignore = ignore
         else:
             self.ignore = [ignore]
