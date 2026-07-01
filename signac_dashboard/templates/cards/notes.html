@@ -1,4 +1,4 @@
-<form class="notes-form" method="POST" action="{{ url_for('notes_update') }}">
+<form class="notes-form" method="POST" action="{{ url_for(note_key + '.notes_update') }}">
   <input type="hidden" name="redirect" value="{{ request.url }}">
   <input type="hidden" name="jobid" value="{{ jobid }}">
   <div class="field">
