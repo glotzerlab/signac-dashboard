@@ -19,21 +19,30 @@ class DashboardTestCase(unittest.TestCase):
         rv = self.test_client.get(query, follow_redirects=True)
         return str(rv.get_data())
 
+    def yield_statepoints(self):
+        for a in range(3):
+            for b in range(2):
+                yield {"a": a, "b": b}
+        
+    def make_dashboard(self):
+        self.dashboard = Dashboard(
+            config=self.config, project=self.project, modules=self.modules
+        )
+        self.test_client = self.dashboard.app.test_client()    
+
+
+    
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
         self.project = init_project(self._tmp_dir)
         # Set up some fake jobs
-        for a in range(3):
-            for b in range(2):
-                job = self.project.open_job({"a": a, "b": b})
-                with job:
-                    job.document["sum"] = a + b
+        for sp in self.yield_statepoints():
+            job = self.project.open_job(sp)
+            with job:
+                job.document["sum"] = job.sp.a + job.sp.b
         self.config = {"ACCESS_TOKEN": "test"}
         self.modules = []
-        self.dashboard = Dashboard(
-            config=self.config, project=self.project, modules=self.modules
-        )
-        self.test_client = self.dashboard.app.test_client()
+        self.make_dashboard()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
 
         # Test logged out content
@@ -116,7 +125,7 @@ class DashboardTestCase(unittest.TestCase):
 
     def test_view_single_job_list_disabled(self):
         """Make sure View panel is shown but list view is disabled when on a single job page."""
-        response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
+        response = self.get_response(f"/jobs/{next(iter(self.project)).id}")
         assert "Views" in response
         assert '<a class="button is-static" disabled title="List View">' in response
 
