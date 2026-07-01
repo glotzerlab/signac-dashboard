@@ -31,7 +31,8 @@ class DashboardTestCase(unittest.TestCase):
         self.test_client = self.dashboard.app.test_client()    
 
 
-    
+    config = {"ACCESS_TOKEN": None}
+
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
         self.project = init_project(self._tmp_dir)
@@ -40,24 +41,9 @@ class DashboardTestCase(unittest.TestCase):
             job = self.project.open_job(sp)
             with job:
                 job.document["sum"] = job.sp.a + job.sp.b
-        self.config = {"ACCESS_TOKEN": "test"}
         self.modules = []
         self.make_dashboard()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
-
-        # Test logged out content
-        response = self.get_response("/")
-        assert "Login required" in response
-
-        response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
-        assert "Login required" in response
-
-        response = self.get_response("/login?token=error")
-        assert "Login required" in response
-        assert "Incorrect token" in response
-
-        # login
-        self.test_client.get("/login?token=test", follow_redirects=True)
 
     def test_get_project(self):
         rv = self.test_client.get("/project/", follow_redirects=True)
@@ -147,6 +133,23 @@ class NoModulesTestCase(DashboardTestCase):
         assert "No modules." in response
         assert "Views" not in response
 
+class LoggedOutCase(DashboardTestCase):
+    config = {"ACCESS_TOKEN": "test"}
+    def test_logged_out(self):
+
+        # Test logged out content
+        response = self.get_response("/")
+        assert "Login required" in response
+
+        response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
+        assert "Login required" in response
+
+        response = self.get_response("/login?token=error")
+        assert "Login required" in response
+        assert "Incorrect token" in response
+
+        # login
+        self.test_client.get("/login?token=test", follow_redirects=True)
 
 class AllModulesTestCase(DashboardTestCase):
     """Add all modules and contexts and test again."""
@@ -160,7 +163,7 @@ class AllModulesTestCase(DashboardTestCase):
                 job = self.project.open_job({"a": a, "b": b})
                 with job:
                     job.document["sum"] = a + b
-        self.config = {"ACCESS_TOKEN": None}
+
         modules = []
         for m in signac_dashboard.modules.__all__:
             module = getattr(signac_dashboard.modules, m)
@@ -219,8 +222,6 @@ class AllModulesTestCase(DashboardTestCase):
 
 class NavigatorTestCase(DashboardTestCase):
     """Test navigator ignore feature"""
-
-    config = {"ACCESS_TOKEN": None}
 
     def yield_statepoints(self):
         for a in range(3):
