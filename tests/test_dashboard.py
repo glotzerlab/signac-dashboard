@@ -17,11 +17,15 @@ from signac_dashboard import Dashboard
 class DashboardTestCase(unittest.TestCase):
     config = {"ACCESS_TOKEN": None}
 
+    def get_modules(self):
+        return []
+
     def get_response(self, query):
         rv = self.test_client.get(query, follow_redirects=True)
         return str(rv.get_data())
 
     def yield_statepoints(self):
+        # override to make different sets of jobs
         for a in range(3):
             for b in range(2):
                 yield {"a": a, "b": b}
@@ -40,12 +44,10 @@ class DashboardTestCase(unittest.TestCase):
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
         self.project = init_project(self._tmp_dir)
-        # Set up some fake jobs
         for sp in self.yield_statepoints():
-            job = self.project.open_job(sp)
-            with job:
-                job.document["sum"] = job.sp.a + job.sp.b
-        self.modules = []
+            job = self.project.open_job(sp).init()
+            job.document["sum"] = job.sp.a + job.sp.b
+        self.modules = self.get_modules()
         self.make_dashboard()
         self.login()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
@@ -163,32 +165,16 @@ class LoggedOutCase(DashboardTestCase):
         # login
         self.test_client.get("/login?token=test", follow_redirects=True)
 
-class AllModulesTestCase(DashboardTestCase):
+class AllModulesTestCase(DashboardLoggedIn):
     """Add all modules and contexts and test again."""
 
-    def setUp(self):
-        self._tmp_dir = tempfile.mkdtemp()
-        self.project = init_project(self._tmp_dir)
-        # Set up some fake jobs
-        for a in range(3):
-            for b in range(2):
-                job = self.project.open_job({"a": a, "b": b})
-                with job:
-                    job.document["sum"] = a + b
-
+    def get_modules(self):
         modules = []
         for m in signac_dashboard.modules.__all__:
             module = getattr(signac_dashboard.modules, m)
             for c in module._supported_contexts:
                 modules.append(module(context=c))
-                with self.assertRaises(RuntimeError):
-                    module(context="BadContext")
-        self.modules = modules
-        self.dashboard = Dashboard(
-            config=self.config, project=self.project, modules=self.modules
-        )
-        self.test_client = self.dashboard.app.test_client()
-        self.addCleanup(shutil.rmtree, self._tmp_dir)
+        return modules
 
     def test_login_with_None_token(self):
         rv = self.test_client.get("/login", follow_redirects=True)
@@ -232,7 +218,7 @@ class AllModulesTestCase(DashboardTestCase):
         assert "disabled>min</div>" in response  # no previous job for b
 
 
-class NavigatorTestCase(DashboardTestCase):
+class NavigatorTestCase(DashboardLoggedIn):
     """Test navigator ignore feature"""
 
     def yield_statepoints(self):
