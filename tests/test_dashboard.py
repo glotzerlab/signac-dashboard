@@ -38,7 +38,7 @@ class DashboardTestCase(unittest.TestCase):
     def get_response(self, query):
         rv = self.test_client.get(query, follow_redirects=True)
         return str(rv.get_data())
-    
+
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
         self.project = signac.init_project(self._tmp_dir)
@@ -49,8 +49,10 @@ class DashboardTestCase(unittest.TestCase):
         self.login()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
 
+
 class DashboardLoggedIn(DashboardTestCase):
     config = {"ACCESS_TOKEN": "test"}
+
     def test_get_project(self):
         rv = self.test_client.get("/project/", follow_redirects=True)
         response = str(rv.get_data())
@@ -139,9 +141,10 @@ class NoModulesTestCase(DashboardLoggedIn):
         assert "No modules." in response
         assert "Views" not in response
 
+
 class LoggedOutCase(DashboardTestCase):
     config = {"ACCESS_TOKEN": "test"}
-    
+
     def login(self):
         # give the wrong token to login to test what logged out looks like
         self.test_client.get("/login?token=wrong", follow_redirects=True)
@@ -159,6 +162,7 @@ class LoggedOutCase(DashboardTestCase):
 
         # login
         self.test_client.get("/login?token=test", follow_redirects=True)
+
 
 class AllModulesTestCase(DashboardLoggedIn):
     """Add all modules and contexts and test again."""
@@ -222,26 +226,27 @@ class NavigatorTestCase(DashboardLoggedIn):
 
     def yield_statepoints(self):
         for a in range(3):
-            yield {"a": a, "b": 2*a, "constant": 1}
+            yield {"a": a, "b": 2 * a, "constant": 1}
 
     def test_ignore_one(self):
-        self.modules = [signac_dashboard.modules.Navigator(ignore = "b")]
+        self.modules = [signac_dashboard.modules.Navigator(ignore="b")]
         self.make_dashboard()
         # we don't need to run self.login() like the rest of setUp because
         # modules run their setup when the Dashboard is created
 
     def test_ignore_list_one(self):
-        self.modules = [signac_dashboard.modules.Navigator(ignore = ["b"])]
+        self.modules = [signac_dashboard.modules.Navigator(ignore=["b"])]
         self.make_dashboard()
 
     def test_ignore_list_list_two(self):
-        self.modules = [signac_dashboard.modules.Navigator(ignore = ["b", "constant"])]
+        self.modules = [signac_dashboard.modules.Navigator(ignore=["b", "constant"])]
 
         # caught a bug in neighborlist in core for ignoring constant parameters
         # catch it here before it's fixed in core
         signac_version_tuple = tuple(int(i) for i in signac.__version__.split("."))
-        if signac_version_tuple <= (2,4,0):
+        if signac_version_tuple <= (2, 4, 0):
             import warnings
+
             with warnings.catch_warnings(record=True) as w:
                 self.make_dashboard()
                 assert "constant" in str(w[-1].message)
