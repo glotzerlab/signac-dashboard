@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from urllib.parse import quote as urlquote
 
-from signac import init_project
+import signac
 
 import signac_dashboard.modules
 from signac_dashboard import Dashboard
@@ -43,7 +43,7 @@ class DashboardTestCase(unittest.TestCase):
 
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
-        self.project = init_project(self._tmp_dir)
+        self.project = signac.init_project(self._tmp_dir)
         for sp in self.yield_statepoints():
             job = self.project.open_job(sp).init()
             job.document["sum"] = job.sp.a + job.sp.b
@@ -237,7 +237,17 @@ class NavigatorTestCase(DashboardLoggedIn):
 
     def test_ignore_list_list_two(self):
         self.modules = [signac_dashboard.modules.Navigator(ignore = ["b", "constant"])]
-        self.make_dashboard()
+
+        # caught a bug in neighborlist in core for ignoring constant parameters
+        # catch it here before it's fixed in core
+        signac_version_tuple = tuple(int(i) for i in signac.__version__.split("."))
+        if signac_version_tuple <= (2,4,0):
+            import warnings
+            with warnings.catch_warnings(record=True) as w:
+                self.make_dashboard()
+                assert "constant" in str(w[-1].message)
+        else:
+            self.make_dashboard()
 
 
 if __name__ == "__main__":
