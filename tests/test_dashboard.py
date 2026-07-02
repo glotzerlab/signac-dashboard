@@ -18,10 +18,6 @@ class DashboardTestCase(unittest.TestCase):
     config = {"ACCESS_TOKEN": None}
     modules = []
 
-    def get_response(self, query):
-        rv = self.test_client.get(query, follow_redirects=True)
-        return str(rv.get_data())
-
     def yield_statepoints(self):
         # override to make different sets of jobs
         for a in range(3):
@@ -39,6 +35,10 @@ class DashboardTestCase(unittest.TestCase):
         if token is not None:
             self.test_client.get(f"/login?token={token}", follow_redirects=True)
 
+    def get_response(self, query):
+        rv = self.test_client.get(query, follow_redirects=True)
+        return str(rv.get_data())
+    
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
         self.project = signac.init_project(self._tmp_dir)
@@ -147,8 +147,6 @@ class LoggedOutCase(DashboardTestCase):
         self.test_client.get("/login?token=wrong", follow_redirects=True)
 
     def test_logged_out(self):
-
-        # Test logged out content
         response = self.get_response("/")
         assert "Login required" in response
 
