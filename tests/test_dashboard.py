@@ -16,9 +16,7 @@ from signac_dashboard import Dashboard
 
 class DashboardTestCase(unittest.TestCase):
     config = {"ACCESS_TOKEN": None}
-
-    def get_modules(self):
-        return []
+    modules = []
 
     def get_response(self, query):
         rv = self.test_client.get(query, follow_redirects=True)
@@ -47,7 +45,6 @@ class DashboardTestCase(unittest.TestCase):
         for sp in self.yield_statepoints():
             job = self.project.open_job(sp).init()
             job.document["sum"] = job.sp.a + job.sp.b
-        self.modules = self.get_modules()
         self.make_dashboard()
         self.login()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
@@ -168,13 +165,17 @@ class LoggedOutCase(DashboardTestCase):
 class AllModulesTestCase(DashboardLoggedIn):
     """Add all modules and contexts and test again."""
 
-    def get_modules(self):
-        modules = []
+    modules = []
+    for m in signac_dashboard.modules.__all__:
+        module = getattr(signac_dashboard.modules, m)
+        for c in module._supported_contexts:
+            modules.append(module(context=c))
+
+    def test_bad_context(self):
         for m in signac_dashboard.modules.__all__:
             module = getattr(signac_dashboard.modules, m)
-            for c in module._supported_contexts:
-                modules.append(module(context=c))
-        return modules
+            with self.assertRaises(RuntimeError):
+                module(context="BadContext")
 
     def test_login_with_None_token(self):
         rv = self.test_client.get("/login", follow_redirects=True)
