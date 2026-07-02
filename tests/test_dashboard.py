@@ -15,6 +15,8 @@ from signac_dashboard import Dashboard
 
 
 class DashboardTestCase(unittest.TestCase):
+    config = {"ACCESS_TOKEN": None}
+
     def get_response(self, query):
         rv = self.test_client.get(query, follow_redirects=True)
         return str(rv.get_data())
@@ -23,15 +25,17 @@ class DashboardTestCase(unittest.TestCase):
         for a in range(3):
             for b in range(2):
                 yield {"a": a, "b": b}
-        
+
     def make_dashboard(self):
         self.dashboard = Dashboard(
             config=self.config, project=self.project, modules=self.modules
         )
-        self.test_client = self.dashboard.app.test_client()    
+        self.test_client = self.dashboard.app.test_client()
 
-
-    config = {"ACCESS_TOKEN": None}
+    def login(self):
+        token = self.config.get("ACCESS_TOKEN", None)
+        if token is not None:
+            self.test_client.get(f"/login?token={token}", follow_redirects=True)
 
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
@@ -43,8 +47,11 @@ class DashboardTestCase(unittest.TestCase):
                 job.document["sum"] = job.sp.a + job.sp.b
         self.modules = []
         self.make_dashboard()
+        self.login()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
 
+class DashboardLoggedIn(DashboardTestCase):
+    config = {"ACCESS_TOKEN": "test"}
     def test_get_project(self):
         rv = self.test_client.get("/project/", follow_redirects=True)
         response = str(rv.get_data())
@@ -121,7 +128,7 @@ class DashboardTestCase(unittest.TestCase):
             assert "Login required" in response
 
 
-class NoModulesTestCase(DashboardTestCase):
+class NoModulesTestCase(DashboardLoggedIn):
     """Test the inherited tests and cases without any modules."""
 
     def test_job_sidebar(self):
@@ -135,6 +142,11 @@ class NoModulesTestCase(DashboardTestCase):
 
 class LoggedOutCase(DashboardTestCase):
     config = {"ACCESS_TOKEN": "test"}
+    
+    def login(self):
+        # give the wrong token to login to test what logged out looks like
+        self.test_client.get("/login?token=wrong", follow_redirects=True)
+
     def test_logged_out(self):
 
         # Test logged out content
@@ -230,6 +242,8 @@ class NavigatorTestCase(DashboardTestCase):
     def test_ignore_one(self):
         self.modules = [signac_dashboard.modules.Navigator(ignore = "b")]
         self.make_dashboard()
+        # we don't need to run self.login() like the rest of setUp because
+        # modules run their setup when the Dashboard is created
 
     def test_ignore_list_one(self):
         self.modules = [signac_dashboard.modules.Navigator(ignore = ["b"])]
