@@ -23,7 +23,7 @@ class Navigator(Module):
     :param max_chars: Truncation length of state point values (default: 6).
     :type max_chars: int
     :param ignore: key to ignore when detecting neighbors
-    :type ignore: str or list[str]
+    :type ignore: str or list[str] or None
 
     """
 
