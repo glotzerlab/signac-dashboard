@@ -19,6 +19,8 @@ Updated
 +++++++
 
 - Feedback when querying for Python booleans instead of JSON booleans (#213).
+- Moved Navigator module logic to signac, enabling ignoring state point keys when detecting neighbors (#320).
+- Requires signac 2.4.0.
 
 Fixed
 +++++
