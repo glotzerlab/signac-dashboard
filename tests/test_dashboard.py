@@ -228,6 +228,14 @@ class NavigatorTestCase(DashboardLoggedIn):
         for a in range(3):
             yield {"a": a, "b": 2 * a, "constant": 1}
 
+    def test_ignore_empty_list(self):
+        self.modules = [signac_dashboard.modules.Navigator(ignore=[])]
+        self.make_dashboard()
+
+    def test_ignore_none(self):
+        self.modules = [signac_dashboard.modules.Navigator(ignore=None)]
+        self.make_dashboard()
+
     def test_ignore_one(self):
         self.modules = [signac_dashboard.modules.Navigator(ignore="b")]
         self.make_dashboard()
