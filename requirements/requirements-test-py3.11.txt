@@ -2,15 +2,15 @@
 #    uv pip compile requirements.in requirements/requirements-test.in --python-version=3.11 --output-file=requirements/requirements-test-py3.11.txt
 blinker==1.9.0
     # via flask
-click==8.3.1
+click==8.4.1
     # via flask
-coverage==7.13.1
+coverage==7.14.1
     # via
     #   -r requirements/requirements-test.in
     #   pytest-cov
-filelock==3.20.1
+filelock==3.29.0
     # via signac
-flask==3.1.2
+flask==3.1.3
     # via
     #   -r requirements.in
     #   flask-assets
@@ -42,7 +42,7 @@ markupsafe==3.0.3
     #   werkzeug
 natsort==8.4.0
     # via -r requirements.in
-packaging==25.0
+packaging==26.2
     # via
     #   pytest
     #   signac
@@ -50,25 +50,25 @@ pluggy==1.6.0
     # via
     #   pytest
     #   pytest-cov
-pygments==2.19.2
+pygments==2.20.0
     # via pytest
-pytest==9.0.2
+pytest==9.0.3
     # via
     #   -r requirements/requirements-test.in
     #   pytest-cov
-pytest-cov==7.0.0
+pytest-cov==7.1.0
     # via -r requirements/requirements-test.in
 pyyaml==6.0.3
     # via webassets
-setuptools==80.9.0
-    # via zope-dottedname
-signac==2.3.0
+setuptools==82.0.1
+    # via -r requirements/requirements-test.in
+signac==2.4.0
     # via -r requirements.in
 synced-collections==1.0.0
     # via signac
-tomli==2.3.0
+tomli==2.4.1
     # via coverage
-tqdm==4.67.1
+tqdm==4.67.3
     # via signac
 watchdog==6.0.0
     # via -r requirements.in
@@ -76,10 +76,10 @@ webassets==3.0.0
     # via
     #   -r requirements.in
     #   flask-assets
-werkzeug==3.1.4
+werkzeug==3.1.8
     # via
     #   -r requirements.in
     #   flask
     #   flask-login
-zope-dottedname==7.0
+zope-dottedname==7.1
     # via webassets

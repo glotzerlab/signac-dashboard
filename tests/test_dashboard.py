@@ -9,47 +9,50 @@ import unittest
 from urllib.parse import quote as urlquote
 
 import pytest
-from signac import init_project
+import signac
 
 import signac_dashboard.modules
 from signac_dashboard import Dashboard
 
 
 class DashboardTestCase(unittest.TestCase):
+    config = {"ACCESS_TOKEN": None}
+    modules = []
+
+    def yield_statepoints(self):
+        # override to make different sets of jobs
+        for a in range(3):
+            for b in range(2):
+                yield {"a": a, "b": b}
+
+    def make_dashboard(self):
+        self.dashboard = Dashboard(
+            config=self.config, project=self.project, modules=self.modules
+        )
+        self.test_client = self.dashboard.app.test_client()
+
+    def login(self):
+        token = self.config.get("ACCESS_TOKEN", None)
+        if token is not None:
+            self.test_client.get(f"/login?token={token}", follow_redirects=True)
+
     def get_response(self, query):
         rv = self.test_client.get(query, follow_redirects=True)
         return str(rv.get_data())
 
     def setUp(self):
         self._tmp_dir = tempfile.mkdtemp()
-        self.project = init_project(self._tmp_dir)
-        # Set up some fake jobs
-        for a in range(3):
-            for b in range(2):
-                job = self.project.open_job({"a": a, "b": b})
-                with job:
-                    job.document["sum"] = a + b
-        self.config = {"ACCESS_TOKEN": "test"}
-        self.modules = []
-        self.dashboard = Dashboard(
-            config=self.config, project=self.project, modules=self.modules
-        )
-        self.test_client = self.dashboard.app.test_client()
+        self.project = signac.init_project(self._tmp_dir)
+        for sp in self.yield_statepoints():
+            job = self.project.open_job(sp).init()
+            job.document["sum"] = job.sp.a + job.sp.b
+        self.make_dashboard()
+        self.login()
         self.addCleanup(shutil.rmtree, self._tmp_dir)
 
-        # Test logged out content
-        response = self.get_response("/")
-        assert "Login required" in response
 
-        response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
-        assert "Login required" in response
-
-        response = self.get_response("/login?token=error")
-        assert "Login required" in response
-        assert "Incorrect token" in response
-
-        # login
-        self.test_client.get("/login?token=test", follow_redirects=True)
+class DashboardLoggedIn(DashboardTestCase):
+    config = {"ACCESS_TOKEN": "test"}
 
     def test_get_project(self):
         rv = self.test_client.get("/project/", follow_redirects=True)
@@ -115,10 +118,11 @@ class DashboardTestCase(unittest.TestCase):
         response = str(rv.get_data())
         assert f"{len(self.project)} jobs" in response
 
-    def test_no_view_single_job(self):
-        """Make sure View panel is not shown when on a single job page."""
-        response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
-        assert "Views" not in response
+    def test_view_single_job_list_disabled(self):
+        """Make sure View panel is shown but list view is disabled when on a single job page."""
+        response = self.get_response(f"/jobs/{next(iter(self.project)).id}")
+        assert "Views" in response
+        assert '<a class="button is-static" disabled title="List View">' in response
 
     def test_logout(self):
         response = self.get_response("/logout")
@@ -126,7 +130,7 @@ class DashboardTestCase(unittest.TestCase):
             assert "Login required" in response
 
 
-class NoModulesTestCase(DashboardTestCase):
+class NoModulesTestCase(DashboardLoggedIn):
     """Test the inherited tests and cases without any modules."""
 
     def test_job_sidebar(self):
@@ -139,32 +143,42 @@ class NoModulesTestCase(DashboardTestCase):
         assert "Views" not in response
 
 
-class AllModulesTestCase(DashboardTestCase):
+class LoggedOutCase(DashboardTestCase):
+    config = {"ACCESS_TOKEN": "test"}
+
+    def login(self):
+        # give the wrong token to login to test what logged out looks like
+        self.test_client.get("/login?token=wrong", follow_redirects=True)
+
+    def test_logged_out(self):
+        response = self.get_response("/")
+        assert "Login required" in response
+
+        response = self.get_response("/jobs/7f9fb369851609ce9cb91404549393f3")
+        assert "Login required" in response
+
+        response = self.get_response("/login?token=error")
+        assert "Login required" in response
+        assert "Incorrect token" in response
+
+        # login
+        self.test_client.get("/login?token=test", follow_redirects=True)
+
+
+class AllModulesTestCase(DashboardLoggedIn):
     """Add all modules and contexts and test again."""
 
-    def setUp(self):
-        self._tmp_dir = tempfile.mkdtemp()
-        self.project = init_project(self._tmp_dir)
-        # Set up some fake jobs
-        for a in range(3):
-            for b in range(2):
-                job = self.project.open_job({"a": a, "b": b})
-                with job:
-                    job.document["sum"] = a + b
-        self.config = {"ACCESS_TOKEN": None}
-        modules = []
+    modules = []
+    for m in signac_dashboard.modules.__all__:
+        module = getattr(signac_dashboard.modules, m)
+        for c in module._supported_contexts:
+            modules.append(module(context=c))
+
+    def test_bad_context(self):
         for m in signac_dashboard.modules.__all__:
             module = getattr(signac_dashboard.modules, m)
-            for c in module._supported_contexts:
-                modules.append(module(context=c))
-                with self.assertRaises(RuntimeError):
-                    module(context="BadContext")
-        self.modules = modules
-        self.dashboard = Dashboard(
-            config=self.config, project=self.project, modules=self.modules
-        )
-        self.test_client = self.dashboard.app.test_client()
-        self.addCleanup(shutil.rmtree, self._tmp_dir)
+            with self.assertRaises(RuntimeError):
+                module(context="BadContext")
 
     def test_login_with_None_token(self):
         rv = self.test_client.get("/login", follow_redirects=True)
@@ -229,6 +243,47 @@ def test_file_list_icon(filename, expected):
     """Test that FileList._get_icon returns correct icon classes."""
     file_list = signac_dashboard.modules.FileList()
     assert file_list._get_icon(filename) == expected
+
+
+class NavigatorTestCase(DashboardLoggedIn):
+    """Test navigator ignore feature"""
+
+    def yield_statepoints(self):
+        for a in range(3):
+            yield {"a": a, "b": 2 * a, "constant": 1}
+
+    def test_ignore_empty_list(self):
+        self.modules = [signac_dashboard.modules.Navigator(ignore=[])]
+        self.make_dashboard()
+
+    def test_ignore_none(self):
+        self.modules = [signac_dashboard.modules.Navigator(ignore=None)]
+        self.make_dashboard()
+
+    def test_ignore_one(self):
+        self.modules = [signac_dashboard.modules.Navigator(ignore="b")]
+        self.make_dashboard()
+        # we don't need to run self.login() like the rest of setUp because
+        # modules run their setup when the Dashboard is created
+
+    def test_ignore_list_one(self):
+        self.modules = [signac_dashboard.modules.Navigator(ignore=["b"])]
+        self.make_dashboard()
+
+    def test_ignore_list_list_two(self):
+        self.modules = [signac_dashboard.modules.Navigator(ignore=["b", "constant"])]
+
+        # caught a bug in neighborlist in core for ignoring constant parameters
+        # catch it here before it's fixed in core
+        signac_version_tuple = tuple(int(i) for i in signac.__version__.split("."))
+        if signac_version_tuple <= (2, 4, 0):
+            import warnings
+
+            with warnings.catch_warnings(record=True) as w:
+                self.make_dashboard()
+                assert "constant" in str(w[-1].message)
+        else:
+            self.make_dashboard()
 
 
 if __name__ == "__main__":

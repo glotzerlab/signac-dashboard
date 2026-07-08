@@ -5,10 +5,7 @@
 
 {# Hides the view options when showing 1 job so users don't click on 'list' view. #}
 {% block view_options %}
-    {% if g.jobs | length == 1 %}
-    {% else %}
-        {{ super() }}
-    {% endif %}
+    {{ super() }}
 {% endblock view_options %}
 
 {% set context = "JobContext" %}

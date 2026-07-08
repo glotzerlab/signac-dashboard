@@ -229,9 +229,12 @@ class Dashboard:
         js_all = Bundle("js/js_all/*.js", filters="jsmin", output="gen/app.min.js")
         # SCSS (Sassy CSS) is compiled to CSS
         scss_all = Bundle("scss/app.scss", filters="libsass", output="gen/app.css")
+        # Sortable is used for rearranging tiles in the tile view
+        sortable = Bundle("js/sortable-*.min.js", output="gen/sortable.min.js")
         assets.register("jquery", jquery)
         assets.register("js_all", js_all)
         assets.register("scss_all", scss_all)
+        assets.register("sortable", sortable)
         return assets
 
     def register_module_asset(self, asset):
@@ -451,7 +454,20 @@ class Dashboard:
         session.setdefault(
             "enabled_module_indices", self._setup_enabled_module_indices()
         )
-        view_mode = request.args.get("view", kwargs.get("default_view", "list"))
+
+        # Determine view mode
+        default_view = kwargs.get("default_view", "list")
+        view_mode = request.args.get("view")
+
+        if view_mode:
+            session["view_mode"] = view_mode
+        else:
+            view_mode = session.get("view_mode", default_view)
+            # If the saved view is "list" but the default is "grid", fall back to "grid"
+            # because "list" doesn't make sense for single job
+            if view_mode == "list" and default_view == "grid":
+                view_mode = "grid"
+
         if view_mode == "grid":
             if (
                 len(session.get("enabled_module_indices", {}).get("JobContext", []))
@@ -459,6 +475,13 @@ class Dashboard:
             ):
                 flash("No modules for the JobContext are enabled.", "info")
             return render_template("jobs_grid.html", *args, **kwargs)
+        elif view_mode == "tiles":
+            if (
+                len(session.get("enabled_module_indices", {}).get("JobContext", []))
+                == 0
+            ):
+                flash("No modules for the JobContext are enabled.", "info")
+            return render_template("jobs_tile.html", *args, **kwargs)
         elif view_mode == "list":
             return render_template("jobs_list.html", *args, **kwargs)
         else:
