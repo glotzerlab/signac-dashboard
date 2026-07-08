@@ -13,6 +13,7 @@ Version 0.7
 Added
 +++++
 
+- File icons for the FileList module (#287).
 - Tile view, enabling compact layouts of module cards (#286)
 
 Updated

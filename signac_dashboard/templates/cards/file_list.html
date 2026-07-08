@@ -1,5 +1,8 @@
 <ul>
   {% for file in files %}
-  <li><a href="{{ url_for('get_file', jobid=file.jobid, filename=file.name, download_name=file.download) }}" download="{{ file.download }}">{{ file.name }}</a></li>
+  <li>
+    <span class="icon"><i class="fas {{ file.icon }}"></i></span>
+    <a href="{{ url_for('get_file', jobid=file.jobid, filename=file.name, download_name=file.download) }}" download="{{ file.download }}">{{ file.name }}</a>
+  </li>
   {% endfor %}
 </ul>
