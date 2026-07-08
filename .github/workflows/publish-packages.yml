@@ -30,10 +30,10 @@ jobs:
         lockfile: "requirements/requirements-test-py3.14.txt"
     - name: Build a binary wheel and a source tarball
       run:
-        uv build --sdist --wheel --outdir dist/ .
+        uv build --sdist --wheel --out-dir dist/ .
     - name: Install wheel
       run:
-        uv pip install signac-dashboard --progress-bar off --no-index -f dist/
+        uv pip install signac-dashboard --system --no-progress --no-index -f dist/
     - name: Test with pytest
       run:
         python -m pytest -v tests/
