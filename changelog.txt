@@ -7,25 +7,27 @@ The **signac-dashboard** package follows `semantic versioning <https://semver.or
 Version 0.7
 ===========
 
-[0.7.0] -- 2025-xx-xx
+[0.7.0] -- 2026-07-08
 ---------------------
 
 Added
 +++++
 
-- Tile view, enabling compact layouts of module cards (#286)
+- Tile view, enabling compact layouts of module cards (#286).
+- Make state point keys hyperlinks (#304).
 
 Updated
 +++++++
 
 - Feedback when querying for Python booleans instead of JSON booleans (#213).
 - Moved Navigator module logic to signac, enabling ignoring state point keys when detecting neighbors (#320).
-- Requires signac 2.4.0.
+- Require signac 2.4.0.
 
 Fixed
 +++++
 
 - Use ``tool.setuptools`` key in ``pyproject.toml``.
+- Website links.
 
 Version 0.6
 ===========
