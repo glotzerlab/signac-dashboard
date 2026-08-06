@@ -33,6 +33,7 @@ def plot_coherence(job):
     # Save correlation coefficient
     job.doc["correlation"] = np.corrcoef(s1, s2)[0, 1]
 
+    # Image plot needs to be saved to the job folder for later visualization
     fig, axs = plt.subplots(2, 1)
     plt.title(f"Coherence time = {job.sp.coherence_time}")
 
@@ -49,6 +50,16 @@ def plot_coherence(job):
     fig.tight_layout()
     plt.savefig(job.fn("coherence.png"))
     plt.close()
+
+    # Save the signal and coherence data for the Plotly visualization.
+    # This could also be computed while the dashboard is running when
+    # it is requested.
+    job.doc["t"] = t.tolist()
+    job.doc["s1"] = s1.tolist()
+    job.doc["s2"] = s2.tolist()
+    job.doc["cxy"] = cxy.tolist()
+    job.doc["f"] = f.tolist()
+    job.doc["cxy"] = cxy.tolist()
 
 
 for i in range(30):
