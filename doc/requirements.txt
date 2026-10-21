@@ -6,7 +6,7 @@ babel==2.18.0
     # via sphinx
 beautifulsoup4==4.15.0
     # via sphinx-codeautolink
-certifi==2026.6.17
+certifi==2026.10.19
     # via requests
 charset-normalizer==3.4.9
     # via requests
